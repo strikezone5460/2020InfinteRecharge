@@ -1,0 +1,53 @@
++----------------------------------------------------------------------------------------------------+
+|                                         Motor Controllers                                          |
++---------------------------+-----------------------+-----------+---------------------+--------------+
+|   Motor Name              |    Controller Type    |   CAN ID  |     Motor Type      |   PDP Port   |
++---------------------------+-----------------------+-----------+---------------------+--------------+
+|   leftDriveMaster         |         Falcon        |     1     |        Falcon       |              |
+|   leftDriveSlave          |         Falcon        |     2     |        Falcon       |              |
+|   rightDriveMaster        |         Falcon        |     3     |        Falcon       |              |
+|   rightDriveSlave         |         Falcon        |     4     |        Falcon       |              |
+|   shooterMaster           |         Talon         |     5     |        775Pro(?)    |              |
+|   shooterSlave            |         Victor        |     6     |        775Pro(?)    |              |
+|   intake                  |         Victor        |     7     |        775Pro       |              |
+|   hopperMaster            |         Talon(?)      |     8     |        775Pro       |              |
+|   hopperSlave             |         Victor(?)     |     9     |        775Pro       |              |
+|   climber                 |         Victor        |     10    |        BAG          |              |
+|   wheelSpinner            |         Victor/Talon  |     11    |        BAG          |              |
+|   turretRotation          |         Talon         |     12    |        775Pro       |              |
++---------------------------+-----------------------+-----------+---------------------+--------------+
+
++------------------------------------------------------------------------------------------+
+|                                          Encoders                                        |
++-------------------------+--------------------+-----------+-------------------------------+
+|      Encoder Name       |    Encoder Type    |   CAN ID  |        Connected Motors       |
++-------------------------+--------------------+-----------+-------------------------------+
+|   leftDriveEncoder      | optical            |    20     |    leftDriveMaster & Slave    |
+|   rightDriveEncoder     | optical            |    21     |    rightDriveMaster & Slave   |
++-------------------------+--------------------+-----------+-------------------------------+
+
++-------------------------------------------------------------------------------+
+|                               PCM 0 Solenoids                                 |
++---------------------+------------+------+----------------+--------------------+
+|   Solenoid Name     |    Type    |  ID  |    Direction   |    Action          |
++---------------------+------------+------+----------------+--------------------+
+|   gearShift         |    Double  |  0   |    Forward     |    Shift High      |
+|                     |    Double  |  1   |    Reverse     |    Shift Low       |
+|   PTO               |    Single  |  2   |    N/A         |                    |  --TALK TO MATT
+|   intake            |    Double  |  3   |    Forward     |    Intake Out      |
+|                     |    Double  |  4   |    Reverse     |    Intake In       |
+|   wheelLift         |    Single  |  5   |    N/A         |                    |
+|   ballStop          |    Single  |  6   |    N/A         |    Stops Hopper    |
+|                     |            |  7   |                |                    |
++---------------------+------------+------+----------------+--------------------+
+
+
+
++-------------------------------------------------------+
+|                       Sensors                         |
++-------------------+-------------------+---------------+
+|   Sensor Name     |   Sensor Type     |   Location    |
++-------------------+-------------------+---------------+
+|   gyro            |   Gyro            |   RIO         |
+|   colorSensor     |   REV Color Sensor|   I2C - RIO   |
++-------------------+-------------------+---------------+
