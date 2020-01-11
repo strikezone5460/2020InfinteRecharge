@@ -7,7 +7,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,6 +25,13 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
+  XboxController XBDriver = new XboxController(0);
+
+  Solenoid shiftHigh = new Solenoid(0);
+  Solenoid shiftLow = new Solenoid(1);
+  
+
+  Drivetrain DT = new Drivetrain();
   @Override
   public void robotInit() {
   }
@@ -39,6 +50,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    double speed = -XBDriver.getY(Hand.kLeft);
+    double rotate = XBDriver.getX(Hand.kRight);
+    int shiftState = 0;
+
+    DT.arcadeDrive(speed, rotate);
+    if(XBDriver.getBumper(Hand.kLeft)) shiftState++;
+    if(shiftState == 1){
+      shiftHigh.set(false);
+      shiftLow.set(true);
+    }else if(shiftState >= 1){
+      shiftLow.set(false);
+      shiftHigh.set(true);
+      shiftState = 0;
+    }
   }
 
   @Override

@@ -7,8 +7,28 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 /**
  * Add your docs here.
  */
 public class RobotMap {
+    TalonFX leftDriveMaster = new TalonFX(1);
+    TalonFX leftDriveSlave = new TalonFX(2);
+    TalonFX rightDriveMaster = new TalonFX(3);
+    TalonFX rightDriveSlave = new TalonFX(4);
+
+    TalonSRX shooterMaster = new TalonSRX(5);
+    VictorSPX shooterSlave = new VictorSPX(6);
+
+    VictorSPX intake = new VictorSPX(7);
+
+    
+
+
+    
+    
+
 }

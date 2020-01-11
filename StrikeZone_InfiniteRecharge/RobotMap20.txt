@@ -22,8 +22,8 @@
 +-------------------------+--------------------+-----------+-------------------------------+
 |      Encoder Name       |    Encoder Type    |   CAN ID  |        Connected Motors       |
 +-------------------------+--------------------+-----------+-------------------------------+
-|   leftDriveEncoder      | optical            |    20     |    leftDriveMaster & Slave    |
-|   rightDriveEncoder     | optical            |    21     |    rightDriveMaster & Slave   |
+|   leftDriveEncoder      | optical            |    21     |    leftDriveMaster & Slave    |
+|   rightDriveEncoder     | optical            |    22     |    rightDriveMaster & Slave   |
 +-------------------------+--------------------+-----------+-------------------------------+
 
 +-------------------------------------------------------------------------------+
