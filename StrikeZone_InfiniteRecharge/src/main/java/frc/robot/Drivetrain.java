@@ -20,9 +20,17 @@ public class Drivetrain extends RobotMap{
         leftDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
         leftDriveSlave.follow(leftDriveMaster);
         rightDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
-        rightDriveSlave.follow(leftDriveMaster);
+        rightDriveSlave.follow(rightDriveMaster);
     }
      
+
+    public double Deadband(double in) {
+        if(in < .25 && in > -.25){
+            return 0.0;
+        }else{
+            return ((in*1.25)- .25)*.5;
+        }
+    }
    
 
 

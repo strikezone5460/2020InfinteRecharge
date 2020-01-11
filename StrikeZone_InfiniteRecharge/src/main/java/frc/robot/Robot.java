@@ -29,7 +29,8 @@ public class Robot extends TimedRobot {
 
   Solenoid shiftHigh = new Solenoid(0);
   Solenoid shiftLow = new Solenoid(1);
-  
+  int shiftState = 0;
+
 
   Drivetrain DT = new Drivetrain();
   @Override
@@ -51,11 +52,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double speed = -XBDriver.getY(Hand.kLeft);
-    double rotate = XBDriver.getX(Hand.kRight);
-    int shiftState = 0;
+    double rotate = -XBDriver.getX(Hand.kRight);
 
-    DT.arcadeDrive(speed, rotate);
-    if(XBDriver.getBumper(Hand.kLeft)) shiftState++;
+
+    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate));
+    if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
     if(shiftState == 1){
       shiftHigh.set(false);
       shiftLow.set(true);
