@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -27,12 +26,14 @@ public class Robot extends TimedRobot {
    */
   XboxController XBDriver = new XboxController(0);
 
-  Solenoid shiftHigh = new Solenoid(0);
-  Solenoid shiftLow = new Solenoid(1);
+
   int shiftState = 0;
+  int shooterState = 0;
 
 
   Drivetrain DT = new Drivetrain();
+  Shooter SH = new Shooter();
+
   @Override
   public void robotInit() {
   }
@@ -56,14 +57,24 @@ public class Robot extends TimedRobot {
 
 
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate));
+
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
     if(shiftState == 1){
-      shiftHigh.set(false);
-      shiftLow.set(true);
+      DT.shiftHigh.set(false);
+      DT.shiftLow.set(true);
     }else if(shiftState >= 1){
-      shiftLow.set(false);
-      shiftHigh.set(true);
+      DT.shiftLow.set(false);
+      DT.shiftHigh.set(true);
       shiftState = 0;
+    }
+
+
+    if(XBDriver.getAButtonPressed()) shooterState++;
+    if(shooterState == 1){
+      SH.velocityShooter(.5);
+    }else if(shooterState >= 1){
+      SH.velocityShooter(.5);
+      shooterState = 0;
     }
   }
 

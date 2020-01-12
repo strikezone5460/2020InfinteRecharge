@@ -9,6 +9,10 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SPI.Port;
+
 // import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 // import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -16,6 +20,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
  * Add your docs here.
  */
 public class Drivetrain extends RobotMap{
+
+    Solenoid shiftHigh = new Solenoid(0);
+    Solenoid shiftLow = new Solenoid(1);
+
+    ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
+
     public void arcadeDrive(double speed, double rotate) {
         leftDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
         leftDriveSlave.follow(leftDriveMaster);
@@ -28,7 +38,7 @@ public class Drivetrain extends RobotMap{
         if(in < .25 && in > -.25){
             return 0.0;
         }else{
-            return ((in*1.25)- .25)*.5;
+            return ((in*1.25)- .25)*.35;
         }
     }
    

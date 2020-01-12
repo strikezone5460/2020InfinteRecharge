@@ -39,7 +39,7 @@
 |   intakeIn          |    Double  |  4   |    Reverse     |    Intake In       |
 |   wheelLift         |    Single  |  5   |    N/A         |                    |
 |   ballStop          |    Single  |  6   |    N/A         |    Stops Hopper    |
-|                     |            |  7   |                |                    |
+|   hoodHolder        |    Single  |  7   |    N/A         |    Holds down hood?|
 +---------------------+------------+------+----------------+--------------------+
 
 

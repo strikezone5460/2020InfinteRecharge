@@ -12,7 +12,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Solenoid;
+//import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SPI.Port;
 
 /**
  * Add your docs here.
@@ -38,23 +39,22 @@ public class RobotMap {
 
     TalonSRX turretRotation = new TalonSRX(13);
 
-    ADXRS450_Gyro gyro = new ADXRS450_Gyro();//might change
+    // ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
 
 
     //Solenoids
-    Solenoid shiftHigh = new Solenoid(0);
-    Solenoid shiftLow = new Solenoid(1);
 
-    Solenoid PTO = new Solenoid(2);
 
-    Solenoid intakeOut = new Solenoid(3);
-    Solenoid intakeIn = new Solenoid(4);
+    // Solenoid PTO = new Solenoid(2);
 
-    Solenoid spinnerLift = new Solenoid(5);
+    // Solenoid intakeOut = new Solenoid(3);
+    // Solenoid intakeIn = new Solenoid(4);
 
-    Solenoid ballStop = new Solenoid(6);
+    // Solenoid spinnerLift = new Solenoid(5);
 
-    Solenoid hoodHolder = new Solenoid(7);//I dont know exacly what this is yet
+    // Solenoid ballStop = new Solenoid(6);
+
+    // Solenoid hoodHolder = new Solenoid(7);//I dont know exacly what this is yet
     
     
 
