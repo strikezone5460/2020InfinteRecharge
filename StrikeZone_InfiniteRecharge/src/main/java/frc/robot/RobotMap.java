@@ -11,6 +11,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Solenoid;
+
 /**
  * Add your docs here.
  */
@@ -20,21 +23,38 @@ public class RobotMap {
     TalonFX rightDriveMaster = new TalonFX(3);
     TalonFX rightDriveSlave = new TalonFX(4);
 
-    TalonSRX shooterMaster = new TalonSRX(5);
-    VictorSPX shooterSlave = new VictorSPX(6);
+    TalonFX shooterMaster = new TalonFX(5);//Might Change
+    TalonFX shooterSlave = new TalonFX(6);
 
-    VictorSPX intake = new VictorSPX(7);
+    VictorSPX intakeMaster = new VictorSPX(7);
+    VictorSPX intakeSlave = new VictorSPX(8);
 
-    TalonSRX hopperMaster = new TalonSRX(8);
-    VictorSPX hopperSlave = new VictorSPX(9);
+    TalonSRX hopperMaster = new TalonSRX(9);
+    VictorSPX hopperSlave = new VictorSPX(10);
 
-    VictorSPX climber = new VictorSPX(10);
+    VictorSPX climber = new VictorSPX(11);
 
-    VictorSPX wheelSpinner = new VictorSPX(11);
+    VictorSPX wheelSpinner = new VictorSPX(12);
 
-    TalonSRX turretRotation = new TalonSRX(12);
+    TalonSRX turretRotation = new TalonSRX(13);
+
+    ADXRS450_Gyro gyro = new ADXRS450_Gyro();//might change
 
 
+    //Solenoids
+    Solenoid shiftHigh = new Solenoid(0);
+    Solenoid shiftLow = new Solenoid(1);
+
+    Solenoid PTO = new Solenoid(2);
+
+    Solenoid intakeOut = new Solenoid(3);
+    Solenoid intakeIn = new Solenoid(4);
+
+    Solenoid spinnerLift = new Solenoid(5);
+
+    Solenoid ballStop = new Solenoid(6);
+
+    Solenoid hoodHolder = new Solenoid(7);//I dont know exacly what this is yet
     
     
 

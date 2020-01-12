@@ -9,12 +9,13 @@
 |   rightDriveSlave         |         Falcon        |     4     |        Falcon       |              |
 |   shooterMaster           |         Talon         |     5     |        775Pro(?)    |              |
 |   shooterSlave            |         Victor        |     6     |        775Pro(?)    |              |
-|   intake                  |         Victor        |     7     |        775Pro       |              |
-|   hopperMaster            |         Talon(?)      |     8     |        775Pro       |              |
-|   hopperSlave             |         Victor(?)     |     9     |        775Pro       |              |
-|   climber                 |         Victor        |     10    |        BAG          |              |
-|   wheelSpinner            |         Victor/Talon  |     11    |        BAG          |              |
-|   turretRotation          |         Talon         |     12    |        775Pro       |              |
+|   intakeMaster            |         Victor        |     7     |        775Pro       |              |
+|   intakeSlave             |         Victor        |     8     |        775Pro       |              |
+|   hopperMaster            |         Talon(?)      |     9     |        775Pro       |              |
+|   hopperSlave             |         Victor(?)     |     10    |        775Pro       |              |
+|   climber                 |         Victor        |     11    |        BAG          |              |
+|   wheelSpinner            |         Victor/Talon  |     12    |        BAG          |              |
+|   turretRotation          |         Talon         |     13    |        775Pro       |              |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
 
 +------------------------------------------------------------------------------------------+
@@ -31,11 +32,11 @@
 +---------------------+------------+------+----------------+--------------------+
 |   Solenoid Name     |    Type    |  ID  |    Direction   |    Action          |
 +---------------------+------------+------+----------------+--------------------+
-|   gearShift         |    Double  |  0   |    Forward     |    Shift High      |
-|                     |    Double  |  1   |    Reverse     |    Shift Low       |
+|   shiftHigh         |    Double  |  0   |    Forward     |    Shift High      |
+|   shiftLow          |    Double  |  1   |    Reverse     |    Shift Low       |
 |   PTO               |    Single  |  2   |    N/A         |                    |  --TALK TO MATT
-|   intake            |    Double  |  3   |    Forward     |    Intake Out      |
-|                     |    Double  |  4   |    Reverse     |    Intake In       |
+|   intakeOut         |    Double  |  3   |    Forward     |    Intake Out      |
+|   intakeIn          |    Double  |  4   |    Reverse     |    Intake In       |
 |   wheelLift         |    Single  |  5   |    N/A         |                    |
 |   ballStop          |    Single  |  6   |    N/A         |    Stops Hopper    |
 |                     |            |  7   |                |                    |
