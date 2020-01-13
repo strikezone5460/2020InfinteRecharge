@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -26,6 +27,14 @@ public class Drivetrain extends RobotMap{
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
 
+    public void Init(){
+        leftDriveMaster.configOpenloopRamp(.35);
+        rightDriveMaster.configOpenloopRamp(.35);
+        leftDriveMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+        rightDriveMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+        
+    }
+
     public void arcadeDrive(double speed, double rotate) {
         leftDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
         leftDriveSlave.follow(leftDriveMaster);
@@ -35,14 +44,15 @@ public class Drivetrain extends RobotMap{
      
 
     public double Deadband(double in) {
-        if(in < .25 && in > -.25){
+        if(in < .2 && in > -.2){
             return 0.0;
         }else{
-            return ((in*1.25)- .25)*.35;
+            return ((in*1.2)- .2)*.75;
         }
     }
    
-
+    int leftEncPos = leftDriveMaster.getSelectedSensorPosition(0);
+    int rightEncPos = rightDriveMaster.getSelectedSensorPosition(0);
 
 
 

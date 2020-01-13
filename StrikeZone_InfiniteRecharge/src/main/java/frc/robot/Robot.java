@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -26,16 +27,21 @@ public class Robot extends TimedRobot {
    */
   XboxController XBDriver = new XboxController(0);
 
-
+  // Solenoid shiftHigh = new Solenoid(0);
+  // Solenoid shiftLow = new Solenoid(1);
   int shiftState = 0;
   int shooterState = 0;
 
-
-  Drivetrain DT = new Drivetrain();
   Shooter SH = new Shooter();
-
+  Drivetrain DT = new Drivetrain();
   @Override
   public void robotInit() {
+    DT.Init();
+  }
+
+  @Override
+  public void disabledPeriodic(){
+    //System.out.println("left: " + DT.leftEncPos + "right: " + DT.rightEncPos);
   }
 
   @Override
@@ -48,6 +54,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    //DT.Init();
   }
 
   @Override
@@ -55,9 +62,8 @@ public class Robot extends TimedRobot {
     double speed = -XBDriver.getY(Hand.kLeft);
     double rotate = -XBDriver.getX(Hand.kRight);
 
-
+    //System.out.println();
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate));
-
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
     if(shiftState == 1){
       DT.shiftHigh.set(false);
@@ -68,12 +74,15 @@ public class Robot extends TimedRobot {
       shiftState = 0;
     }
 
+    
+
+
 
     if(XBDriver.getAButtonPressed()) shooterState++;
     if(shooterState == 1){
-      SH.velocityShooter(.5);
+      SH.velocityShooter(1);
     }else if(shooterState >= 1){
-      SH.velocityShooter(.5);
+      SH.velocityShooter(0);
       shooterState = 0;
     }
   }

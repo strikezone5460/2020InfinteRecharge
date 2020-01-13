@@ -8,16 +8,18 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 /**
  * Add your docs here.
  */
 public class Shooter extends RobotMap{
     public void shooterInit(){
-
+        shooterMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
     }
     public void velocityShooter(double setpoint){
-        shooterMaster.set(ControlMode.PercentOutput, setpoint);
-        shooterSlave.set(ControlMode.PercentOutput, -setpoint);
+        shooterMaster.set(ControlMode.PercentOutput, -setpoint);
+        shooterSlave.set(ControlMode.PercentOutput, setpoint);
     }
+    int shooterVel = shooterMaster.getSelectedSensorVelocity(0);
 }
