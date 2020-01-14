@@ -3,19 +3,18 @@
 +---------------------------+-----------------------+-----------+---------------------+--------------+
 |   Motor Name              |    Controller Type    |   CAN ID  |     Motor Type      |   PDP Port   |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
-|   leftDriveMaster         |         Falcon        |     1     |        Falcon       |              |
-|   leftDriveSlave          |         Falcon        |     2     |        Falcon       |              |
-|   rightDriveMaster        |         Falcon        |     3     |        Falcon       |              |
-|   rightDriveSlave         |         Falcon        |     4     |        Falcon       |              |
-|   shooterMaster           |         Talon         |     5     |        775Pro(?)    |              |
-|   shooterSlave            |         Victor        |     6     |        775Pro(?)    |              |
+|   leftDriveMaster         |         TalonFX       |     1     |        Falcon       |      0       |
+|   leftDriveSlave          |         TalonFX       |     2     |        Falcon       |      1       |
+|   rightDriveMaster        |         TalonFX       |     3     |        Falcon       |      15      |
+|   rightDriveSlave         |         TalonFX       |     4     |        Falcon       |      14      |
+|   shooterMaster           |         TalonFX       |     5     |        Falcon       |      2       |
+|   shooterSlave            |         TalonFX       |     6     |        Falcon       |      13      |
 |   intakeMaster            |         Victor        |     7     |        775Pro       |              |
 |   intakeSlave             |         Victor        |     8     |        775Pro       |              |
 |   hopperMaster            |         Talon(?)      |     9     |        775Pro       |              |
 |   hopperSlave             |         Victor(?)     |     10    |        775Pro       |              |
-|   climber                 |         Victor        |     11    |        BAG          |              |
-|   wheelSpinner            |         Victor/Talon  |     12    |        BAG          |              |
-|   turretRotation          |         Talon         |     13    |        775Pro       |              |
+|   wheelSpinner            |         Victor/Talon  |     11    |        BAG          |              |
+|   turretRotation          |         Talon         |     12    |        775Pro       |              |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
 
 +------------------------------------------------------------------------------------------+
@@ -34,7 +33,7 @@
 +---------------------+------------+------+----------------+--------------------+
 |   shiftHigh         |    Double  |  0   |    Forward     |    Shift High      |
 |   shiftLow          |    Double  |  1   |    Reverse     |    Shift Low       |
-|   PTO               |    Single  |  2   |    N/A         |                    |  --TALK TO MATT
+|   PTO               |    Single  |  2   |    N/A         |    Climber         |
 |   intakeOut         |    Double  |  3   |    Forward     |    Intake Out      |
 |   intakeIn          |    Double  |  4   |    Reverse     |    Intake In       |
 |   wheelLift         |    Single  |  5   |    N/A         |                    |
