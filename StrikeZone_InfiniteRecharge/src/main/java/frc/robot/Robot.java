@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.*;
+import frc.robot.Subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
   // Solenoid shiftLow = new Solenoid(1);
   int shiftState = 0;
   int shooterState = 0;
+  int counter = 0;
 
   Shooter SH = new Shooter();
   Drivetrain DT = new Drivetrain();
@@ -54,13 +55,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //DT.Init();
+    DT.Init();
   }
 
   @Override
   public void teleopPeriodic() {
     double speed = -XBDriver.getY(Hand.kLeft);
     double rotate = -XBDriver.getX(Hand.kRight);
+     DT.leftEncPos();
+     DT.rightEncPos();
+
+    counter++;
+    if((counter%5)==0){
+      System.out.println("left: " + (DT.leftEncPos() / 1000) + " right: " + (DT.rightEncPos() / 1000));
+    }
 
     //System.out.println();
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate));
@@ -80,9 +88,9 @@ public class Robot extends TimedRobot {
 
     if(XBDriver.getAButtonPressed()) shooterState++;
     if(shooterState == 1){
-      SH.velocityShooter(1);
+      SH.percentShooter(1);
     }else if(shooterState >= 1){
-      SH.velocityShooter(0);
+      SH.percentShooter(0);
       shooterState = 0;
     }
   }

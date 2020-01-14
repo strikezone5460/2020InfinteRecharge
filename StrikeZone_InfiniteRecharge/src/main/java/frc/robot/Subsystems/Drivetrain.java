@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -22,17 +22,26 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 public class Drivetrain extends RobotMap{
 
-    Solenoid shiftHigh = new Solenoid(0);
-    Solenoid shiftLow = new Solenoid(1);
+    public Solenoid shiftHigh = new Solenoid(0);
+    public Solenoid shiftLow = new Solenoid(1);
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
 
+
+    public int leftEncPos(){return leftDriveMaster.getSelectedSensorPosition(0);}
+    public int rightEncPos(){return rightDriveMaster.getSelectedSensorPosition(0);}
+
+    double leftDriveCurrent = leftDriveMaster.getStatorCurrent();
     public void Init(){
         leftDriveMaster.configOpenloopRamp(.35);
         rightDriveMaster.configOpenloopRamp(.35);
         leftDriveMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         rightDriveMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+        leftDriveMaster.setSelectedSensorPosition(0);
+        rightDriveMaster.setSelectedSensorPosition(0);
         
+        
+
     }
 
     public void arcadeDrive(double speed, double rotate) {
@@ -44,15 +53,20 @@ public class Drivetrain extends RobotMap{
      
 
     public double Deadband(double in) {
-        if(in < .2 && in > -.2){
-            return 0.0;
-        }else{
+        if(in > .2 ){
             return ((in*1.2)- .2)*.75;
+        }else if(in < -.2){
+            return ((in * 1.2)+ .2)*.75;
         }
+         else{
+            return 0.0;
+        }
+
+
+        
     }
    
-    int leftEncPos = leftDriveMaster.getSelectedSensorPosition(0);
-    int rightEncPos = rightDriveMaster.getSelectedSensorPosition(0);
+
 
 
 
