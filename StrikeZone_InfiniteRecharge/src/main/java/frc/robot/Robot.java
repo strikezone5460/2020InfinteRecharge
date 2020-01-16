@@ -71,7 +71,10 @@ public class Robot extends TimedRobot {
     }
 
     //System.out.println();
+    //percent output drive code
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate));
+
+    //Shifter toggle
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
     if(shiftState == 1){
       DT.shiftHigh.set(false);
@@ -85,12 +88,14 @@ public class Robot extends TimedRobot {
     
 
 
-
+    //
+    //Toggle for the shooter
+    //
     if(XBDriver.getAButtonPressed()) shooterState++;
     if(shooterState == 1){
-      SH.percentShooter(1);
+      SH.velocityShooter(1);
     }else if(shooterState >= 1){
-      SH.percentShooter(0);
+      SH.velocityShooter(0);
       shooterState = 0;
     }
   }

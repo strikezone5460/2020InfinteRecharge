@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 // import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 /**
- * Add your docs here.
+ * Code for the Drivetrian subsystem
  */
 public class Drivetrain extends RobotMap{
 
@@ -27,9 +27,12 @@ public class Drivetrain extends RobotMap{
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
 
+    static int kMaxVelocity = 123445;
 
     public int leftEncPos(){return leftDriveMaster.getSelectedSensorPosition(0);}
     public int rightEncPos(){return rightDriveMaster.getSelectedSensorPosition(0);}
+    public int leftEncVel(){return leftDriveMaster.getSelectedSensorVelocity(0);}
+    public int rightEncVel(){return rightDriveMaster.getSelectedSensorVelocity(0);}
 
     double leftDriveCurrent = leftDriveMaster.getStatorCurrent();
     public void Init(){
@@ -39,9 +42,6 @@ public class Drivetrain extends RobotMap{
         rightDriveMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         leftDriveMaster.setSelectedSensorPosition(0);
         rightDriveMaster.setSelectedSensorPosition(0);
-        
-        
-
     }
 
     public void arcadeDrive(double speed, double rotate) {
@@ -50,7 +50,16 @@ public class Drivetrain extends RobotMap{
         rightDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
         rightDriveSlave.follow(rightDriveMaster);
     }
-     
+
+
+    public void velocityDrive(double speed, double rotate){
+        leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxVelocity);
+        leftDriveSlave.follow(leftDriveMaster);
+        rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxVelocity);
+        rightDriveSlave.follow(rightDriveMaster);
+        
+
+    }
 
     public double Deadband(double in) {
         if(in > .2 ){

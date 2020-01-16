@@ -5,15 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package frc.robot.Subsystems;
 
 /**
  * Add your docs here.
  */
-public class Constants {
-    double kShooterPct = 1.0;
-    double kShooterOff = 0.0;
-
-
-
+public class ColorWheel {
 }

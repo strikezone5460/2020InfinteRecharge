@@ -22,24 +22,25 @@
 +-------------------------+--------------------+-----------+-------------------------------+
 |      Encoder Name       |    Encoder Type    |   CAN ID  |        Connected Motors       |
 +-------------------------+--------------------+-----------+-------------------------------+
-|   leftDriveEncoder      | optical            |    21     |    leftDriveMaster & Slave    |
-|   rightDriveEncoder     | optical            |    22     |    rightDriveMaster & Slave   |
+|   leftDriveEncoder      | integrated         |    1      |    leftDriveMaster & Slave    |
+|   rightDriveEncoder     | integrated         |    4      |    rightDriveMaster & Slave   |
+|   shooterMaster         | integrated         |    5      |    shooterSlave               |
 +-------------------------+--------------------+-----------+-------------------------------+
 
-+-------------------------------------------------------------------------------+
-|                               PCM 0 Solenoids                                 |
-+---------------------+------------+------+----------------+--------------------+
-|   Solenoid Name     |    Type    |  ID  |    Direction   |    Action          |
-+---------------------+------------+------+----------------+--------------------+
-|   shiftHigh         |    Double  |  0   |    Forward     |    Shift High      |
-|   shiftLow          |    Double  |  1   |    Reverse     |    Shift Low       |
-|   PTO               |    Single  |  2   |    N/A         |    Climber         |
-|   intakeOut         |    Double  |  3   |    Forward     |    Intake Out      |
-|   intakeIn          |    Double  |  4   |    Reverse     |    Intake In       |
-|   wheelLift         |    Single  |  5   |    N/A         |                    |
-|   ballStop          |    Single  |  6   |    N/A         |    Stops Hopper    |
-|   hoodHolder        |    Single  |  7   |    N/A         |    Holds down hood?|
-+---------------------+------------+------+----------------+--------------------+
++---------------------------------------------------------------------------------+
+|                               PCM 0 Solenoids                                   |
++---------------------+------------+------+----------------+----------------------+
+|   Solenoid Name     |    Type    |  ID  |    Direction   |    Action            |
++---------------------+------------+------+----------------+----------------------+
+|   shiftHigh         |    Double  |  0   |    Forward     |    Shift High        |
+|   shiftLow          |    Double  |  1   |    Reverse     |    Shift Low         |
+|   PTO               |    Single  |  2   |    N/A         |    Climber           |
+|   intakeOut         |    Double  |  3   |    Forward     |    Intake Out        |
+|   intakeIn          |    Double  |  4   |    Reverse     |    Intake In         |
+|   wheelLift         |    Single  |  5   |    N/A         |                      |
+|   ballStop          |    Single  |  6   |    N/A         |    Stops Hopper      |
+|   hoodMain          |    Single  |  7   |    N/A         |    Changes shoot mode|
++---------------------+------------+------+----------------+----------------------+
 
 
 
@@ -48,6 +49,6 @@
 +-------------------+-------------------+---------------+
 |   Sensor Name     |   Sensor Type     |   Location    |
 +-------------------+-------------------+---------------+
-|   gyro            |   Gyro            |   RIO         |
+|   gyro            |   Gyro            |   RIO         | might not be on RIO
 |   colorSensor     |   REV Color Sensor|   I2C - RIO   |
 +-------------------+-------------------+---------------+
