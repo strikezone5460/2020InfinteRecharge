@@ -11,10 +11,18 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
+import edu.wpi.first.wpilibj.Solenoid;
+
 /**
  * Code For the Shooter Subsytem
  */
 public class Shooter extends RobotMap{
+    public Solenoid hoodMain = new Solenoid(7);
+    // public Solenoid hoodSub = new Solenoid(8);//TODO Figure out what number this actually is
+    //TODO Add a servo for hood
+
+
+
     public void shooterInit(){
         shooterMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         shooterSlave.setInverted(TalonFXInvertType.OpposeMaster);

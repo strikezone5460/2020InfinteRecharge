@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
 
     counter++;
     if((counter%5)==0){
-      System.out.println("left: " + (DT.leftEncPos() / 1000) + " right: " + (DT.rightEncPos() / 1000));
+      System.out.println("left: " + (DT.leftEncVel() / 1000.0) + " right: " + (DT.rightEncVel() / 1000.0));
     }
 
     //System.out.println();

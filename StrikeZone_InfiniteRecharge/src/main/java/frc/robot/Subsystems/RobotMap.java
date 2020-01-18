@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI.Port;
 
 /**
- * Add your docs here.
+ * intantiates all Motorcontrolers to be used throught the program
  */
 public class RobotMap {
     TalonFX leftDriveMaster = new TalonFX(1);
@@ -33,29 +33,13 @@ public class RobotMap {
     TalonSRX hopperMaster = new TalonSRX(9);
     VictorSPX hopperSlave = new VictorSPX(10);
 
-    VictorSPX climber = new VictorSPX(11);
+    // VictorSPX climber = new VictorSPX(11);
 
-    VictorSPX wheelSpinner = new VictorSPX(12);
+    VictorSPX wheelSpinner = new VictorSPX(11);
 
-    TalonSRX turretRotation = new TalonSRX(13);
-
-    // ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
+    TalonSRX turretRotation = new TalonSRX(12);
 
 
-    //Solenoids
-
-
-    // Solenoid PTO = new Solenoid(2);
-
-    // Solenoid intakeOut = new Solenoid(3);
-    // Solenoid intakeIn = new Solenoid(4);
-
-    // Solenoid spinnerLift = new Solenoid(5);
-
-    // Solenoid ballStop = new Solenoid(6);
-
-    // Solenoid hoodHolder = new Solenoid(7);//I dont know exacly what this is yet
-    
     
 
 }

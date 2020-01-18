@@ -7,8 +7,11 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.Solenoid;
+
 /**
  * Add your docs here.
  */
 public class Climber extends RobotMap{
+    Solenoid PTO = new Solenoid(2);
 }

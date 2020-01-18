@@ -7,8 +7,11 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.Solenoid;
+
 /**
  * Add your docs here.
  */
-public class Hopper {
+public class Hopper extends RobotMap{
+    Solenoid ballStop = new Solenoid(6);
 }

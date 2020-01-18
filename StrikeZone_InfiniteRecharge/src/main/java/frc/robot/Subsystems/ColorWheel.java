@@ -7,8 +7,11 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.Solenoid;
+
 /**
  * Add your docs here.
  */
-public class ColorWheel {
+public class ColorWheel extends RobotMap{
+    Solenoid wheelLift = new Solenoid(5);
 }
