@@ -17,18 +17,18 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Intakes extends RobotMap{
 
     Solenoid intakeOut = new Solenoid(3);
-    Solenoid intakeIn = new Solenoid(4);
+      //Solenoid intakeIn = new Solenoid(4);
 
     boolean isIntakeIn = false;
 
     public void intakesOut(){
-        intakeIn.set(false);
+          //intakeIn.set(false);
         intakeOut.set(true);
     }
 
     public void intakesIn(){
         intakeOut.set(false);
-        intakeIn.set(true);
+        //intakeIn.set(true);
     }
 
     public boolean intakesIO(boolean input){
@@ -37,13 +37,13 @@ public class Intakes extends RobotMap{
         if(input) toggle = !toggle; 
         
         if(toggle == true){
-            intakeIn.set(false);
+           // intakeIn.set(false);
             intakeOut.set(true);
             isIntakeIn = false;
             return true; 
         }else{
             intakeOut.set(false);
-            intakeIn.set(true);
+           // intakeIn.set(true);
             isIntakeIn = true;
             return false;  
         }

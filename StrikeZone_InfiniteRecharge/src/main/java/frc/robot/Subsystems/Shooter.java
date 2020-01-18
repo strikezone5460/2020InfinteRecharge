@@ -17,8 +17,10 @@ import edu.wpi.first.wpilibj.Solenoid;
  * Code For the Shooter Subsytem
  */
 public class Shooter extends RobotMap{
-    public Solenoid hoodMain = new Solenoid(7);
-    // public Solenoid hoodSub = new Solenoid(8);//TODO Figure out what number this actually is
+
+    
+    public Solenoid hoodMain = new Solenoid(6);
+    // public Solenoid hoodSub = new Solenoid(7);//TODO Figure out what number this actually is
     //TODO Add a servo for hood
 
 

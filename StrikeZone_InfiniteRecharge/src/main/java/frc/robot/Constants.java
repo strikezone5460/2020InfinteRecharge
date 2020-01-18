@@ -14,6 +14,6 @@ public class Constants {
     double kShooterPct = 1.0;
     double kShooterOff = 0.0;
 
-
-
+    int kMaxLowDriveVel = 15500;
+    int kMaxHighDriveVel = 11000;
 }

@@ -29,12 +29,15 @@ public class Robot extends TimedRobot {
 
   // Solenoid shiftHigh = new Solenoid(0);
   // Solenoid shiftLow = new Solenoid(1);
+  Shooter SH = new Shooter();
+  Drivetrain DT = new Drivetrain();
+
+  
   int shiftState = 0;
   int shooterState = 0;
   int counter = 0;
 
-  Shooter SH = new Shooter();
-  Drivetrain DT = new Drivetrain();
+  boolean isHigh = DT.shiftHigh.get();
   @Override
   public void robotInit() {
     DT.Init();

@@ -27,7 +27,8 @@ public class Drivetrain extends RobotMap{
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
 
-    static int kMaxVelocity = 123445;
+    static int kMaxHighVelocity = 11000;
+    static int kMaxLowVelocity =15000;
 
     public int leftEncPos(){return leftDriveMaster.getSelectedSensorPosition(0);}
     public int rightEncPos(){return rightDriveMaster.getSelectedSensorPosition(0);}
@@ -52,11 +53,18 @@ public class Drivetrain extends RobotMap{
     }
 
 
-    public void velocityDrive(double speed, double rotate){
-        leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxVelocity);
-        leftDriveSlave.follow(leftDriveMaster);
-        rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxVelocity);
-        rightDriveSlave.follow(rightDriveMaster);
+    public void velocityDrive(double speed, double rotate, boolean isHigh){
+        if(isHigh){
+            leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxHighVelocity);
+            leftDriveSlave.follow(leftDriveMaster);
+            rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxHighVelocity);
+            rightDriveSlave.follow(rightDriveMaster);
+        }else{
+            leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxLowVelocity);
+            leftDriveSlave.follow(leftDriveMaster);
+            rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxLowVelocity);
+            rightDriveSlave.follow(rightDriveMaster);
+        }
         
 
     }

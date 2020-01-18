@@ -13,5 +13,5 @@ import edu.wpi.first.wpilibj.Solenoid;
  * Add your docs here.
  */
 public class Hopper extends RobotMap{
-    Solenoid ballStop = new Solenoid(6);
+    Solenoid ballStop = new Solenoid(5);
 }
