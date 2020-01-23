@@ -20,7 +20,7 @@ public class Shooter extends RobotMap{
 
     
     public Solenoid hoodMain = new Solenoid(6);
-    // public Solenoid hoodSub = new Solenoid(7);//TODO Figure out what number this actually is
+    public Solenoid hoodSub = new Solenoid(7);//TODO Figure out what number this actually is
     //TODO Add a servo for hood
 
 

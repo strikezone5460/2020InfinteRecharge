@@ -7,6 +7,7 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -14,4 +15,12 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class Hopper extends RobotMap{
     Solenoid ballStop = new Solenoid(5);
+
+    AnalogInput ballPos1 = new AnalogInput(0);
+    AnalogInput ballPos2 = new AnalogInput(1);
+    AnalogInput ballPos3 = new AnalogInput(2);
+    AnalogInput ballPos4 = new AnalogInput(3);
+
+
+
 }
