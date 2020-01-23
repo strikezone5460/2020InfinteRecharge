@@ -21,7 +21,7 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-StrikeZone_InfiniteRecharge/.gradle/buildOutputCleanup/buildOutputCleanup.lock
-StrikeZone_InfiniteRecharge/.gradle/buildOutputCleanup/outputFiles.bin
-*.lock
+
 *.bin
+*.lock
+StrikeZone_InfiniteRecharge/.gradle/buildOutputCleanup/cache.properties
