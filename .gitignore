@@ -23,3 +23,5 @@
 hs_err_pid*
 StrikeZone_InfiniteRecharge/.gradle/buildOutputCleanup/buildOutputCleanup.lock
 StrikeZone_InfiniteRecharge/.gradle/buildOutputCleanup/outputFiles.bin
+*.bin
+*.lock
