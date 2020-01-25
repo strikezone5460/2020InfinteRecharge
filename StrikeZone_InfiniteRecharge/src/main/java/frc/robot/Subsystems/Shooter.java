@@ -11,6 +11,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -22,7 +25,12 @@ public class Shooter extends RobotMap{
     public Solenoid hoodMain = new Solenoid(6);
     public Solenoid hoodSub = new Solenoid(7);//TODO Figure out what number this actually is
     //TODO Add a servo for hood
+    
 
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-midDistance");
+    NetworkTableEntry tx = table.getEntry("tx");
+    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry ta = table.getEntry("ta");
 
 
     public void shooterInit(){
