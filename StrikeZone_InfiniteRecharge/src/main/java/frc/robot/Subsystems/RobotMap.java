@@ -11,9 +11,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+// import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 //import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SPI.Port;
+// import edu.wpi.first.wpilibj.SPI.Port;
 
 /**
  * intantiates all Motorcontrolers to be used throught the program
@@ -30,8 +30,8 @@ public class RobotMap {
     VictorSPX intakeMaster = new VictorSPX(7);
     VictorSPX intakeSlave = new VictorSPX(8);
 
-    TalonSRX hopperMaster = new TalonSRX(9);
-    VictorSPX hopperSlave = new VictorSPX(10);
+    VictorSPX hopperHorizontal = new VictorSPX(9);
+    VictorSPX hopperVertical = new VictorSPX(10);
 
     // VictorSPX climber = new VictorSPX(11);
 
@@ -40,6 +40,14 @@ public class RobotMap {
     TalonSRX turretRotation = new TalonSRX(12);
 
 
-    
+// 
+//  Constants
+//     
+    double kShooterPct = 1.0;
+    double kShooterOff = 0.0;
+
+    int kMaxLowDriveVel = 15500;
+    int kMaxHighDriveVel = 11000;
+
 
 }
