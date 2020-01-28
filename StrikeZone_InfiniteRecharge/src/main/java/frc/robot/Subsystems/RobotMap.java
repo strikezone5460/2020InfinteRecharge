@@ -46,8 +46,8 @@ public class RobotMap {
     double kShooterPct = 1.0;
     double kShooterOff = 0.0;
 
-    int kMaxLowDriveVel = 15500;
-    int kMaxHighDriveVel = 11000;
+    int kMaxLowDriveVel = 19000;
+    int kMaxHighDriveVel = 19500;
 
 
 }

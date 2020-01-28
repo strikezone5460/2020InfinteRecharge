@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
   XboxController XBDriver = new XboxController(0);
-
+  
   // Solenoid shiftHigh = new Solenoid(0);
   // Solenoid shiftLow = new Solenoid(1);
   Shooter SH = new Shooter();
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   int shooterState = 0;
   int counter = 0;
 
-  boolean isHigh = DT.shiftHigh.get();
+  boolean isHigh = false;
   @Override
   public void robotInit() {
     DT.Init();
@@ -64,28 +64,34 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double speed = -XBDriver.getY(Hand.kLeft);
-    double rotate = -XBDriver.getX(Hand.kRight);
+    double speed = XBDriver.getY(Hand.kLeft);
+    double rotate = XBDriver.getX(Hand.kRight);
+    isHigh =  DT.shiftHigh.get();
+
      DT.leftEncPos();
      DT.rightEncPos();
 
     counter++;
     if((counter%5)==0){
-      System.out.println("left: " + (DT.leftEncVel() / 1000.0) + " right: " + (DT.rightEncVel() / 1000.0));
+      System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
     }
+
+    SH.turretLogic();
 
     //System.out.println();
     //percent output drive code
-    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate));
-
+    //DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
+    DT.velocityDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75, isHigh);
     //Shifter toggle
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
     if(shiftState == 1){
       DT.shiftHigh.set(false);
       DT.shiftLow.set(true);
+     // isHigh = !isHigh;
     }else if(shiftState >= 1){
       DT.shiftLow.set(false);
       DT.shiftHigh.set(true);
+     // isHigh = !isHigh;
       shiftState = 0;
     }
 

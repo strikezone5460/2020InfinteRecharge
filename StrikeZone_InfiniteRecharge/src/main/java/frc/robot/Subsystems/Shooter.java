@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -25,13 +26,22 @@ public class Shooter extends RobotMap{
     public Solenoid hoodMain = new Solenoid(6);
     public Solenoid hoodSub = new Solenoid(7);//TODO Figure out what number this actually is
     //TODO Add a servo for hood
-    
+    DigitalInput homeLeft = new DigitalInput(0);
+    DigitalInput homeRight = new DigitalInput(1);
+
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-midDistance");
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ta = table.getEntry("ta");
+    NetworkTableEntry tv = table.getEntry("tv");
 
+    boolean isHome1 = !homeLeft.get();
+    boolean isHome2 = !homeRight.get();
+
+    int turretPos = turretRotation.getSelectedSensorPosition(0);
+
+    double isTargeting = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
 
     public void shooterInit(){
         shooterMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
@@ -54,6 +64,19 @@ public class Shooter extends RobotMap{
         shooterSlave.follow(shooterMaster);
 
 
+    }
+    public void turretLogic(){
+        if(isTargeting == 0){
+            if(!isHome1 && !isHome2){
+                if(turretPos < 0){
+                    turretRotation.set(ControlMode.PercentOutput, .2);
+                }else{
+                    turretRotation.set(ControlMode.PercentOutput, -.2);
+                }
+            }else{
+                turretRotation.set(ControlMode.PercentOutput,0);
+            }
+        }
     }
 
     

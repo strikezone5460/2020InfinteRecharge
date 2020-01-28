@@ -40,6 +40,8 @@ public class Drivetrain extends RobotMap{
         rightDriveMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         leftDriveMaster.setSelectedSensorPosition(0);
         rightDriveMaster.setSelectedSensorPosition(0);
+        leftDriveMaster.configClosedloopRamp(.25);
+        rightDriveMaster.configClosedloopRamp(.25);
     }
 
     public void arcadeDrive(double speed, double rotate) {
@@ -51,26 +53,33 @@ public class Drivetrain extends RobotMap{
 
 
     public void velocityDrive(double speed, double rotate, boolean isHigh){
-        if(isHigh){
+        // double highOutput = (speed - rotate) * kMaxHighDriveVel;
+        // double lowOutput = (speed - rotate) * kMaxLowDriveVel;
+
+        // // if(Deadband(speed) == 0){
+        // //     highOutput
+        // // }
+
+        //if(isHigh){
             leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxHighDriveVel);
             leftDriveSlave.follow(leftDriveMaster);
             rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxHighDriveVel);
             rightDriveSlave.follow(rightDriveMaster);
-        }else{
-            leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxLowDriveVel);
-            leftDriveSlave.follow(leftDriveMaster);
-            rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxLowDriveVel);
-            rightDriveSlave.follow(rightDriveMaster);
-        }
+        // }else{
+        //     leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxLowDriveVel);
+        //     leftDriveSlave.follow(leftDriveMaster);
+        //     rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxLowDriveVel);
+        //     rightDriveSlave.follow(rightDriveMaster);
+        // }
         
 
     }
 
     public double Deadband(double in) {
         if(in > .2 ){
-            return ((in*1.2)- .2)*.75;
+            return ((in-.2)* 1.25) * .9;
         }else if(in < -.2){
-            return ((in * 1.2)+ .2)*.75;
+            return ((in + .2)* 1.25) * .9;
         }
          else{
             return 0.0;
