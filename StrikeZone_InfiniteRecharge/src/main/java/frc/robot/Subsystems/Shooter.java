@@ -36,8 +36,10 @@ public class Shooter extends RobotMap{
     NetworkTableEntry ta = table.getEntry("ta");
     NetworkTableEntry tv = table.getEntry("tv");
 
-    boolean isHome1 = !homeLeft.get();
-    boolean isHome2 = !homeRight.get();
+    public boolean isHome1 = !homeLeft.get();
+    public boolean isHome2 = !homeRight.get();
+
+    double setpoint = 4100;
 
     int turretPos = turretRotation.getSelectedSensorPosition(0);
 
@@ -48,6 +50,7 @@ public class Shooter extends RobotMap{
         shooterSlave.setInverted(TalonFXInvertType.OpposeMaster);
         shooterMaster.configClosedloopRamp(.25, 0);
         shooterMaster.configClosedLoopPeakOutput(0, .95);
+        turretRotation.setSelectedSensorPosition(4100);
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
     }
     public void percentShooter(double setpoint){
@@ -65,18 +68,36 @@ public class Shooter extends RobotMap{
 
 
     }
-    public void turretLogic(){
-        if(isTargeting == 0){
-            if(!isHome1 && !isHome2){
-                if(turretPos < 0){
-                    turretRotation.set(ControlMode.PercentOutput, .2);
-                }else{
-                    turretRotation.set(ControlMode.PercentOutput, -.2);
-                }
-            }else{
-                turretRotation.set(ControlMode.PercentOutput,0);
-            }
-        }
+    public void turretLogic(double input){
+        turretPos = turretRotation.getSelectedSensorPosition(0);
+        isHome1 = !homeLeft.get();
+        if(input > 10000) input = input -10000;
+        if(input < -1800) input = input +10000;
+        isHome2 = !homeRight.get();
+        double setpoint = input;
+        if(setpoint > 8200)setpoint = 8200;
+        if(setpoint < 0) setpoint = 0;
+        double error = setpoint - turretPos;
+        double kp = -.001;
+        double output  =  error * kp;
+        // if(turretPos > 0){
+            // if(((turretPos + error) > 4100) || ((turretPos - error)< -4100)) setpoint = -setpoint;
+        // }else if( setpoint = -setpoint;
+        if(output >= 1) output = 1;
+        else if(output <= -1) output = -1;
+        turretRotation.set(ControlMode.PercentOutput, output);
+        //if(isTargeting == 0){
+            // // if(isHome1 && isHome2){
+            // //     turretRotation.set(ControlMode.PercentOutput,0);
+            // //     // if(turretPos < 0){
+            // //     //     turretRotation.set(ControlMode.PercentOutput, -1);
+            // //     // }else{
+            // //     //     turretRotation.set(ControlMode.PercentOutput, 1);
+            // //     // }
+            // // }else{
+            // //     // turretRotation.setSelectedSensorPosition(0);
+            // }
+        //}
     }
 
     

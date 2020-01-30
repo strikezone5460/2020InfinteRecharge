@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   Shooter SH = new Shooter();
   Drivetrain DT = new Drivetrain();
 
+  int pos = 4100;
   
   int shiftState = 0;
   int shooterState = 0;
@@ -60,6 +61,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     DT.Init();
+    SH.shooterInit();
   }
 
   @Override
@@ -73,11 +75,14 @@ public class Robot extends TimedRobot {
 
     counter++;
     if((counter%5)==0){
-      System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
+      //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
+      System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
     }
-
-    SH.turretLogic();
-
+    pos = pos +   (int)XBDriver.getX(Hand.kLeft)*50;
+    SH.turretLogic(pos  );
+    if(pos >8200) pos = 0;
+    if(pos < 0) pos = 8200;
+    
     //System.out.println();
     //percent output drive code
     //DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
