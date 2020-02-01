@@ -21,83 +21,8 @@ import frc.robot.Subsystems.*;
  * project.
  */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
-   */
-  XboxController XBDriver = new XboxController(0);
+  
 
-  // Solenoid shiftHigh = new Solenoid(0);
-  // Solenoid shiftLow = new Solenoid(1);
-  int shiftState = 0;
-  int shooterState = 0;
-  int counter = 0;
-
-  Shooter SH = new Shooter();
-  Drivetrain DT = new Drivetrain();
-  @Override
-  public void robotInit() {
-    DT.Init();
-  }
-
-  @Override
-  public void disabledPeriodic(){
-    //System.out.println("left: " + DT.leftEncPos + "right: " + DT.rightEncPos);
-  }
-
-  @Override
-  public void autonomousInit() {
-  }
-
-  @Override
-  public void autonomousPeriodic() {
-  }
-
-  @Override
-  public void teleopInit() {
-    DT.Init();
-  }
-
-  @Override
-  public void teleopPeriodic() {
-    double speed = -XBDriver.getY(Hand.kLeft);
-    double rotate = -XBDriver.getX(Hand.kRight);
-     DT.leftEncPos();
-     DT.rightEncPos();
-
-    counter++;
-    if((counter%5)==0){
-      System.out.println("left: " + (DT.leftEncVel() / 1000.0) + " right: " + (DT.rightEncVel() / 1000.0));
-    }
-
-    //System.out.println();
-    //percent output drive code
-    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate));
-
-    //Shifter toggle
-    if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
-    if(shiftState == 1){
-      DT.shiftHigh.set(false);
-      DT.shiftLow.set(true);
-    }else if(shiftState >= 1){
-      DT.shiftLow.set(false);
-      DT.shiftHigh.set(true);
-      shiftState = 0;
-    }
-
-    
-
-
-    //
-    //Toggle for the shooter
-    //
-    if(XBDriver.getAButtonPressed()) shooterState++;
-    if(shooterState == 1){
-      SH.velocityShooter(1);
-    }else if(shooterState >= 1){
-      SH.velocityShooter(0);
-      shooterState = 0;
-    }
   }
 
   @Override
