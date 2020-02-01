@@ -21,8 +21,31 @@ import frc.robot.Subsystems.*;
  * project.
  */
 public class Robot extends TimedRobot {
+  XboxController XB1 = new XboxController(0);
+  Drivetrain drivetrain = new Drivetrain();
   
+  @Override
+  public void robotInit() {
 
+  }
+
+  @Override
+  public void autonomousInit() {
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+  }
+
+  @Override
+  public void teleopInit() {
+  }
+
+  @Override
+  public void teleopPeriodic() {
+  drivetrain.drive(XB1);
+
+   
   }
 
   @Override

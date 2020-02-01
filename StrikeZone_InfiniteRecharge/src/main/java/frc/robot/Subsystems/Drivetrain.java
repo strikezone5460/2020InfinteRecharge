@@ -29,39 +29,49 @@ public class Drivetrain {
     TalonFX rightDriveM = new TalonFX(3);
     TalonFX rightDriveS = new TalonFX(4); 
 
-    public void Drive(XboxController XB1){
+    public void drive(XboxController XB1){
+        double scaledSpeed;
+        double scaledRotate;
         double speed = XB1.getY(Hand.kLeft);
         double rotate = XB1.getX(Hand.kLeft);
 
-            //DeadBand
-             if((speed < 0.2) && (speed > -0.2)){
-                   speed = 0;
-                 }
-                 else {
-                if(speed>0){
-                   speed = (speed-.2)*1.25;
-                }
-                 if(speed<0){
-                    speed = (speed+.2)*1.25;
-                 }
-                 }
-                 if((rotate < 0.2) && (rotate > -0.2)){
-                    rotate = 0;
-                 }
-                 else {
-                 if(rotate>0){
-                    rotate = (rotate-.2)*1.25;
-                 }
-                 if(rotate<0){
-                    rotate = (rotate+.2)*1.25;
-                 }
-        }
+         //DeadBand
+         if((speed < 0.2) && (speed > -0.2)){
+               speed = 0;
+            }
+         else {
+            if(speed>0){
+               speed = (speed-.2)*1.25;
+            }
+
+            if(speed<0){
+               speed = (speed+.2)*1.25;
+            }
+
+            if((rotate < 0.2) && (rotate > -0.2)){
+               rotate = 0;
+            }
+           
+            else {
+               if(rotate>0){
+                  rotate = (rotate-.2)*1.25;
+               }
+            
+               if(rotate<0){
+                  rotate = (rotate+.2)*1.25;
+               }
+            }
+         }
+
+
+         scaledSpeed = 0.5 * speed;
+         scaledRotate = 0.5 * rotate;
              
-        leftDriveM.set(ControlMode.PercentOutput, speed - rotate);
+        leftDriveM.set(ControlMode.PercentOutput, - scaledSpeed - scaledRotate);
         leftDriveS.follow(leftDriveM);
-        rightDriveM.set(ControlMode.PercentOutput, - speed - rotate);
+        rightDriveM.set(ControlMode.PercentOutput,  scaledSpeed - scaledRotate);
         rightDriveS.follow(rightDriveM);
 
 
-    }
+   }
 }
