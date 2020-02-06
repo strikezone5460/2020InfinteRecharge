@@ -76,17 +76,20 @@ public class Robot extends TimedRobot {
     counter++;
     if((counter%5)==0){
       //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
-      System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
+      // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
+      System.out.println("shooter Vel: " + SH.shooterVel());
     }
-    pos = pos +   (int)XBDriver.getX(Hand.kLeft)*50;
-    SH.turretLogic(pos  );
+    pos = pos +   (int)XBDriver.getX(Hand.kLeft)*25;
+    //SH.turretLogic(pos  );
+    SH.limeLightToggle(XBDriver.getAButtonPressed());
+    SH.limeLightShooter();
     if(pos >8200) pos = 0;
     if(pos < 0) pos = 8200;
     
     //System.out.println();
     //percent output drive code
     //DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
-    DT.velocityDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75, isHigh);
+    // DT.velocityDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75, isHigh);
     //Shifter toggle
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
     if(shiftState == 1){
