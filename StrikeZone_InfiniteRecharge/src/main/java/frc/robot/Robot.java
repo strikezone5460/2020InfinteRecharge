@@ -47,6 +47,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic(){
     //System.out.println("left: " + DT.leftEncPos + "right: " + DT.rightEncPos);
+    SH.limeLightToggle(XBDriver.getBButtonPressed());
+
   }
 
   @Override
@@ -81,7 +83,7 @@ public class Robot extends TimedRobot {
     }
     pos = pos +   (int)XBDriver.getX(Hand.kLeft)*25;
     //SH.turretLogic(pos  );
-    SH.limeLightToggle(XBDriver.getAButtonPressed());
+    SH.limeLightToggle(XBDriver.getBButtonPressed());
     SH.limeLightShooter();
     if(pos >8200) pos = 0;
     if(pos < 0) pos = 8200;
