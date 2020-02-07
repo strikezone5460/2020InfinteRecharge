@@ -3,19 +3,21 @@
 +---------------------------+-----------------------+-----------+---------------------+--------------+
 |   Motor Name              |    Controller Type    |   CAN ID  |     Motor Type      |   PDP Port   |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
-|   leftDriveMaster         |         TalonFX       |     1     |        Falcon       |      0       |
-|   leftDriveSlave          |         TalonFX       |     2     |        Falcon       |      1       |
-|   rightDriveMaster        |         TalonFX       |     3     |        Falcon       |      15      |
-|   rightDriveSlave         |         TalonFX       |     4     |        Falcon       |      14      |
+|   leftDriveMaster         |         TalonFX       |     1     |        Falcon       |      14      |
+|   leftDriveSlave          |         TalonFX       |     2     |        Falcon       |      15      |
+|   rightDriveMaster        |         TalonFX       |     3     |        Falcon       |      0       |
+|   rightDriveSlave         |         TalonFX       |     4     |        Falcon       |      1       |
 |   shooterMaster           |         TalonFX       |     5     |        Falcon       |      2       |
 |   shooterSlave            |         TalonFX       |     6     |        Falcon       |      13      |
-|   intakeMaster            |         Victor        |     7     |        775Pro       |              |
-|   intakeSlave             |         Victor        |     8     |        775Pro       |              |
-|   hopperMaster            |         Talon(?)      |     9     |        775Pro       |              |
-|   hopperSlave             |         Victor(?)     |     10    |        775Pro       |              |
-|   wheelSpinner            |         Victor/Talon  |     11    |        BAG          |              |
-|   turretRotation          |         Talon         |     12    |        775Pro       |              |
+|   intake                  |         Victor        |     7     |        775Pro       |      3       |
+|   hopperMaster            |         Talon         |     9     |        775Pro       |      10      |
+|   hopperSlave             |         Victor        |     10    |        775Pro       |      11      |
+|   wheelSpinner            |         Talon   	    |     11    |        BAG          |      7       |		//DJ label
+|   turretRotation          |         Talon         |     12    |        775Pro       |      12      |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
+|	Limelight	    |		  N/A	    |	  N/A	|	 N/A	      |	     8	     |		//Not a motor but it's fine.. 
++---------------------------+-----------------------+-----------+---------------------+--------------+
+
 
 +------------------------------------------------------------------------------------------+
 |                                          Encoders                                        |
@@ -24,7 +26,7 @@
 +-------------------------+--------------------+-----------+-------------------------------+
 |   leftDriveEncoder      | integrated         |    1      |    leftDriveMaster & Slave    |
 |   rightDriveEncoder     | integrated         |    4      |    rightDriveMaster & Slave   |
-|   shooterMaster         | integrated         |    5      |    shooterSlave               |
+|   shooterMaster         | integrated         |    5      |    shooterSlave               |			// In Talon, 1:1 gear ration
 +-------------------------+--------------------+-----------+-------------------------------+
 
 +---------------------------------------------------------------------------------+
