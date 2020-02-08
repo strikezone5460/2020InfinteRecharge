@@ -53,26 +53,11 @@ public class Drivetrain extends RobotMap{
 
 
     public void velocityDrive(double speed, double rotate, boolean isHigh){
-        // double highOutput = (speed - rotate) * kMaxHighDriveVel;
-        // double lowOutput = (speed - rotate) * kMaxLowDriveVel;
 
-        // // if(Deadband(speed) == 0){
-        // //     highOutput
-        // // }
-
-        //if(isHigh){
             leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxHighDriveVel);
             leftDriveSlave.follow(leftDriveMaster);
             rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxHighDriveVel);
             rightDriveSlave.follow(rightDriveMaster);
-        // }else{
-        //     leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxLowDriveVel);
-        //     leftDriveSlave.follow(leftDriveMaster);
-        //     rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxLowDriveVel);
-        //     rightDriveSlave.follow(rightDriveMaster);
-        // }
-        
-
     }
 
     public double Deadband(double in) {
@@ -80,15 +65,28 @@ public class Drivetrain extends RobotMap{
             return ((in-.2)* 1.25) * .9;
         }else if(in < -.2){
             return ((in + .2)* 1.25) * .9;
-        }
-         else{
+        }else{
             return 0.0;
         }
-
-
-        
     }
-   
+   public void gyroDrive(double speed, double angle){
+        double kp = 0.001;
+
+        double input = gyro.getAngle();
+        double error = angle - input;
+        double output = error * kp;
+
+        arcadeDrive(speed, output);
+   }
+
+   public void posDrive(double leftSetpoint, double rightSetpoint){
+       leftDriveMaster.set(ControlMode.Position, leftSetpoint);
+       leftDriveSlave.follow(leftDriveMaster);
+       rightDriveMaster.set(ControlMode.Position, rightSetpoint);
+       rightDriveSlave.follow(rightDriveMaster);
+
+   }
+
 
 
 
