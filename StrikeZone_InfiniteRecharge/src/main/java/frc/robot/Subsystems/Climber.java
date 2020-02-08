@@ -14,4 +14,31 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class Climber extends RobotMap{
     Solenoid PTO = new Solenoid(2);
+
+    private int climbState = 0;
+    private int counter = 0;
+    void robotClimb(){
+        counter++;
+    switch (climbState) {
+        case 0:
+            PTO.set(true);
+            if(counter == 100){
+                climbState = 1;
+                counter=0;
+                break;
+            }
+        case 1:
+            PTO.set(false);
+            if(counter == 100){
+                climbState = 2;
+                counter=0;
+                break;
+            }
+        case 2:
+            PTO.set(true);
+        default:
+            break;
+    }
+    }
+
 }

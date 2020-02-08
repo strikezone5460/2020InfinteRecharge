@@ -27,8 +27,6 @@ public class Drivetrain extends RobotMap{
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
 
-    static int kMaxVelocity = 123445;
-
     public int leftEncPos(){return leftDriveMaster.getSelectedSensorPosition(0);}
     public int rightEncPos(){return rightDriveMaster.getSelectedSensorPosition(0);}
     public int leftEncVel(){return leftDriveMaster.getSelectedSensorVelocity(0);}
@@ -42,6 +40,8 @@ public class Drivetrain extends RobotMap{
         rightDriveMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         leftDriveMaster.setSelectedSensorPosition(0);
         rightDriveMaster.setSelectedSensorPosition(0);
+        leftDriveMaster.configClosedloopRamp(.25);
+        rightDriveMaster.configClosedloopRamp(.25);
     }
 
     public void arcadeDrive(double speed, double rotate) {
@@ -52,20 +52,34 @@ public class Drivetrain extends RobotMap{
     }
 
 
-    public void velocityDrive(double speed, double rotate){
-        leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxVelocity);
-        leftDriveSlave.follow(leftDriveMaster);
-        rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxVelocity);
-        rightDriveSlave.follow(rightDriveMaster);
+    public void velocityDrive(double speed, double rotate, boolean isHigh){
+        // double highOutput = (speed - rotate) * kMaxHighDriveVel;
+        // double lowOutput = (speed - rotate) * kMaxLowDriveVel;
+
+        // // if(Deadband(speed) == 0){
+        // //     highOutput
+        // // }
+
+        //if(isHigh){
+            leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxHighDriveVel);
+            leftDriveSlave.follow(leftDriveMaster);
+            rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxHighDriveVel);
+            rightDriveSlave.follow(rightDriveMaster);
+        // }else{
+        //     leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxLowDriveVel);
+        //     leftDriveSlave.follow(leftDriveMaster);
+        //     rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxLowDriveVel);
+        //     rightDriveSlave.follow(rightDriveMaster);
+        // }
         
 
     }
 
     public double Deadband(double in) {
         if(in > .2 ){
-            return ((in*1.2)- .2)*.75;
+            return ((in-.2)* 1.25) * .9;
         }else if(in < -.2){
-            return ((in * 1.2)+ .2)*.75;
+            return ((in + .2)* 1.25) * .9;
         }
          else{
             return 0.0;
