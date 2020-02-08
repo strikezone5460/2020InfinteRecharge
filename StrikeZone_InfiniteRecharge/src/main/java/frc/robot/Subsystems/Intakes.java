@@ -51,8 +51,7 @@ public class Intakes extends RobotMap{
 
     public void intakesOn(){
         if(!isIntakeIn){
-            intakeMaster.set(ControlMode.PercentOutput, .75);
-            intakeSlave.set(ControlMode.PercentOutput, -.75);
+            intake.set(ControlMode.PercentOutput, .75);
         }
     }
 

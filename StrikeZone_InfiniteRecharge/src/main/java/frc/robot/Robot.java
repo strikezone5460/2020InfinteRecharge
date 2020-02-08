@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double speed = XBDriver.getY(Hand.kLeft);
+    double speed = -XBDriver.getY(Hand.kLeft);
     double rotate = XBDriver.getX(Hand.kRight);
     isHigh =  DT.shiftHigh.get();
 
@@ -81,7 +81,6 @@ public class Robot extends TimedRobot {
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       System.out.println("shooter Vel: " + SH.shooterVel());
     }
-    pos = pos +   (int)XBDriver.getX(Hand.kLeft)*25;
     //SH.turretLogic(pos  );
     SH.limeLightToggle(XBDriver.getBButtonPressed());
     SH.limeLightShooter();
@@ -90,7 +89,7 @@ public class Robot extends TimedRobot {
     
     //System.out.println();
     //percent output drive code
-    //DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
+    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
     // DT.velocityDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75, isHigh);
     //Shifter toggle
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;

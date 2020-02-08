@@ -27,8 +27,7 @@ public class RobotMap {
     TalonFX shooterMaster = new TalonFX(5);//Might Change
     TalonFX shooterSlave = new TalonFX(6);
 
-    VictorSPX intakeMaster = new VictorSPX(7);
-    VictorSPX intakeSlave = new VictorSPX(8);
+    VictorSPX intake = new VictorSPX(7);
 
     VictorSPX hopperHorizontal = new VictorSPX(9);
     VictorSPX hopperVertical = new VictorSPX(10);
