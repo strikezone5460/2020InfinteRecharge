@@ -82,21 +82,13 @@ public class Shooter extends RobotMap{
     public int shooterVel(){return shooterMaster.getSelectedSensorVelocity(0);}
 
     public void basicServo(double input){
-<<<<<<< Updated upstream
-        //Turret Rotater
-=======
         //Turret rotation
->>>>>>> Stashed changes
         double pos = (input +1)/2;
         hoodAdjust.setPosition(pos);
     }
 
     public void velocityShooter(double setpoint){
-<<<<<<< Updated upstream
         //Shooter Velocity
-=======
-        //shooter velocity
->>>>>>> Stashed changes
         shooterVel();
         if(shooterMaster.getClosedLoopError(0)>0){
         shooterMaster.set(ControlMode.Velocity, setpoint);

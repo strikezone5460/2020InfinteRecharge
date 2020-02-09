@@ -86,7 +86,6 @@ public class Robot extends TimedRobot {
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       System.out.println("shooter Vel: " + SH.shooterVel());
     }
-<<<<<<< Updated upstream
     if((counter%20)==0){
       HO.hopperLogic();
     }else{
@@ -102,14 +101,6 @@ public class Robot extends TimedRobot {
 
     // if(pos >8200) pos = 0;
     // if(pos < 0) pos = 8200;
-=======
-    //SH.turretLogic(pos  );
-    SH.limeLightToggle(XBDriver.getBButtonPressed());
-    SH.limeLightShooter();
-    if(pos >8200) pos = 0;
-    if(pos < 0) pos = 8200;
-    //TODO
->>>>>>> Stashed changes
     
     //System.out.println();
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);

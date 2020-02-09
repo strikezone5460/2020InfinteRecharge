@@ -34,6 +34,7 @@ public class Intakes extends RobotMap{
     }
 
     public boolean intakesIO(boolean input){
+        //intakes in and out (toggle)
         if(input) toggle = !toggle; 
         
         if(toggle == true){
