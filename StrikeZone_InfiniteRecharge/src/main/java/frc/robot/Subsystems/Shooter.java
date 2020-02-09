@@ -80,11 +80,13 @@ public class Shooter extends RobotMap{
     public int shooterVel(){return shooterMaster.getSelectedSensorVelocity(0);}
 
     public void basicServo(double input){
+        //Turret Rotater
         double pos = (input +1)/2;
         hoodAdjust.setPosition(pos);
     }
 
     public void velocityShooter(double setpoint){
+        //Shooter Velocity
         shooterVel();
         if(shooterMaster.getClosedLoopError(0)>0){
         shooterMaster.set(ControlMode.Velocity, setpoint);
@@ -92,6 +94,9 @@ public class Shooter extends RobotMap{
         shooterSlave.follow(shooterMaster);
     }
     public void turretLogic(double input){
+
+        //P.I.D loop
+
         turretPos = turretRotation.getSelectedSensorPosition(0);
         isHome1 = !homeLeft.get();
         isHome2 = !homeRight.get();
@@ -127,6 +132,7 @@ public class Shooter extends RobotMap{
         //}
     }
     public void limeLightTurret(){
+        //P.I.D loop
         isTargeting = tv.getDouble(0.0);
         xOffset = tx.getDouble(0.0);
 
