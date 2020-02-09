@@ -29,14 +29,14 @@ public class RobotMap {
 
     VictorSPX intake = new VictorSPX(7);
 
-    VictorSPX hopperHorizontal = new VictorSPX(9);
-    VictorSPX hopperVertical = new VictorSPX(10);
+    TalonSRX hopperHorizontal = new TalonSRX(8);
+    VictorSPX hopperVertical = new VictorSPX(9);
 
     // VictorSPX climber = new VictorSPX(11);
 
-    VictorSPX wheelSpinner = new VictorSPX(11);
+    VictorSPX wheelSpinner = new VictorSPX(10);
 
-    TalonSRX turretRotation = new TalonSRX(12);
+    TalonSRX turretRotation = new TalonSRX(11);
 
 
 // 

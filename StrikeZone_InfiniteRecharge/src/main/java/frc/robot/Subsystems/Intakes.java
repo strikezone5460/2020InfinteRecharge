@@ -19,7 +19,9 @@ public class Intakes extends RobotMap{
     Solenoid intakeOut = new Solenoid(3);
       //Solenoid intakeIn = new Solenoid(4);
 
-    boolean isIntakeIn = false;
+    private boolean isIntakeIn = false;
+    private boolean toggle = false;
+
 
     public void intakesOut(){
           //intakeIn.set(false);
@@ -32,18 +34,14 @@ public class Intakes extends RobotMap{
     }
 
     public boolean intakesIO(boolean input){
-        boolean toggle = false;
-
         if(input) toggle = !toggle; 
         
         if(toggle == true){
-           // intakeIn.set(false);
             intakeOut.set(true);
             isIntakeIn = false;
             return true; 
         }else{
             intakeOut.set(false);
-           // intakeIn.set(true);
             isIntakeIn = true;
             return false;  
         }
@@ -51,7 +49,21 @@ public class Intakes extends RobotMap{
 
     public void intakesOn(){
         if(!isIntakeIn){
-            intake.set(ControlMode.PercentOutput, .75);
+            intake.set(ControlMode.PercentOutput, .55);
+        }else{
+            intake.set(ControlMode.PercentOutput, 0);
+        }
+    }
+    public void intakeOut(){
+        if(!isIntakeIn){
+            intake.set(ControlMode.PercentOutput, -.5);
+        }else{
+            intake.set(ControlMode.PercentOutput, 0);
+        }  
+    }
+    public void intakesOff(){
+        if(!isIntakeIn){
+            intake.set(ControlMode.PercentOutput, 0);
         }
     }
 

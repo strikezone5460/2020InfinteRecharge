@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.Solenoid;
  * Add your docs here.
  */
 public class Hopper extends RobotMap{
-    Solenoid ballStop = new Solenoid(5);
+    //Solenoid ballStop = new Solenoid(5);
 
-    DigitalInput ball0 = new DigitalInput(0);
-    DigitalInput ball1 = new DigitalInput(1);
-    DigitalInput ball2 = new DigitalInput(2);
+    DigitalInput ball0 = new DigitalInput(4);
+    DigitalInput ball1 = new DigitalInput(5);
+    DigitalInput ball2 = new DigitalInput(6);
 
     public void hopperLogic(){
         int theState = (ball0.get()?0:1)+(ball1.get()?0:2)+(ball2.get()?0:4);
@@ -68,13 +68,15 @@ public class Hopper extends RobotMap{
         hopperHorizontal.set(ControlMode.PercentOutput, 0);
         hopperVertical.set(ControlMode.PercentOutput, 0);
         break;
-
-
-
     }
-
-
     }
-
-
+    public void hopperBasic(){
+      hopperHorizontal.set(ControlMode.PercentOutput, -.5);
+      hopperVertical.set(ControlMode.PercentOutput, -.5);
+    }
+    public void hopperBasicOff(){
+      hopperHorizontal.set(ControlMode.PercentOutput, 0);
+      hopperVertical.set(ControlMode.PercentOutput, 0);
+    }
+    
 }
