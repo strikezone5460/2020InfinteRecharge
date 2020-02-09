@@ -10,10 +10,10 @@
 |   shooterMaster           |         TalonFX       |     5     |        Falcon       |      2       |
 |   shooterSlave            |         TalonFX       |     6     |        Falcon       |      13      |
 |   intake                  |         Victor        |     7     |        775Pro       |      3       |
-|   hopperMaster            |         Talon         |     9     |        775Pro       |      10      |
-|   hopperSlave             |         Victor        |     10    |        775Pro       |      11      |
-|   wheelSpinner            |         Talon   	    |     11    |        BAG          |      7       |		//DJ label
-|   turretRotation          |         Talon         |     12    |        775Pro       |      12      |
+|   hopperMaster            |         Talon         |     8     |        775Pro       |      10      |
+|   hopperSlave             |         Victor        |     9     |        775Pro       |      11      |
+|   wheelSpinner            |         Talon   	    |     10    |        BAG          |      7       |		//DJ label
+|   turretRotation          |         Talon         |     11    |        775Pro       |      12      |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
 |	Limelight	    |		  N/A	    |	  N/A	|	 N/A	      |	     8	     |		//Not a motor but it's fine.. 
 +---------------------------+-----------------------+-----------+---------------------+--------------+

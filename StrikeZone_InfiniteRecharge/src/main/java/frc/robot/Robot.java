@@ -31,6 +31,8 @@ public class Robot extends TimedRobot {
   // Solenoid shiftLow = new Solenoid(1);
   Shooter SH = new Shooter();
   Drivetrain DT = new Drivetrain();
+  Intakes IN = new Intakes();
+  Hopper HO = new Hopper();
 
   int pos = 4100;
   
@@ -81,16 +83,41 @@ public class Robot extends TimedRobot {
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       System.out.println("shooter Vel: " + SH.shooterVel());
     }
-    //SH.turretLogic(pos  );
-    SH.limeLightToggle(XBDriver.getBButtonPressed());
-    SH.limeLightShooter();
-    if(pos >8200) pos = 0;
-    if(pos < 0) pos = 8200;
+    if((counter%20)==0){
+      HO.hopperLogic();
+    }else{
+      HO.hopperBasicOff();
+    }
+    SH.limeLightToggle(XBDriver.getTriggerAxis(Hand.kRight)>.25);
+    if(XBDriver.getTriggerAxis(Hand.kRight)>.25){
+      HO.hopperBasic();
+    }else{
+      HO.hopperBasicOff();
+    }
+    SH.limeLightTurret();
+
+    // if(pos >8200) pos = 0;
+    // if(pos < 0) pos = 8200;
     
     //System.out.println();
-    //percent output drive code
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
-    // DT.velocityDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75, isHigh);
+
+    IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
+    if(XBDriver.getAButton()){
+      IN.intakesOn();
+      HO.hopperLogic();
+    }else if(XBDriver.getBButton()){
+      IN.intakesOut();
+    }
+    else{
+      IN.intakesOff();
+    }
+    if(XBDriver.getXButton()){
+      HO.hopperBasic();
+    }else{
+      HO.hopperBasicOff();
+    }
+
     //Shifter toggle
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
     if(shiftState == 1){

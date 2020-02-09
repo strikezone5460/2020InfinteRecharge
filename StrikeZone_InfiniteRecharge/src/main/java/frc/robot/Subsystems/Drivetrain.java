@@ -33,6 +33,10 @@ public class Drivetrain extends RobotMap{
     public int rightEncVel(){return rightDriveMaster.getSelectedSensorVelocity(0);}
 
     double leftDriveCurrent = leftDriveMaster.getStatorCurrent();
+
+    /**
+     * Initialization function for Drivetrain
+     */
     public void Init(){
         leftDriveMaster.configOpenloopRamp(.35);
         rightDriveMaster.configOpenloopRamp(.35);
@@ -43,7 +47,11 @@ public class Drivetrain extends RobotMap{
         leftDriveMaster.configClosedloopRamp(.25);
         rightDriveMaster.configClosedloopRamp(.25);
     }
-
+    /**
+     * Standard Drive function for teleop
+     * @param speed Percent of total speed (0-1)
+     * @param rotate Rotatates robot at a constant speed (0-1)
+     */
     public void arcadeDrive(double speed, double rotate) {
         leftDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
         leftDriveSlave.follow(leftDriveMaster);
@@ -51,15 +59,24 @@ public class Drivetrain extends RobotMap{
         rightDriveSlave.follow(rightDriveMaster);
     }
 
-
+    /**
+     * Uses Velocity mode PID in talons to drive
+     * @param speed Percent of Maximum velocity (0-1)
+     * @param rotate Rotates robot (0-1)
+     * @param isHigh The shifter state effects the maximum Velocity
+     */
     public void velocityDrive(double speed, double rotate, boolean isHigh){
-
             leftDriveMaster.set(ControlMode.Velocity, (speed - rotate) * kMaxHighDriveVel);
             leftDriveSlave.follow(leftDriveMaster);
             rightDriveMaster.set(ControlMode.Velocity, (-speed - rotate) * kMaxHighDriveVel);
             rightDriveSlave.follow(rightDriveMaster);
     }
 
+    /**
+     * Scaling deadband to avoid drift
+     * @param in any Joystick value 
+     * @return Smooth standard out put with a deadband at +-2
+     */
     public double Deadband(double in) {
         if(in > .2 ){
             return ((in-.2)* 1.25) * .9;
@@ -69,6 +86,12 @@ public class Drivetrain extends RobotMap{
             return 0.0;
         }
     }
+
+    /**
+     * Keeps the robot driving straight at a given angle
+     * @param speed Speed of robot (0-1)
+     * @param angle Angle that the robot will travel
+     */
    public void gyroDrive(double speed, double angle){
         double kp = 0.001;
 
@@ -79,6 +102,12 @@ public class Drivetrain extends RobotMap{
         arcadeDrive(speed, output);
    }
 
+   /**
+    * Tank drive to a given sepoint for each
+    * side of the drivetrain
+    * @param leftSetpoint Left Setpoint
+    * @param rightSetpoint  Right Setpoint
+    */
    public void posDrive(double leftSetpoint, double rightSetpoint){
        leftDriveMaster.set(ControlMode.Position, leftSetpoint);
        leftDriveSlave.follow(leftDriveMaster);

@@ -9,7 +9,6 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -19,9 +18,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Hopper extends RobotMap{
     //Solenoid ballStop = new Solenoid(5);
 
-    DigitalInput ball0 = new DigitalInput(4);
-    DigitalInput ball1 = new DigitalInput(5);
-    DigitalInput ball2 = new DigitalInput(6);
+    DigitalInput ball0 = new DigitalInput(3);
+    DigitalInput ball1 = new DigitalInput(4);
+    DigitalInput ball2 = new DigitalInput(5);
 
     public void hopperLogic(){
         int theState = (ball0.get()?0:1)+(ball1.get()?0:2)+(ball2.get()?0:4);

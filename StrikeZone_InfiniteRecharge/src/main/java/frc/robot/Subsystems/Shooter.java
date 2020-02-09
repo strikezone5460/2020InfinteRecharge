@@ -126,7 +126,7 @@ public class Shooter extends RobotMap{
             // }
         //}
     }
-    public void limeLightShooter(){
+    public void limeLightTurret(){
         isTargeting = tv.getDouble(0.0);
         xOffset = tx.getDouble(0.0);
 
