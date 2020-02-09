@@ -54,6 +54,7 @@ public class Shooter extends RobotMap{
     double xOffset = tx.getDouble(0.0);
 
     public void limeLightToggle(boolean input){
+        //Lime light toggle 
         if(input) LLtoggle = !LLtoggle;
         if(LLtoggle){
             ledMode.setNumber(0);
@@ -74,19 +75,28 @@ public class Shooter extends RobotMap{
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
     }
     public void percentShooter(double setpoint){
+        //shoot
         shooterMaster.set(ControlMode.PercentOutput, -setpoint);
         shooterSlave.follow(shooterMaster);
     }
     public int shooterVel(){return shooterMaster.getSelectedSensorVelocity(0);}
 
     public void basicServo(double input){
+<<<<<<< Updated upstream
         //Turret Rotater
+=======
+        //Turret rotation
+>>>>>>> Stashed changes
         double pos = (input +1)/2;
         hoodAdjust.setPosition(pos);
     }
 
     public void velocityShooter(double setpoint){
+<<<<<<< Updated upstream
         //Shooter Velocity
+=======
+        //shooter velocity
+>>>>>>> Stashed changes
         shooterVel();
         if(shooterMaster.getClosedLoopError(0)>0){
         shooterMaster.set(ControlMode.Velocity, setpoint);
@@ -102,15 +112,16 @@ public class Shooter extends RobotMap{
         isHome2 = !homeRight.get();
         isTargeting = tv.getDouble(0.0);
         xOffset = tx.getDouble(0.0);
+        //P.I.D loop
 
         if(input > 10000) input = input -10000;
         if(input < -1800) input = input +10000;
-
+        
         double setpoint = input;
 
         if(setpoint > 8200)setpoint = 8200;
         if(setpoint < 0) setpoint = 0;
-
+        
         double error = setpoint - turretPos;
         double kp = -.001;
         double output  =  error * kp;
@@ -157,6 +168,7 @@ public class Shooter extends RobotMap{
         }else if(turretPos < 0){
             turretLogic(8100);
         }
+        //P.I.D loop
     }
 
 

@@ -44,13 +44,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     DT.Init();
+    //DriveTrain Initalization
   }
 
   @Override
   public void disabledPeriodic(){
     //System.out.println("left: " + DT.leftEncPos + "right: " + DT.rightEncPos);
     SH.limeLightToggle(XBDriver.getBButtonPressed());
-
+    //Limelight on Shooter
   }
 
   @Override
@@ -66,6 +67,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     DT.Init();
     SH.shooterInit();
+    //Initalization for Shooter and Drivetrain
   }
 
   @Override
@@ -78,11 +80,13 @@ public class Robot extends TimedRobot {
      DT.rightEncPos();
 
     counter++;
+    //TODO
     if((counter%5)==0){
       //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       System.out.println("shooter Vel: " + SH.shooterVel());
     }
+<<<<<<< Updated upstream
     if((counter%20)==0){
       HO.hopperLogic();
     }else{
@@ -98,6 +102,14 @@ public class Robot extends TimedRobot {
 
     // if(pos >8200) pos = 0;
     // if(pos < 0) pos = 8200;
+=======
+    //SH.turretLogic(pos  );
+    SH.limeLightToggle(XBDriver.getBButtonPressed());
+    SH.limeLightShooter();
+    if(pos >8200) pos = 0;
+    if(pos < 0) pos = 8200;
+    //TODO
+>>>>>>> Stashed changes
     
     //System.out.println();
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
@@ -124,6 +136,7 @@ public class Robot extends TimedRobot {
       DT.shiftHigh.set(false);
       DT.shiftLow.set(true);
      // isHigh = !isHigh;
+  
     }else if(shiftState >= 1){
       DT.shiftLow.set(false);
       DT.shiftHigh.set(true);
