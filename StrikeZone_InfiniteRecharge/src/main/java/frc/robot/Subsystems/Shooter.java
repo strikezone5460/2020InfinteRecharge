@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter extends RobotMap{
 
     
-    public Solenoid hoodMain = new Solenoid(6);
+    public Solenoid hoodMain = new Solenoid(4);//TODO Change back to 6
     public Solenoid hoodSub = new Solenoid(7);
     
     Servo hoodAdjust = new Servo(0);
@@ -69,34 +69,26 @@ public class Shooter extends RobotMap{
     public void shooterInit(){
         shooterMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         shooterSlave.setInverted(TalonFXInvertType.OpposeMaster);
-        shooterMaster.configClosedloopRamp(.25, 0);
+        shooterMaster.configClosedloopRamp(.35, 0);
         shooterMaster.configClosedLoopPeakOutput(0, .95);
         turretRotation.setSelectedSensorPosition(4100);
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
     }
     public void percentShooter(double setpoint){
         //shoot
-        shooterMaster.set(ControlMode.PercentOutput, -setpoint);
+        shooterMaster.set(ControlMode.PercentOutput, setpoint);
         shooterSlave.follow(shooterMaster);
     }
     public int shooterVel(){return shooterMaster.getSelectedSensorVelocity(0);}
 
     public void basicServo(double input){
-<<<<<<< Updated upstream
-        //Turret Rotater
-=======
         //Turret rotation
->>>>>>> Stashed changes
-        double pos = (input +1)/2;
+        double pos = input; //(input +1)/2;
         hoodAdjust.setPosition(pos);
     }
 
     public void velocityShooter(double setpoint){
-<<<<<<< Updated upstream
         //Shooter Velocity
-=======
-        //shooter velocity
->>>>>>> Stashed changes
         shooterVel();
         if(shooterMaster.getClosedLoopError(0)>0){
         shooterMaster.set(ControlMode.Velocity, setpoint);
@@ -143,7 +135,7 @@ public class Shooter extends RobotMap{
         //}
     }
     public void limeLightTurret(){
-        //P.I.D loop
+        //PID loop
         isTargeting = tv.getDouble(0.0);
         xOffset = tx.getDouble(0.0);
 
@@ -168,9 +160,21 @@ public class Shooter extends RobotMap{
         }else if(turretPos < 0){
             turretLogic(8100);
         }
-        //P.I.D loop
+        //PID loop
     }
 
+    public void hoodToggle(int toggle){
+        if(toggle == 1){
+            longShotHood();
+            ledMode.setNumber(0);
+        }else if(toggle == 2){
+            shortShotHood();
+            ledMode.setNumber(1);
+        }else{
+            closedHood();
+            ledMode.setNumber(1);
+        }
+    }
 
     public void shortShotHood(){
         hoodMain.set(true);

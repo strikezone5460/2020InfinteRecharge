@@ -26,6 +26,7 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
   XboxController XBDriver = new XboxController(0);
+  XboxController XBOpp = new XboxController(1);
   
   // Solenoid shiftHigh = new Solenoid(0);
   // Solenoid shiftLow = new Solenoid(1);
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
   int shiftState = 0;
   int shooterState = 0;
   int counter = 0;
+  int hoodState = 0;
 
   boolean isHigh = false;
   @Override
@@ -86,33 +88,36 @@ public class Robot extends TimedRobot {
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       System.out.println("shooter Vel: " + SH.shooterVel());
     }
-<<<<<<< Updated upstream
-    if((counter%20)==0){
-      HO.hopperLogic();
-    }else{
-      HO.hopperBasicOff();
-    }
-    SH.limeLightToggle(XBDriver.getTriggerAxis(Hand.kRight)>.25);
+    // if((counter%20)==0 || (counter%20)==1 || (counter%20)==2 || (counter%20)==3){
+    //   HO.hopperLogic();
+    // }else{
+    //   HO.hopperBasicOff();
+    // }
+
+
+    // SH.limeLightToggle(XBDriver.getTriggerAxis(Hand.kRight)>.25);
     if(XBDriver.getTriggerAxis(Hand.kRight)>.25){
-      HO.hopperBasic();
+      SH.percentShooter(1);
+       //HO.hopperBasic();
+       HO.hopperLogicBasic(true);
     }else{
-      HO.hopperBasicOff();
+      SH.percentShooter(0);
+    }
+
+    if(XBDriver.getYButtonPressed()){
+      hoodState++;
+      SH.hoodToggle(hoodState);
+      if(hoodState == 3)hoodState = 0;
     }
     SH.limeLightTurret();
 
     // if(pos >8200) pos = 0;
     // if(pos < 0) pos = 8200;
-=======
-    //SH.turretLogic(pos  );
-    SH.limeLightToggle(XBDriver.getBButtonPressed());
-    SH.limeLightShooter();
-    if(pos >8200) pos = 0;
-    if(pos < 0) pos = 8200;
-    //TODO
->>>>>>> Stashed changes
     
     //System.out.println();
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
+
+    SH.basicServo(XBDriver.getTriggerAxis(Hand.kLeft));
 
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
     if(XBDriver.getAButton()){
@@ -125,7 +130,8 @@ public class Robot extends TimedRobot {
       IN.intakesOff();
     }
     if(XBDriver.getXButton()){
-      HO.hopperBasic();
+      HO.hopperLogicBasic(false);
+      // HO.hopperLogic();
     }else{
       HO.hopperBasicOff();
     }
