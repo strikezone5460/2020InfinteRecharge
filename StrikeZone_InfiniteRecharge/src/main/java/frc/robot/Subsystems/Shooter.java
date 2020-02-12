@@ -167,12 +167,16 @@ public class Shooter extends RobotMap{
         if(toggle == 1){
             longShotHood();
             ledMode.setNumber(0);
+            camMode.setNumber(0);
         }else if(toggle == 2){
             shortShotHood();
             ledMode.setNumber(1);
+            camMode.setNumber(1);
         }else{
             closedHood();
             ledMode.setNumber(1);
+            camMode.setNumber(1);
+
         }
     }
 

@@ -28,38 +28,38 @@ public class Hopper extends RobotMap{
       // Might need to apply delays to motors stopping, to accomodate the balls moving from position to position
       case 0:
       //no balls in hopper
-        hopperHorizontal.set(ControlMode.PercentOutput, -0.6);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
         hopperVertical.set(ControlMode.PercentOutput, 0);
         break;
       case 1:
       // ball in horizontal position, no where else
-        hopperHorizontal.set(ControlMode.PercentOutput, -0.6);
-        hopperVertical.set(ControlMode.PercentOutput, 0);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
+        hopperVertical.set(ControlMode.PercentOutput, -01);
         break;
       case 2:
       // ball in bottom vertical position, no where else
       // make it at some point that there's a delay before this activates, in case a ball is coming
-        hopperHorizontal.set(ControlMode.PercentOutput, -0.6);
-        hopperVertical.set(ControlMode.PercentOutput, -0.6);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
+        hopperVertical.set(ControlMode.PercentOutput, -01);
         break;
       case 3:
       // balls in horizontal and bottom vertical positions
-        hopperHorizontal.set(ControlMode.PercentOutput, 0);
-        hopperVertical.set(ControlMode.PercentOutput, -0.6);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
+        hopperVertical.set(ControlMode.PercentOutput, -01);
         break;
       case 4:
       // ball in top vertical position
-        hopperHorizontal.set(ControlMode.PercentOutput, -0.6);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
         hopperVertical.set(ControlMode.PercentOutput, 0);
         break;
       case 5:
       // balls in top vertical and horizontal positions
-        hopperHorizontal.set(ControlMode.PercentOutput, -0.6);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
         hopperVertical.set(ControlMode.PercentOutput, 0);
         break;
       case 6:
       // balls in top and bottom vertical positions
-        hopperHorizontal.set(ControlMode.PercentOutput, -0.6);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
         hopperVertical.set(ControlMode.PercentOutput, 0);
         break;
       case 7:
@@ -73,8 +73,8 @@ public class Hopper extends RobotMap{
      * Forces hopper to turn on
      */
     public void hopperBasic(){
-      hopperHorizontal.set(ControlMode.PercentOutput, -.5);
-      hopperVertical.set(ControlMode.PercentOutput, -.5);
+      hopperHorizontal.set(ControlMode.PercentOutput, -1);
+      hopperVertical.set(ControlMode.PercentOutput, -1);
     }
     /**
      * Forces hopper to turn off
@@ -91,11 +91,11 @@ public class Hopper extends RobotMap{
       //If the logic is overridden, turn on (For shooting)
       if(!override){
         //If there is a ball in the last position, turn off
-        if(!ball2.get()){
+        if(!ball0.get()){
           //If there is a ball in the first position, turn on
-          if(ball0.get()){
-            hopperHorizontal.set(ControlMode.PercentOutput, -.6);
-            hopperVertical.set(ControlMode.PercentOutput, -.6);
+          if(ball2.get()){
+            hopperHorizontal.set(ControlMode.PercentOutput, -1);
+            hopperVertical.set(ControlMode.PercentOutput, -1);
           }else{
             hopperHorizontal.set(ControlMode.PercentOutput, 0);
             hopperVertical.set(ControlMode.PercentOutput, 0);
@@ -105,9 +105,15 @@ public class Hopper extends RobotMap{
           hopperVertical.set(ControlMode.PercentOutput, 0);
         }
       }else{
-        hopperHorizontal.set(ControlMode.PercentOutput, -0.6);
-        hopperVertical.set(ControlMode.PercentOutput, -0.6);
+        hopperHorizontal.set(ControlMode.PercentOutput, -01);
+        hopperVertical.set(ControlMode.PercentOutput, -01);
       }
+    }
+    public void hopperVerticalOn(){
+      hopperVertical.set(ControlMode.PercentOutput,-1);
+    }
+    public void hopperHorizontalOn(){
+      hopperHorizontal.set(ControlMode.PercentOutput,-1);
     }
     
 }

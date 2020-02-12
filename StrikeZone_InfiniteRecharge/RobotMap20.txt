@@ -15,7 +15,7 @@
 |   wheelSpinner            |         Talon   	    |     10    |        BAG          |      7       |		//DJ label
 |   turretRotation          |         Talon         |     11    |        775Pro       |      12      |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
-|	Limelight	    |		  N/A	    |	  N/A	|	 N/A	      |	     8	     |		//Not a motor but it's fine.. 
+|	Limelight	            |		  N/A	        |	  N/A	|	      N/A	      |	     8	     |		//Not a motor but it's fine.. 
 +---------------------------+-----------------------+-----------+---------------------+--------------+
 
 
@@ -37,11 +37,11 @@
 |   shiftHigh         |    Double  |  0   |    Forward     |    Shift High        |
 |   shiftLow          |    Double  |  1   |    Reverse     |    Shift Low         |
 |   PTO               |    Single  |  2   |    N/A         |    Climber           |
-|   intakeOut         |    Double  |  3   |    Forward     |    Intake Out        |
-|   intakeIn          |    Double  |  4   |    Reverse     |    Intake In         |
-|   wheelLift         |    Single  |  5   |    N/A         |                      |
-|   ballStop          |    Single  |  6   |    N/A         |    Stops Hopper      |
-|   hoodMain          |    Single  |  7   |    N/A         |    Changes shoot mode|
+|   intakeOut         |    Single  |  3   |    Forward     |    Intake Out        |
+|   wheelLift         |    Single  |  4   |    N/A         |                      |
+|   ballStop          |    Single  |  5   |    N/A         |    Stops Hopper      |
+|   hoodMain          |    Single  |  6   |    N/A         |    Changes shoot mode|
+|   hoodSub           |    Single  |  7   |    N/A         |    Changes shoot mode|
 +---------------------+------------+------+----------------+----------------------+
 
 

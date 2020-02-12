@@ -82,24 +82,18 @@ public class Robot extends TimedRobot {
      DT.rightEncPos();
 
     counter++;
-    //TODO
     if((counter%5)==0){
       //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
-      System.out.println("shooter Vel: " + SH.shooterVel());
+      //System.out.println("shooter Vel: " + SH.shooterVel());
     }
-    // if((counter%20)==0 || (counter%20)==1 || (counter%20)==2 || (counter%20)==3){
-    //   HO.hopperLogic();
-    // }else{
-    //   HO.hopperBasicOff();
-    // }
 
 
     // SH.limeLightToggle(XBDriver.getTriggerAxis(Hand.kRight)>.25);
-    if(XBDriver.getTriggerAxis(Hand.kRight)>.25){
-      SH.percentShooter(1);
+    if(XBDriver.getTriggerAxis(Hand.kRight)>.1){
+      SH.percentShooter(XBDriver.getTriggerAxis(Hand.kRight));
        //HO.hopperBasic();
-       HO.hopperLogicBasic(true);
+       //HO.hopperLogicBasic(true);
     }else{
       SH.percentShooter(0);
     }
@@ -114,8 +108,7 @@ public class Robot extends TimedRobot {
     // if(pos >8200) pos = 0;
     // if(pos < 0) pos = 8200;
     
-    //System.out.println();
-    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75);
+    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75, false);//TODO Replace with nuke
 
     SH.basicServo(XBDriver.getTriggerAxis(Hand.kLeft));
 
@@ -130,8 +123,19 @@ public class Robot extends TimedRobot {
       IN.intakesOff();
     }
     if(XBDriver.getXButton()){
-      HO.hopperLogicBasic(false);
-      // HO.hopperLogic();
+      // HO.hopperLogicBasic(false);
+      HO.hopperLogic();
+    }else{
+      HO.hopperBasicOff();
+    }
+    if(XBOpp.getAButton()){
+      HO.hopperLogic();
+    }else if(XBOpp.getBButton()){
+      HO.hopperVerticalOn();
+    }else if(XBOpp.getXButton()){
+      HO.hopperHorizontalOn();
+    }else if(XBOpp.getYButton()){
+      HO.hopperBasic();
     }else{
       HO.hopperBasicOff();
     }

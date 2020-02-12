@@ -52,11 +52,17 @@ public class Drivetrain extends RobotMap{
      * @param speed Percent of total speed (0-1)
      * @param rotate Rotatates robot at a constant speed (0-1)
      */
-    public void arcadeDrive(double speed, double rotate) {
+    public void arcadeDrive(double speed, double rotate, boolean isClimbing) {
+        if(!isClimbing){
         leftDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
         leftDriveSlave.follow(leftDriveMaster);
         rightDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
         rightDriveSlave.follow(rightDriveMaster);
+        }else{
+            rightDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
+            rightDriveSlave.follow(rightDriveMaster); 
+        }
+        
     }
 
     /**
@@ -99,7 +105,7 @@ public class Drivetrain extends RobotMap{
         double error = angle - input;
         double output = error * kp;
 
-        arcadeDrive(speed, output);
+        arcadeDrive(speed, output, false);
    }
 
    /**

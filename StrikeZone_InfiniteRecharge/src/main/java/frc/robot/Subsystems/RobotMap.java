@@ -24,15 +24,13 @@ public class RobotMap {
     TalonFX rightDriveMaster = new TalonFX(3);
     TalonFX rightDriveSlave = new TalonFX(4);
 
-    TalonFX shooterMaster = new TalonFX(5);//Might Change
+    TalonFX shooterMaster = new TalonFX(5);
     TalonFX shooterSlave = new TalonFX(6);
 
     VictorSPX intake = new VictorSPX(7);
 
     TalonSRX hopperHorizontal = new TalonSRX(8);
     VictorSPX hopperVertical = new VictorSPX(9);
-
-    // VictorSPX climber = new VictorSPX(11);
 
     VictorSPX wheelSpinner = new VictorSPX(10);
 
@@ -44,6 +42,7 @@ public class RobotMap {
 //     
     double kShooterPct = 1.0;
     double kShooterOff = 0.0;
+    int kShooterVel = 19000; 
 
     int kMaxLowDriveVel = 19000;
     int kMaxHighDriveVel = 19500;
