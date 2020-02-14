@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Solenoid;
  * Add your docs here.
  */
 public class Climber extends RobotMap{
-    Solenoid PTO = new Solenoid(2);
+    Solenoid PTO = new Solenoid(0, 2);
 
     private int climbState = 0;
     private int counter = 0;

@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
   int shooterState = 0;
   int counter = 0;
   int hoodState = 0;
+  int shooterCounter =0;
 
   boolean isHigh = false;
   @Override
@@ -86,6 +87,7 @@ public class Robot extends TimedRobot {
       //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       //System.out.println("shooter Vel: " + SH.shooterVel());
+      System.out.println("turret pos: " + SH.turretPos);
     }
 
 
@@ -93,9 +95,23 @@ public class Robot extends TimedRobot {
     if(XBDriver.getTriggerAxis(Hand.kRight)>.1){
       SH.percentShooter(XBDriver.getTriggerAxis(Hand.kRight));
        //HO.hopperBasic();
-       //HO.hopperLogicBasic(true);
+       if(shooterCounter++ > 200){
+       HO.hopperLogic(true);
+       }
+    }else if(XBOpp.getAButton()){
+      HO.hopperLogic(false);
+    }else if(XBOpp.getBButton()){
+      HO.hopperVerticalOn();
+    }else if(XBOpp.getXButton()){
+      HO.hopperHorizontalOn();
+    }else if(XBOpp.getYButton()){
+      HO.hopperLogic(true);
     }else{
       SH.percentShooter(0);
+      HO.hopperLogic(false);
+      shooterCounter = 0;
+      // HO.hopperBasicOff();
+
     }
 
     if(XBDriver.getYButtonPressed()){
@@ -115,30 +131,17 @@ public class Robot extends TimedRobot {
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
     if(XBDriver.getAButton()){
       IN.intakesOn();
-      HO.hopperLogic();
     }else if(XBDriver.getBButton()){
       IN.intakesOut();
     }
     else{
       IN.intakesOff();
     }
-    if(XBDriver.getXButton()){
-      // HO.hopperLogicBasic(false);
-      HO.hopperLogic();
-    }else{
-      HO.hopperBasicOff();
-    }
-    if(XBOpp.getAButton()){
-      HO.hopperLogic();
-    }else if(XBOpp.getBButton()){
-      HO.hopperVerticalOn();
-    }else if(XBOpp.getXButton()){
-      HO.hopperHorizontalOn();
-    }else if(XBOpp.getYButton()){
-      HO.hopperBasic();
-    }else{
-      HO.hopperBasicOff();
-    }
+    // if(XBDriver.getXButton()){
+    //   // HO.hopperLogicBasic(false);
+    //   HO.hopperLogic(false);
+    // }
+
 
     //Shifter toggle
     if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;

@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 public class Drivetrain extends RobotMap{
 
-    public Solenoid shiftHigh = new Solenoid(0);
-    public Solenoid shiftLow = new Solenoid(1);
+    public Solenoid shiftHigh = new Solenoid(0, 0);
+    public Solenoid shiftLow = new Solenoid(0, 1);
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);//might change
 

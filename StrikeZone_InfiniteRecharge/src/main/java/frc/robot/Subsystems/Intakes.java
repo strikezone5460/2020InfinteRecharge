@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class Intakes extends RobotMap{
 
-    Solenoid intakeOut = new Solenoid(3);
+    Solenoid intakeOut = new Solenoid(0, 3);
       //Solenoid intakeIn = new Solenoid(4);
 
     private boolean isIntakeIn = false;

@@ -13,5 +13,5 @@ import edu.wpi.first.wpilibj.Solenoid;
  * Add your docs here.
  */
 public class ColorWheel extends RobotMap{
-    Solenoid wheelLift = new Solenoid(4);
+    Solenoid wheelLift = new Solenoid(0, 4);
 }

@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter extends RobotMap{
 
     
-    public Solenoid hoodMain = new Solenoid(4);//TODO Change back to 6
-    public Solenoid hoodSub = new Solenoid(7);
+    public Solenoid hoodMain = new Solenoid(1, 0);//TODO Change back to 6
+    public Solenoid hoodSub = new Solenoid(1, 1);
     
     Servo hoodAdjust = new Servo(0);
     
@@ -46,9 +46,9 @@ public class Shooter extends RobotMap{
     public boolean isHome2 = !homeRight.get();
 
     boolean LLtoggle = true;
-    double setpoint = 4100;
+    double setpoint = 760;
 
-    int turretPos = turretRotation.getSelectedSensorPosition(0);
+    public int turretPos = turretRotation.getSelectedSensorPosition(0);
     //NetworkTableInstance.getDefault().getTable("limelight-turret").getEntry("tv")
     double isTargeting = tv.getDouble(0);
     double xOffset = tx.getDouble(0.0);
@@ -71,7 +71,7 @@ public class Shooter extends RobotMap{
         shooterSlave.setInverted(TalonFXInvertType.OpposeMaster);
         shooterMaster.configClosedloopRamp(.35, 0);
         shooterMaster.configClosedLoopPeakOutput(0, .95);
-        turretRotation.setSelectedSensorPosition(4100);
+        turretRotation.setSelectedSensorPosition(760);
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
     }
     public void percentShooter(double setpoint){
@@ -106,20 +106,20 @@ public class Shooter extends RobotMap{
         xOffset = tx.getDouble(0.0);
         //P.I.D loop
 
-        if(input > 10000) input = input -10000;
-        if(input < -1800) input = input +10000;
+        // if(input > 10000) input = input -10000;
+        // if(input < -1800) input = input +10000;
         
         double setpoint = input;
 
-        if(setpoint > 8200)setpoint = 8200;
+        if(setpoint > 6570)setpoint = 6570;
         if(setpoint < 0) setpoint = 0;
         
         double error = setpoint - turretPos;
-        double kp = -.001;
+        double kp = .0005;
         double output  =  error * kp;
  
-        if(output >= .75) output = .75;
-        else if(output <= -.75) output = -.75;
+        if(output >= 1) output = .5;
+        else if(output <= -1) output = -.5;
         turretRotation.set(ControlMode.PercentOutput, output);
         //if(isTargeting == 0){
             // // if(isHome1 && isHome2){
@@ -141,7 +141,7 @@ public class Shooter extends RobotMap{
 
         turretPos = turretRotation.getSelectedSensorPosition(0);
 
-        double kp = 0.0225;
+        double kp = -0.0225;
 
         double error = xOffset;
         double output = kp * error;
@@ -149,17 +149,23 @@ public class Shooter extends RobotMap{
         if(output >= .75) output = .75;
         else if(output <= -.75) output = -.75;
 
-        if(isTargeting == 1){
+        // if(turretPos > 6570){
+        //     turretLogic(0);
+        // }else if(turretPos < 0){
+        //     turretLogic(6570);
+        // }else
+         if((isTargeting == 1) && (turretPos > 0) && (turretPos < 6570)){
             turretRotation.set(ControlMode.PercentOutput, output);
-        }else{
+        }else if(turretPos <= 0){ 
             // turretRotation.set(ControlMode.PercentOutput,0);
-            turretLogic(4100);
-        }
-        if(turretPos > 8100){
             turretLogic(0);
-        }else if(turretPos < 0){
-            turretLogic(8100);
+        }else if(turretPos >= 6570){
+            // turretRotation.set(ControlMode.PercentOutput,0);
+            turretLogic(6560);
+        }else{
+            turretLogic(760);
         }
+
         //PID loop
     }
 
