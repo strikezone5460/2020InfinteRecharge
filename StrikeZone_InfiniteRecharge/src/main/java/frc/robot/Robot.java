@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -86,31 +85,31 @@ public class Robot extends TimedRobot {
     if((counter%5)==0){
       //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
-      //System.out.println("shooter Vel: " + SH.shooterVel());
-      System.out.println("turret pos: " + SH.turretPos);
+      System.out.println("shooter Vel: " + SH.shooterVel());
+      // System.out.println("turret pos: " + SH.turretPos);
     }
 
 
     // SH.limeLightToggle(XBDriver.getTriggerAxis(Hand.kRight)>.25);
     if(XBDriver.getTriggerAxis(Hand.kRight)>.1){
-      SH.percentShooter(XBDriver.getTriggerAxis(Hand.kRight));
+      // SH.percentShooter(XBDriver.getTriggerAxis(Hand.kRight));
        //HO.hopperBasic();
+       SH.velocityShooter(1700);
        if(shooterCounter++ > 200){
-       HO.hopperLogic(true);
+       //HO.hopperLogic(true);
        }
     }else if(XBOpp.getAButton()){
       HO.hopperLogic(false);
     }else if(XBOpp.getBButton()){
       HO.hopperVerticalOn();
     }else if(XBOpp.getXButton()){
-      HO.hopperHorizontalOn();
+      HO.hopperLogic(false);
     }else if(XBOpp.getYButton()){
       HO.hopperLogic(true);
     }else{
       SH.percentShooter(0);
-      HO.hopperLogic(false);
       shooterCounter = 0;
-      // HO.hopperBasicOff();
+      HO.hopperBasicOff();
 
     }
 

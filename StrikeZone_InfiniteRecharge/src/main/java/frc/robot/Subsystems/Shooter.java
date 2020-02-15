@@ -8,6 +8,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
@@ -53,6 +54,8 @@ public class Shooter extends RobotMap{
     double isTargeting = tv.getDouble(0);
     double xOffset = tx.getDouble(0.0);
 
+
+
     public void limeLightToggle(boolean input){
         //Lime light toggle 
         if(input) LLtoggle = !LLtoggle;
@@ -72,6 +75,7 @@ public class Shooter extends RobotMap{
         shooterMaster.configClosedloopRamp(.35, 0);
         shooterMaster.configClosedLoopPeakOutput(0, .95);
         turretRotation.setSelectedSensorPosition(760);
+        // shooterMaster.config
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
     }
     public void percentShooter(double setpoint){
@@ -89,10 +93,8 @@ public class Shooter extends RobotMap{
 
     public void velocityShooter(double setpoint){
         //Shooter Velocity
-        shooterVel();
-        if(shooterMaster.getClosedLoopError(0)>0){
-        shooterMaster.set(ControlMode.Velocity, setpoint);
-        }
+        // shooterMaster.set(ControlMode.Velocity, setpoint);
+        shooterMaster.set(ControlMode.Velocity, setpoint, DemandType.ArbitraryFeedForward, 0.7);
         shooterSlave.follow(shooterMaster);
     }
     public void turretLogic(double input){
@@ -146,8 +148,8 @@ public class Shooter extends RobotMap{
         double error = xOffset;
         double output = kp * error;
 
-        if(output >= .75) output = .75;
-        else if(output <= -.75) output = -.75;
+        if(output >= 1) output = 1;
+        else if(output <= -1) output = -1;
 
         // if(turretPos > 6570){
         //     turretLogic(0);

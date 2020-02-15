@@ -26,7 +26,7 @@ public class Hopper extends RobotMap{
     public void hopperLogic(boolean override){
      
       if(!override){
-        if(counter++%5 == 0){
+        if(counter++%3 == 0){
           theState = (ball0.get()?0:1)+(ball1.get()?0:2)+(ball2.get()?0:4);
         }
         switch (theState){
