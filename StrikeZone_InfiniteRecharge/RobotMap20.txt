@@ -34,14 +34,14 @@
 +---------------------+------------+------+----------------+----------------------+
 |   Solenoid Name     |    Type    |  ID  |    Direction   |    Action            |
 +---------------------+------------+------+----------------+----------------------+
-|   shiftHigh         |    Double  |  0   |    Forward     |    Shift High        |
-|   shiftLow          |    Double  |  1   |    Reverse     |    Shift Low         |
-|   PTO               |    Single  |  2   |    N/A         |    Climber           |
-|   intakeOut         |    Single  |  3   |    Forward     |    Intake Out        |
-|   wheelLift         |    Single  |  4   |    N/A         |                      |
-|   ballStop          |    Single  |  5   |    N/A         |    Stops Hopper      |
-|   hoodMain          |    Single  |  6   |    N/A         |    Changes shoot mode|
-|   hoodSub           |    Single  |  7   |    N/A         |    Changes shoot mode|
+|   shiftHigh         |    Double  |  0,0   |    Forward     |    Shift High        |
+|   shiftLow          |    Double  |  0,1   |    Reverse     |    Shift Low         |
+|   PTO               |    Single  |  0,2   |    N/A         |    Climber           |
+|   intakeOut         |    Single  |  0,3   |    Forward     |    Intake Out        |
+|   wheelLift         |    Single  |  0,4   |    N/A         |                      |
+|   ballStop          |    Single  |  0,5   |    N/A         |    Stops Hopper      |
+|   hoodMain          |    Single  |  1,0   |    N/A         |    Changes shoot mode|
+|   hoodSub           |    Single  |  1,1   |    N/A         |    Changes shoot mode|
 +---------------------+------------+------+----------------+----------------------+
 
 

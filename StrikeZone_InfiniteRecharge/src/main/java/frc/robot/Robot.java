@@ -47,6 +47,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     DT.Init();
     //DriveTrain Initalization
+    SH.shooterInit();
+
   }
 
   @Override
@@ -68,7 +70,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     DT.Init();
-    SH.shooterInit();
     //Initalization for Shooter and Drivetrain
   }
 
@@ -94,9 +95,14 @@ public class Robot extends TimedRobot {
     if(XBDriver.getTriggerAxis(Hand.kRight)>.1){
       // SH.percentShooter(XBDriver.getTriggerAxis(Hand.kRight));
        //HO.hopperBasic();
-       SH.velocityShooter(1700);
-       if(shooterCounter++ > 200){
-       //HO.hopperLogic(true);
+       SH.velocityShooter(20000);
+       SH.hoodToggle(1);
+       if(shooterCounter++ < 10 && shooterCounter > 0){ //shooter warmup period TODO Adjust
+        HO.hopperBasicRev(.25);
+       }else if(shooterCounter > 10 && shooterCounter < 50){
+          HO.hopperBasicOff();
+       }else if(shooterCounter >= 50){
+        HO.hopperLogic(true);
        }
     }else if(XBOpp.getAButton()){
       HO.hopperLogic(false);
@@ -106,28 +112,28 @@ public class Robot extends TimedRobot {
       HO.hopperLogic(false);
     }else if(XBOpp.getYButton()){
       HO.hopperLogic(true);
+    }else if(XBDriver.getYButtonPressed()){
+      hoodState++;
+      SH.hoodToggle(hoodState);
+      if(hoodState == 2)hoodState = 0;
     }else{
       SH.percentShooter(0);
       shooterCounter = 0;
       HO.hopperBasicOff();
-
     }
 
-    if(XBDriver.getYButtonPressed()){
-      hoodState++;
-      SH.hoodToggle(hoodState);
-      if(hoodState == 3)hoodState = 0;
-    }
+
     SH.limeLightTurret();
 
     // if(pos >8200) pos = 0;
     // if(pos < 0) pos = 8200;
     
-    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.75, false);//TODO Replace with nuke
+    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
 
     SH.basicServo(XBDriver.getTriggerAxis(Hand.kLeft));
 
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
+
     if(XBDriver.getAButton()){
       IN.intakesOn();
     }else if(XBDriver.getBButton()){
@@ -162,13 +168,13 @@ public class Robot extends TimedRobot {
     //
     //Toggle for the shooter
     //
-    if(XBDriver.getAButtonPressed()) shooterState++;
-    if(shooterState == 1){
-      SH.velocityShooter(1);
-    }else if(shooterState >= 1){
-      SH.velocityShooter(0);
-      shooterState = 0;
-    }
+    // if(XBDriver.getAButtonPressed()) shooterState++;
+    // if(shooterState == 1){
+    //   SH.velocityShooter(1);
+    // }else if(shooterState >= 1){
+    //   SH.velocityShooter(0);
+    //   shooterState = 0;
+    // }
   }
 
   @Override

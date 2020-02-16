@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter extends RobotMap{
 
     
-    public Solenoid hoodMain = new Solenoid(1, 0);//TODO Change back to 6
+    public Solenoid hoodMain = new Solenoid(1, 0);
     public Solenoid hoodSub = new Solenoid(1, 1);
     
     Servo hoodAdjust = new Servo(0);
@@ -72,8 +72,8 @@ public class Shooter extends RobotMap{
     public void shooterInit(){
         shooterMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         shooterSlave.setInverted(TalonFXInvertType.OpposeMaster);
-        shooterMaster.configClosedloopRamp(.35, 0);
-        shooterMaster.configClosedLoopPeakOutput(0, .95);
+        shooterMaster.configClosedloopRamp(.25, 0);
+        shooterMaster.configClosedLoopPeakOutput(0, 1);
         turretRotation.setSelectedSensorPosition(760);
         // shooterMaster.config
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
@@ -94,7 +94,7 @@ public class Shooter extends RobotMap{
     public void velocityShooter(double setpoint){
         //Shooter Velocity
         // shooterMaster.set(ControlMode.Velocity, setpoint);
-        shooterMaster.set(ControlMode.Velocity, setpoint, DemandType.ArbitraryFeedForward, 0.7);
+        shooterMaster.set(ControlMode.Velocity, setpoint);
         shooterSlave.follow(shooterMaster);
     }
     public void turretLogic(double input){
@@ -117,11 +117,11 @@ public class Shooter extends RobotMap{
         if(setpoint < 0) setpoint = 0;
         
         double error = setpoint - turretPos;
-        double kp = .0005;
+        double kp = .00035;
         double output  =  error * kp;
  
-        if(output >= 1) output = .5;
-        else if(output <= -1) output = -.5;
+        if(output >= .5) output = .5;
+        else if(output <= -.5) output = -.5;
         turretRotation.set(ControlMode.PercentOutput, output);
         //if(isTargeting == 0){
             // // if(isHome1 && isHome2){
@@ -151,21 +151,21 @@ public class Shooter extends RobotMap{
         if(output >= 1) output = 1;
         else if(output <= -1) output = -1;
 
-        // if(turretPos > 6570){
-        //     turretLogic(0);
-        // }else if(turretPos < 0){
-        //     turretLogic(6570);
-        // }else
+        if(turretPos > 6570){
+            turretLogic(760);
+        }else if(turretPos < 0){
+            turretLogic(5830);
+        }else
          if((isTargeting == 1) && (turretPos > 0) && (turretPos < 6570)){
             turretRotation.set(ControlMode.PercentOutput, output);
-        }else if(turretPos <= 0){ 
-            // turretRotation.set(ControlMode.PercentOutput,0);
-            turretLogic(0);
-        }else if(turretPos >= 6570){
-            // turretRotation.set(ControlMode.PercentOutput,0);
-            turretLogic(6560);
+        // }else if(turretPos <= 0){ 
+        //     // turretRotation.set(ControlMode.PercentOutput,0);
+        //     turretLogic(5830);
+        // }else if(turretPos >= 6570){
+        //     // turretRotation.set(ControlMode.PercentOutput,0);
+        //     turretLogic(760);
         }else{
-            turretLogic(760);
+            turretLogic(turretPos);
         }
 
         //PID loop
@@ -176,10 +176,6 @@ public class Shooter extends RobotMap{
             longShotHood();
             ledMode.setNumber(0);
             camMode.setNumber(0);
-        }else if(toggle == 2){
-            shortShotHood();
-            ledMode.setNumber(1);
-            camMode.setNumber(1);
         }else{
             closedHood();
             ledMode.setNumber(1);
