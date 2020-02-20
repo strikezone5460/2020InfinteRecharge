@@ -35,6 +35,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    int state = 0;
+    switch(state){
+      case 0:
+      Shooter.shooterVel(0.5);
+      Hopper.percentHopper(0.5);
+      case 1:
+      //Some more code
+      
+    }
   }
 
   @Override
@@ -54,6 +63,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
+
+    
+
+
+
   }
 
 }
+ 
