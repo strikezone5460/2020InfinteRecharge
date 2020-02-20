@@ -32,7 +32,7 @@ public class RobotMap {
     TalonSRX hopperHorizontal = new TalonSRX(8);
     VictorSPX hopperVertical = new VictorSPX(9);
 
-    VictorSPX wheelSpinner = new VictorSPX(10);
+    VictorSPX wheelSpin = new VictorSPX(10);
 
     TalonSRX turretRotation = new TalonSRX(11);
 
