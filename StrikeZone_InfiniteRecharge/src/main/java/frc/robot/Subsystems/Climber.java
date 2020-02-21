@@ -17,7 +17,7 @@ public class Climber extends RobotMap{
 
     private int climbState = 0;
     private int counter = 0;
-    void robotClimb(){
+    public void robotClimb(boolean noDrive){
         counter++;
     switch (climbState) {
         case 0:
@@ -29,7 +29,7 @@ public class Climber extends RobotMap{
             }
         case 1:
             PTO.set(false);
-            if(counter == 100){
+            if(noDrive){
                 climbState = 2;
                 counter=0;
                 break;
@@ -40,5 +40,7 @@ public class Climber extends RobotMap{
             break;
     }
     }
+
+
 
 }
