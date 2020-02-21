@@ -10,8 +10,8 @@
 |   shooterMaster           |         TalonFX       |     5     |        Falcon       |      2       |
 |   shooterSlave            |         TalonFX       |     6     |        Falcon       |      13      |
 |   intake                  |         Victor        |     7     |        775Pro       |      3       |
-|   hopperMaster            |         Talon         |     8     |        775Pro       |      10      |
-|   hopperSlave             |         Victor        |     9     |        775Pro       |      11      |
+|   hopperHorizontal        |         Talon         |     8     |        775Pro       |      10      |
+|   hopperVertical          |         Victor        |     9     |        775Pro       |      11      |
 |   wheelSpinner            |         Talon   	    |     10    |        BAG          |      7       |		//DJ label
 |   turretRotation          |         Talon         |     11    |        775Pro       |      12      |
 +---------------------------+-----------------------+-----------+---------------------+--------------+
@@ -32,14 +32,13 @@
 +---------------------------------------------------------------------------------+
 |                               PCM 0 Solenoids                                   |
 +---------------------+------------+------+----------------+----------------------+
-|   Solenoid Name     |    Type    |  ID  |    Direction   |    Action            |
+|   Solenoid Name     |    Type    |  ID    |    Direction   |    Action            |
 +---------------------+------------+------+----------------+----------------------+
 |   shiftHigh         |    Double  |  0,0   |    Forward     |    Shift High        |
 |   shiftLow          |    Double  |  0,1   |    Reverse     |    Shift Low         |
 |   PTO               |    Single  |  0,2   |    N/A         |    Climber           |
 |   intakeOut         |    Single  |  0,3   |    Forward     |    Intake Out        |
 |   wheelLift         |    Single  |  0,4   |    N/A         |                      |
-|   ballStop          |    Single  |  0,5   |    N/A         |    Stops Hopper      |
 |   hoodMain          |    Single  |  1,0   |    N/A         |    Changes shoot mode|
 |   hoodSub           |    Single  |  1,1   |    N/A         |    Changes shoot mode|
 +---------------------+------------+------+----------------+----------------------+
@@ -53,4 +52,16 @@
 +-------------------+-------------------+---------------+
 |   gyro            |   Gyro            |   RIO         | might not be on RIO
 |   colorSensor     |   REV Color Sensor|   I2C - RIO   |
++-------------------+-------------------+---------------+
+
+
++-------------------------------------------------------+
+|                      Shooter Values                   |
++-------------------+-------------------+---------------+
+|   Distance        |   Shooter Vel     |   Hood Angle  |
++-------------------+-------------------+---------------+
+|   5'              |   12000           |   0           | 
+|   10'             |   14000           |   2"          |
+|   15'             |   15000           |   full        |
+|   20'             |   17500           |   full        |
 +-------------------+-------------------+---------------+

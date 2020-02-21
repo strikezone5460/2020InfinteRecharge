@@ -40,9 +40,11 @@ public class RobotMap {
 // 
 //  Constants
 //     
-    double kShooterPct = 1.0;
-    double kShooterOff = 0.0;
-    int kShooterVel = 19000; 
+    static double kShooterPct = 1.0;
+    static double kShooterOff = 0.0;
+    public int kShooterVel[] = {13300, 14000, 15000, 17500, 19500};
+    static double kHoodPos[] = {0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1};
+
 
     int kMaxLowDriveVel = 19000;
     int kMaxHighDriveVel = 19500;
