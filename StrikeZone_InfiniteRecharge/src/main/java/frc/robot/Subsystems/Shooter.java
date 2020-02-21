@@ -36,7 +36,7 @@ public class Shooter extends RobotMap{
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-turret");
     NetworkTableEntry tx = table.getEntry("tx");
-    NetworkTableEntry ty = table.getEntry("ty");
+    public NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ta = table.getEntry("ta");
     NetworkTableEntry tv = table.getEntry("tv");
     NetworkTableEntry ledMode = table.getEntry("ledMode");
@@ -53,6 +53,9 @@ public class Shooter extends RobotMap{
     //NetworkTableInstance.getDefault().getTable("limelight-turret").getEntry("tv")
     double isTargeting = tv.getDouble(0);
     double xOffset = tx.getDouble(0.0);
+    double yOffset = ty.getDouble(0.0);
+
+    boolean isFlipping = false;
 
 
 
@@ -117,12 +120,16 @@ public class Shooter extends RobotMap{
         if(setpoint < 0) setpoint = 0;
         
         double error = setpoint - turretPos;
-        double kp = .00035;
+        double kp = .00025;
         double output  =  error * kp;
  
         if(output >= .5) output = .5;
         else if(output <= -.5) output = -.5;
         turretRotation.set(ControlMode.PercentOutput, output);
+
+        if(turretPos != input) isFlipping = true;
+        else isFlipping = false;
+
         //if(isTargeting == 0){
             // // if(isHome1 && isHome2){
             // //     turretRotation.set(ControlMode.PercentOutput,0);
@@ -143,7 +150,7 @@ public class Shooter extends RobotMap{
 
         turretPos = turretRotation.getSelectedSensorPosition(0);
 
-        double kp = -0.0225;
+        double kp = -0.0255;
 
         double error = xOffset;
         double output = kp * error;
@@ -151,22 +158,35 @@ public class Shooter extends RobotMap{
         if(output >= 1) output = 1;
         else if(output <= -1) output = -1;
 
-        if(turretPos > 6570){
-            turretLogic(760);
-        }else if(turretPos < 0){
-            turretLogic(5830);
-        }else
+        // if(turretPos > 6570){
+        //     turretLogic(760);
+        // }else if(turretPos < 0){
+        //     turretLogic(5830);
+        // }else
          if((isTargeting == 1) && (turretPos > 0) && (turretPos < 6570)){
             turretRotation.set(ControlMode.PercentOutput, output);
-        // }else if(turretPos <= 0){ 
-        //     // turretRotation.set(ControlMode.PercentOutput,0);
-        //     turretLogic(5830);
-        // }else if(turretPos >= 6570){
-        //     // turretRotation.set(ControlMode.PercentOutput,0);
-        //     turretLogic(760);
-        }else{
-            turretLogic(turretPos);
+        }else if(turretPos <= 0){ 
+            if(output < 0 ){
+                turretRotation.set(ControlMode.PercentOutput,0);
+            }else{
+                turretRotation.set(ControlMode.PercentOutput, output);
+            }
+            // turretLogic(5830);
+        }else if(turretPos >= 6570){
+            if(output > 0){
+                turretRotation.set(ControlMode.PercentOutput,0);
+            }else{
+                turretRotation.set(ControlMode.PercentOutput, output);
+            }
+            // turretLogic(760);
+        // System.out.println("targeting");
+        }else if(isTargeting == 0 && turretPos < 3285){
+            turretLogic(760);
+        }else if(isTargeting == 0 && turretPos > 3285){
+            turretLogic(5830);
         }
+        
+        //Hood Logic
 
         //PID loop
     }
@@ -182,6 +202,25 @@ public class Shooter extends RobotMap{
             camMode.setNumber(1);
 
         }
+    }
+    public void hoodLogic(boolean closed){
+        yOffset =ty.getDouble(0.0);
+        if(!closed){
+        if(yOffset >= 0){
+            //under 10ft
+            hoodAdjust.setPosition(kHoodPos[0]);
+        }else if(yOffset < 0 && yOffset > -10){
+            //between 10 and 15ft
+            hoodAdjust.setPosition(kHoodPos[4]);
+        }else if(yOffset < -10 && yOffset > -15){
+            //between 15 and 20
+            hoodAdjust.setPosition(kHoodPos[5]);
+        }else{
+            hoodAdjust.setPosition(kHoodPos[9]);
+        }
+    }else{
+        hoodAdjust.setPosition(0);
+    }
     }
 
     public void shortShotHood(){
