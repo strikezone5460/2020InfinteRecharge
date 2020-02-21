@@ -17,19 +17,19 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Hopper extends RobotMap{
     //Solenoid ballStop = new Solenoid(5);
 
-    DigitalInput ball0 = new DigitalInput(3);
-    DigitalInput ball1 = new DigitalInput(4);
-    DigitalInput ball2 = new DigitalInput(5);
+    DigitalInput PosA = new DigitalInput(3);
+    DigitalInput PosB = new DigitalInput(4);
+    DigitalInput PosC = new DigitalInput(5);
 
     int counter = 0;
     int theState = 0;
 
-    public int hopperState = (ball0.get()?0:1)+(ball1.get()?0:2)+(ball2.get()?0:4);
+    public int hopperState = (PosA.get()?0:1)+(PosB.get()?0:2)+(PosC.get()?0:4);
     public void hopperLogic(boolean override){
      
       if(!override){
         if(counter++%3 == 0){
-          theState = (ball0.get()?0:1)+(ball1.get()?0:2)+(ball2.get()?0:4);
+          theState = (PosA.get()?0:1)+(PosB.get()?0:2)+(PosC.get()?0:4);
         }
         switch (theState){
           // Might need to apply delays to motors stopping, to accomodate the balls moving from position to position
@@ -107,9 +107,9 @@ public class Hopper extends RobotMap{
       //If the logic is overridden, turn on (For shooting)
       if(!override){
         //If there is a ball in the last position, turn off
-        if(!ball0.get()){
+        if(!PosA.get()){
           //If there is a ball in the first position, turn on
-          if(ball2.get()){
+          if(PosC.get()){
             hopperHorizontal.set(ControlMode.PercentOutput, -.9);
             hopperVertical.set(ControlMode.PercentOutput, -.9);
           }else{
