@@ -17,8 +17,11 @@ public class EightBall{
     private Intakes IN = new Intakes();
     private Hopper HO = new Hopper();
 
-    public int atuoState = 0;
+    public int autoState = 0;
     int count = 0;
     
+    public void eightBall(boolean side){
+        
+    }
 
 }

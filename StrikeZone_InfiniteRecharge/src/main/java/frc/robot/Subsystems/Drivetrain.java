@@ -59,8 +59,8 @@ public class Drivetrain extends RobotMap{
         rightDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
         rightDriveSlave.follow(rightDriveMaster);
         }else{
-            rightDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
-            rightDriveSlave.follow(rightDriveMaster); 
+            leftDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
+            leftDriveSlave.follow(leftDriveMaster); 
         }
         
     }

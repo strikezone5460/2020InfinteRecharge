@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.Autons.Auton_0;
 import frc.robot.Subsystems.*;
 
 /**
@@ -33,6 +34,9 @@ public class Robot extends TimedRobot {
   Drivetrain DT = new Drivetrain();
   Intakes IN = new Intakes();
   Hopper HO = new Hopper();
+  Climber CL = new Climber();
+
+  Auton_0 a0 = new Auton_0();
 
   int pos = 4100;
   
@@ -41,13 +45,40 @@ public class Robot extends TimedRobot {
   int counter = 0;
   int hoodState = 0;
   int shooterCounter =0;
+  int shooterSetpoint = 0;
+  int hoodCounter = 0;
 
-  boolean isHigh = false;
+  boolean isClimbing = false;
+
+
+  int autonIndex = 0;
+  int cycle = 0;
+  String autonStrings[] = {
+    "Move 5 feet",
+    "Shoot 3 then Move 5 feet",
+    "Shoot 3, get 2 behind, move 5 feet",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined",
+    "Undefined"
+  };
+
   @Override
   public void robotInit() {
     DT.Init();
     //DriveTrain Initalization
     SH.shooterInit();
+    CL.Init(DT);
 
   }
 
@@ -56,46 +87,65 @@ public class Robot extends TimedRobot {
     //System.out.println("left: " + DT.leftEncPos + "right: " + DT.rightEncPos);
     SH.limeLightToggle(XBDriver.getBButtonPressed());
     //Limelight on Shooter
+
+    if ((XBDriver.getBackButtonPressed())&&(autonIndex < 16)){
+      autonIndex++;
+    }
+    else if ((XBDriver.getStartButtonPressed())&&(autonIndex > 0)){
+      autonIndex--;
+    }
+    if ((cycle++ & 0x0F)==0) System.out.println("Auton: "+autonIndex+" - "+autonStrings[autonIndex]);
   }
 
   @Override
   public void autonomousInit() {
+    a0.Init(DT, SH, HO, IN);
   }
 
   @Override
   public void autonomousPeriodic() {
+
+    switch(autonIndex){
+      case 0:
+        a0.Periodic();
+        break;
+    }
   
   }
 
   @Override
   public void teleopInit() {
     DT.Init();
+  
     //Initalization for Shooter and Drivetrain
   }
 
   @Override
   public void teleopPeriodic() {
-    double speed = -XBDriver.getY(Hand.kLeft);
+    double speed = XBDriver.getY(Hand.kLeft);
     double rotate = XBDriver.getX(Hand.kRight);
-    isHigh =  DT.shiftHigh.get();
+    // isHigh =  DT.shiftHigh.get();
+    double yOffset = SH.ty.getDouble(0.0);
+
 
      DT.leftEncPos();
      DT.rightEncPos();
 
     counter++;
-    if((counter%5)==0){
+    if((counter%8)==0){
       //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
-      System.out.println("shooter Vel: " + SH.shooterVel());
-      // System.out.println("turret pos: " + SH.turretPos);
+      System.out.println("shooter Vel: " + SH.shooterVel() + " hoodState " + hoodState);
+      //System.out.println("turret pos: " + SH.turretPos);
     }
 
 
     // SH.limeLightToggle(XBDriver.getTriggerAxis(Hand.kRight)>.25);
-    if(XBDriver.getTriggerAxis(Hand.kRight)>.1){
+    if(XBOpp.getTriggerAxis(Hand.kRight)>.1){
+
       // SH.percentShooter(XBDriver.getTriggerAxis(Hand.kRight));
        //HO.hopperBasic();
-       SH.velocityShooter(20000);
+       SH.velocityShooter(SH.shooterSpeed(yOffset));
        SH.hoodToggle(1);
        if(shooterCounter++ < 10 && shooterCounter > 0){ //shooter warmup period TODO Adjust
         HO.hopperBasicRev(.25);
@@ -104,44 +154,56 @@ public class Robot extends TimedRobot {
        }else if(shooterCounter >= 50){
         HO.hopperLogic(true);
        }
+       hoodState  = 1;
     }else if(XBOpp.getAButton()){
       HO.hopperLogic(false);
     }else if(XBOpp.getBButton()){
-      HO.hopperVerticalOn();
-    }else if(XBOpp.getXButton()){
-      HO.hopperLogic(false);
-    }else if(XBOpp.getYButton()){
-      HO.hopperLogic(true);
-    }else if(XBDriver.getYButtonPressed()){
+      HO.hopperBasicRev(.5);
+    }else if(XBOpp.getYButtonPressed()){
       hoodState++;
-      SH.hoodToggle(hoodState);
-      if(hoodState == 2)hoodState = 0;
+
     }else{
       SH.percentShooter(0);
       shooterCounter = 0;
       HO.hopperBasicOff();
     }
+    if(XBOpp.getBumper(Hand.kLeft)){
+      isClimbing = true;
+      CL.robotClimb(XBOpp.getBumperPressed(Hand.kRight), DT.Deadband(speed), 0);
+    }
 
+    if(hoodState == 1){
+      SH.hoodLogic(false);
+    }else{
+      SH.hoodLogic(true);
+    }
+      SH.hoodToggle(hoodState);
+      if(hoodState >= 2)  hoodCounter++;
+      if(hoodCounter >= 25){ 
+        hoodCounter = 0;
+        hoodState = 0;
+      }
 
+    if(XBDriver.getTriggerAxis(Hand.kRight) > .1){
+      IN.intakesOn();
+    //  HO.hopperLogic(false);
+    }else if(XBDriver.getBButton()){
+      IN.intakesOut();
+    }else{
+      IN.intakesOff();
+    }
     SH.limeLightTurret();
 
     // if(pos >8200) pos = 0;
     // if(pos < 0) pos = 8200;
-    
+    if(!isClimbing){
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
-
-    SH.basicServo(XBDriver.getTriggerAxis(Hand.kLeft));
+    }
+    // SH.basicServo(XBDriver.getTriggerAxis(Hand.kLeft));
 
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
 
-    if(XBDriver.getAButton()){
-      IN.intakesOn();
-    }else if(XBDriver.getBButton()){
-      IN.intakesOut();
-    }
-    else{
-      IN.intakesOff();
-    }
+
     // if(XBDriver.getXButton()){
     //   // HO.hopperLogicBasic(false);
     //   HO.hopperLogic(false);

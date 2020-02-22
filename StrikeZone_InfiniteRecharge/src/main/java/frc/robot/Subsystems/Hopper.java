@@ -17,47 +17,47 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Hopper extends RobotMap{
     //Solenoid ballStop = new Solenoid(5);
 
-    DigitalInput ball0 = new DigitalInput(3);
-    DigitalInput ball1 = new DigitalInput(4);
-    DigitalInput ball2 = new DigitalInput(5);
+    DigitalInput PosA = new DigitalInput(3);
+    DigitalInput PosB = new DigitalInput(4);
+    DigitalInput PosC = new DigitalInput(5);
 
     int counter = 0;
     int theState = 0;
 
-    public int hopperState = (ball0.get()?0:1)+(ball1.get()?0:2)+(ball2.get()?0:4);
+    public int hopperState = (PosA.get()?0:1)+(PosB.get()?0:2)+(PosC.get()?0:4);
     public void hopperLogic(boolean override){
      
       if(!override){
         if(counter++%3 == 0){
-          theState = (ball0.get()?0:1)+(ball1.get()?0:2)+(ball2.get()?0:4);
+          theState = (PosA.get()?0:1)+(PosB.get()?0:2)+(PosC.get()?0:4);
         }
         switch (theState){
           // Might need to apply delays to motors stopping, to accomodate the balls moving from position to position
           case 0:
           //no balls in hopper
-            hopperHorizontal.set(ControlMode.PercentOutput, -.9);
+            hopperHorizontal.set(ControlMode.PercentOutput, -.8);
             hopperVertical.set(ControlMode.PercentOutput, 0);
             break;
           case 1:
           // ball in horizontal position, no where else
-            hopperHorizontal.set(ControlMode.PercentOutput, -.9);
-            hopperVertical.set(ControlMode.PercentOutput, -.9);
+            hopperHorizontal.set(ControlMode.PercentOutput, -.8);
+            hopperVertical.set(ControlMode.PercentOutput, -.8);
             break;
           case 2:
           // ball in bottom vertical position, no where else
           // make it at some point that there's a delay before this activates, in case a ball is coming
-            hopperHorizontal.set(ControlMode.PercentOutput, -.9);
+            hopperHorizontal.set(ControlMode.PercentOutput, -.8);
             hopperVertical.set(ControlMode.PercentOutput, 0);
             break;
           case 3:
           // balls in horizontal and bottom vertical positions
-            hopperHorizontal.set(ControlMode.PercentOutput, -.9);
-            hopperVertical.set(ControlMode.PercentOutput, -.9);
+            hopperHorizontal.set(ControlMode.PercentOutput, -.8);
+            hopperVertical.set(ControlMode.PercentOutput, -.8);
             break;
           case 4:
           // ball in top vertical position
             hopperHorizontal.set(ControlMode.PercentOutput, 0);
-            hopperVertical.set(ControlMode.PercentOutput, .9 );
+            hopperVertical.set(ControlMode.PercentOutput, .8 );
             break;
           case 5:
           // balls in top vertical and horizontal positions
@@ -66,7 +66,7 @@ public class Hopper extends RobotMap{
             break;
           case 6:
           // balls in top and bottom vertical positions
-            hopperHorizontal.set(ControlMode.PercentOutput, -.9);
+            hopperHorizontal.set(ControlMode.PercentOutput, -.8);
             hopperVertical.set(ControlMode.PercentOutput, 0);
             break;
           case 7:
@@ -76,16 +76,16 @@ public class Hopper extends RobotMap{
             break;
       }
     }else{
-      hopperHorizontal.set(ControlMode.PercentOutput, -1);
-      hopperVertical.set(ControlMode.PercentOutput, -1);
+      hopperHorizontal.set(ControlMode.PercentOutput, -.9);
+      hopperVertical.set(ControlMode.PercentOutput, -.9);
     }
     }
     /**
      * Forces hopper to turn on
      */
     public void hopperBasic(){
-      hopperHorizontal.set(ControlMode.PercentOutput, -.9);
-      hopperVertical.set(ControlMode.PercentOutput, -.9);
+      hopperHorizontal.set(ControlMode.PercentOutput, -.8);
+      hopperVertical.set(ControlMode.PercentOutput, -.8);
     }
     /**
      * Forces hopper to turn off
@@ -107,11 +107,11 @@ public class Hopper extends RobotMap{
       //If the logic is overridden, turn on (For shooting)
       if(!override){
         //If there is a ball in the last position, turn off
-        if(!ball0.get()){
+        if(!PosA.get()){
           //If there is a ball in the first position, turn on
-          if(ball2.get()){
-            hopperHorizontal.set(ControlMode.PercentOutput, -.9);
-            hopperVertical.set(ControlMode.PercentOutput, -.9);
+          if(PosC.get()){
+            hopperHorizontal.set(ControlMode.PercentOutput, -.8);
+            hopperVertical.set(ControlMode.PercentOutput, -.8);
           }else{
             hopperHorizontal.set(ControlMode.PercentOutput, 0);
             hopperVertical.set(ControlMode.PercentOutput, 0);
@@ -121,15 +121,15 @@ public class Hopper extends RobotMap{
           hopperVertical.set(ControlMode.PercentOutput, 0);
         }
       }else{
-        hopperHorizontal.set(ControlMode.PercentOutput, -.9);
-        hopperVertical.set(ControlMode.PercentOutput, -.9);
+        hopperHorizontal.set(ControlMode.PercentOutput, -.8);
+        hopperVertical.set(ControlMode.PercentOutput, -.8);
       }
     }
     public void hopperVerticalOn(){
-      hopperVertical.set(ControlMode.PercentOutput,-.9);
+      hopperVertical.set(ControlMode.PercentOutput,-.8);
     }
     public void hopperHorizontalOn(){
-      hopperHorizontal.set(ControlMode.PercentOutput,-.9);
+      hopperHorizontal.set(ControlMode.PercentOutput,-.8);
     }
     
 }
