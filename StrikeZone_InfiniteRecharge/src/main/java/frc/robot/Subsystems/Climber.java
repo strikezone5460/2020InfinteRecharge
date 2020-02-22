@@ -14,21 +14,28 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class Climber extends RobotMap{
     Solenoid PTO = new Solenoid(0, 2);
+    Drivetrain DT;
 
     private int climbState = 0;
     private int counter = 0;
-    public void robotClimb(boolean noDrive){
+    public void Init(Drivetrain dt){
+        DT = dt;
+    }
+    public void robotClimb(boolean noDrive, double speed, double rotate){
         counter++;
     switch (climbState) {
         case 0:
             PTO.set(true);
-            if(counter == 100){
+            DT.arcadeDrive(speed, rotate, true);
+            if(counter == 500){
                 climbState = 1;
                 counter=0;
                 break;
             }
         case 1:
             PTO.set(false);
+            DT.arcadeDrive(speed, rotate, false);
+
             if(noDrive){
                 climbState = 2;
                 counter=0;
@@ -36,6 +43,8 @@ public class Climber extends RobotMap{
             }
         case 2:
             PTO.set(true);
+            DT.arcadeDrive(speed, rotate, true);
+
         default:
             break;
     }
