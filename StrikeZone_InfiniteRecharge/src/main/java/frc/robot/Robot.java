@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   Climber CL = new Climber();
 
   Auton_0 a0 = new Auton_0();
-  
+
   int pos = 4100;
   
   int shiftState = 0;
@@ -48,7 +48,8 @@ public class Robot extends TimedRobot {
   int shooterSetpoint = 0;
   int hoodCounter = 0;
 
-  boolean isHigh = false;
+  boolean isClimbing = false;
+
 
   int autonIndex = 0;
   int cycle = 0;
@@ -77,6 +78,7 @@ public class Robot extends TimedRobot {
     DT.Init();
     //DriveTrain Initalization
     SH.shooterInit();
+    CL.Init(DT);
 
   }
 
@@ -97,7 +99,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    a0.Init();
+    a0.Init(DT, SH, HO, IN);
   }
 
   @Override
@@ -114,6 +116,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     DT.Init();
+  
     //Initalization for Shooter and Drivetrain
   }
 
@@ -121,7 +124,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double speed = XBDriver.getY(Hand.kLeft);
     double rotate = XBDriver.getX(Hand.kRight);
-    isHigh =  DT.shiftHigh.get();
+    // isHigh =  DT.shiftHigh.get();
     double yOffset = SH.ty.getDouble(0.0);
 
 
@@ -165,8 +168,10 @@ public class Robot extends TimedRobot {
       HO.hopperBasicOff();
     }
     if(XBOpp.getBumper(Hand.kLeft)){
-      CL.robotClimb(XBOpp.getBumperPressed(Hand.kRight));
+      isClimbing = true;
+      CL.robotClimb(XBOpp.getBumperPressed(Hand.kRight), DT.Deadband(speed), 0);
     }
+
     if(hoodState == 1){
       SH.hoodLogic(false);
     }else{
@@ -191,9 +196,9 @@ public class Robot extends TimedRobot {
 
     // if(pos >8200) pos = 0;
     // if(pos < 0) pos = 8200;
-    
+    if(!isClimbing){
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
-
+    }
     // SH.basicServo(XBDriver.getTriggerAxis(Hand.kLeft));
 
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
