@@ -75,7 +75,7 @@ public class Shooter extends RobotMap{
     public void shooterInit(){
         shooterMaster.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         shooterSlave.setInverted(TalonFXInvertType.OpposeMaster);
-        shooterMaster.configClosedloopRamp(.25, 0);
+        shooterMaster.configClosedloopRamp(.2, 0);
         shooterMaster.configClosedLoopPeakOutput(0, 1);
         turretRotation.setSelectedSensorPosition(760);
         // shooterMaster.config
@@ -192,7 +192,7 @@ public class Shooter extends RobotMap{
     }
 
     public void hoodToggle(int toggle){
-        if(toggle == 1){
+        if(toggle != 0){
             longShotHood();
             ledMode.setNumber(0);
             camMode.setNumber(0);
@@ -204,23 +204,39 @@ public class Shooter extends RobotMap{
         }
     }
     public void hoodLogic(boolean closed){
-        yOffset =ty.getDouble(0.0);
-        if(!closed){
-        if(yOffset >= 0){
+        yOffset = ty.getDouble(0.0);
+    if(!closed){
+        if(yOffset >= -1){
             //under 10ft
             hoodAdjust.setPosition(kHoodPos[0]);
-        }else if(yOffset < 0 && yOffset > -10){
+        }else if(yOffset < -1 && yOffset > -10){
             //between 10 and 15ft
-            hoodAdjust.setPosition(kHoodPos[4]);
+            hoodAdjust.setPosition(kHoodPos[7]);
         }else if(yOffset < -10 && yOffset > -15){
             //between 15 and 20
-            hoodAdjust.setPosition(kHoodPos[5]);
+            hoodAdjust.setPosition(kHoodPos[8]);
         }else{
-            hoodAdjust.setPosition(kHoodPos[9]);
+            hoodAdjust.setPosition(kHoodPos[10]);
         }
     }else{
         hoodAdjust.setPosition(0);
     }
+    }
+
+    public double shooterSpeed(double yOffset){
+        if(yOffset >= -1){
+            return kShooterVel[0];
+          }else if(yOffset < -1 && yOffset > -10){
+            //between 10 and 15ft
+            return kShooterVel[1];
+        }else if(yOffset < -10 && yOffset > -15){
+            //between 15 and 20
+            return kShooterVel[2];
+        }else if(yOffset < -15 && yOffset > -24){
+            return kShooterVel[3];
+        }else if(yOffset == 0.0){
+            return 0;
+        }else return .01;
     }
 
     public void shortShotHood(){

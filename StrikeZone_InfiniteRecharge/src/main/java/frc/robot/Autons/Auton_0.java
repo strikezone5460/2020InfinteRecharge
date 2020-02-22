@@ -7,21 +7,15 @@
 
 package frc.robot.Autons;
 
-import frc.robot.Subsystems.*;
 /**
  * Add your docs here.
  */
-public class EightBall{
-    private Drivetrain DT = new Drivetrain();
-    private Shooter SH = new Shooter();
-    private Intakes IN = new Intakes();
-    private Hopper HO = new Hopper();
+public class Auton_0 {
 
-    public int autoState = 0;
-    int count = 0;
-    
-    public void eightBall(boolean side){
+    public void Periodic(){
+        System.out.println("We runnin boiz");
+    }
+    public void Init(){
         
     }
-
 }
