@@ -211,10 +211,10 @@ public class Shooter extends RobotMap{
             hoodAdjust.setPosition(kHoodPos[0]);
         }else if(yOffset < -1 && yOffset > -10){
             //between 10 and 15ft
-            hoodAdjust.setPosition(kHoodPos[7]);
+            hoodAdjust.setPosition(kHoodPos[10]);
         }else if(yOffset < -10 && yOffset > -15){
             //between 15 and 20
-            hoodAdjust.setPosition(kHoodPos[8]);
+            hoodAdjust.setPosition(kHoodPos[10]);
         }else{
             hoodAdjust.setPosition(kHoodPos[10]);
         }
@@ -224,9 +224,9 @@ public class Shooter extends RobotMap{
     }
 
     public double shooterSpeed(double yOffset){
-        if(yOffset >= -1){
+        if(yOffset >= -2){
             return kShooterVel[0];
-          }else if(yOffset < -1 && yOffset > -10){
+          }else if(yOffset < -2 && yOffset > -10){
             //between 10 and 15ft
             return kShooterVel[1];
         }else if(yOffset < -10 && yOffset > -15){
@@ -253,6 +253,10 @@ public class Shooter extends RobotMap{
         hoodMain.set(false);
         hoodSub.set(false);
     }
+
+    // public double shooterEquation(double ty){
+        
+    // }
 
     
 }

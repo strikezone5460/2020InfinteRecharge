@@ -27,7 +27,7 @@ public class Climber extends RobotMap{
         case 0:
             PTO.set(true);
             DT.arcadeDrive(speed, rotate, true);
-            if(counter == 500){
+            if(counter == 50){
                 climbState = 1;
                 counter=0;
                 break;
