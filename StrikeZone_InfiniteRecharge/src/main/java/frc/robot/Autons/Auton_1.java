@@ -8,11 +8,12 @@
 package frc.robot.Autons;
 
 import frc.robot.Subsystems.*;
+
 /**
  * Add your docs here.
  */
-public class Auton_0 {
-
+public class Auton_1 {
+    
     Drivetrain DT;
     Shooter SH;
     Hopper HO;
@@ -27,53 +28,39 @@ public class Auton_0 {
         HO = ho;
         IN = in;
     }
-    /**
-     * 3 Ball then move
-     */
+
     public void Periodic(){
         autoCounter++;
         switch (autoState) {
             case 0:
-                SH.hoodToggle(1);
-                SH.limeLightTurret();
-                SH.hoodLogic(false);
-                SH.velocityShooter(SH.kShooterVel[1]);
-                if(autoCounter == 80){
+                DT.gyroDrive(1, 0);
+                IN.intakesOut();
+                if(autoCounter == 20){
+                    autoCounter = 0;
                     autoState = 1;
-                    autoCounter =0;
-                }
+                }     
                 break;
             case 1:
-                SH.limeLightTurret();
-                SH.hoodLogic(false);
-                SH.velocityShooter(SH.kShooterVel[1]);
-                HO.hopperLogic(true);
-                
-                if(autoCounter == 60){
+                DT.gyroDrive(.85, 0);
+                IN.intakesOn(true);
+                if(autoCounter == 20){
+                    autoCounter = 0;
                     autoState = 2;
-                    autoCounter = 0;
                 }
                 break;
-            case 2: 
-                SH.limeLightTurret();
-                SH.velocityShooter(0);
-                SH.hoodLogic(true);
-                HO.hopperBasicOff();
-                IN.intakesOut();
-                DT.arcadeDrive(.25, 0, false);
-                if(autoCounter == 60){
+            case 2:
+                DT.gyroDrive(.5, 0);
+                IN.intakesOn(true);
+                if(autoCounter == 20){
+                    autoCounter = 0;
                     autoState = 3;
-                    autoCounter = 0;
                 }
-                break;
-            case 3:
-                SH.hoodToggle(0);
-                DT.arcadeDrive(0, 0, false);
                 break;
             default:
                 break;
         }
-        
+
+
     }
-  
+
 }
