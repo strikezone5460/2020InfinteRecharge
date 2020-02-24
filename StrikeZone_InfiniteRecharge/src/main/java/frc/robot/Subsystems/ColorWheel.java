@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.util.Color;
  */
 public class ColorWheel extends RobotMap{
     Solenoid wheelEx = new Solenoid(0, 4);
-     ColorSensorV3 pain = new ColorSensorV3(I2C.Port.kOnboard); // pain is color sensor
+     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard); // colorSensor is color sensor
         private final ColorMatch colorMatch = new ColorMatch();
         String startColor = "";
 
@@ -40,9 +40,23 @@ public class ColorWheel extends RobotMap{
         colorMatch.addColorMatch(kYellowTarget);
         
     }
+
+    public void djUp(){
+        wheelEx.set(true);
+    }
+    public void djDown(){
+        wheelEx.set(false);
+    }
+    public void djSpin(){
+        wheelSpin.set(ControlMode.PercentOutput, .75);
+    }
+    public void djSpinOff(){
+        wheelSpin.set(ControlMode.PercentOutput, 0);
+
+    }
     int theWheelState = 0;
     public void djBoothPos(){
-        Color detectedColor = pain.getColor(); // pain is color sensor
+        Color detectedColor = colorSensor.getColor(); // colorSensor is color sensor
         String nextColor;
         ColorMatchResult match = colorMatch.matchClosestColor(detectedColor);
         int count = 0;
@@ -89,7 +103,7 @@ public class ColorWheel extends RobotMap{
           }
 }
 public void djBoothExact(){
-    Color detectedColor = pain.getColor();
+    Color detectedColor = colorSensor.getColor();
     ColorMatchResult match = colorMatch.matchClosestColor(detectedColor);
 
         String gameData = DriverStation.getInstance().getGameSpecificMessage();

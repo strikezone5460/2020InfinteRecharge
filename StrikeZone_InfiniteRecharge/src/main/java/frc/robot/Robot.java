@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.Autons.Auton_0;
+import frc.robot.Autons.*;
 import frc.robot.Subsystems.*;
 
 /**
@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
   Intakes IN = new Intakes();
   Hopper HO = new Hopper();
   Climber CL = new Climber();
+  ColorWheel DJ = new ColorWheel();
 
   Auton_0 a0 = new Auton_0();
 
@@ -99,7 +100,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    a0.Init(DT, SH, HO, IN);
+    switch(autonIndex){
+      case 0:
+        a0.Init(DT, SH, HO, IN);
+      break;
+      case 1:
+
+    }
   }
 
   @Override
@@ -133,45 +140,90 @@ public class Robot extends TimedRobot {
 
     counter++;
     if((counter%8)==0){
-      //System.out.println("left: " + (DT.leftEncVel()) + " right: " + (DT.rightEncVel()) + "is High: "+ isHigh);
+      System.out.println("left: " + (DT.leftEncPos()) + " right: " + (DT.rightEncPos()) + " Gyro " + DT.gyroVal());
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
-      System.out.println("shooter Vel: " + SH.shooterVel() + " hoodState " + hoodState);
+      // System.out.println("shooter Vel: " + SH.shooterVel() + " hoodState " + hoodState);
       //System.out.println("turret pos: " + SH.turretPos);
     }
+    //####################################################################
+    //##################   Opperator Controls   ##########################
+    //####################################################################
 
-
-    // SH.limeLightToggle(XBDriver.getTriggerAxis(Hand.kRight)>.25);
+    // SH.limeLightToggle(XBOpp.getTriggerAxis(Hand.kRight)>.25);
     if(XBOpp.getTriggerAxis(Hand.kRight)>.1){
-
-      // SH.percentShooter(XBDriver.getTriggerAxis(Hand.kRight));
-       //HO.hopperBasic();
        SH.velocityShooter(SH.shooterSpeed(yOffset));
        SH.hoodToggle(1);
+       hoodState = 1;
        if(shooterCounter++ < 10 && shooterCounter > 0){ //shooter warmup period TODO Adjust
         HO.hopperBasicRev(.25);
        }else if(shooterCounter > 10 && shooterCounter < 50){
           HO.hopperBasicOff();
-       }else if(shooterCounter >= 50){
+       }else if(shooterCounter >= 60){
         HO.hopperLogic(true);
        }
-       hoodState  = 1;
     }else if(XBOpp.getAButton()){
       HO.hopperLogic(false);
     }else if(XBOpp.getBButton()){
       HO.hopperBasicRev(.5);
     }else if(XBOpp.getYButtonPressed()){
       hoodState++;
-
     }else{
       SH.percentShooter(0);
       shooterCounter = 0;
       HO.hopperBasicOff();
     }
-    if(XBOpp.getBumper(Hand.kLeft)){
-      isClimbing = true;
-      CL.robotClimb(XBOpp.getBumperPressed(Hand.kRight), DT.Deadband(speed), 0);
+
+    // if(XBOpp.getBumper(Hand.kLeft)){
+    //   isClimbing = true;
+    //   CL.robotClimb(XBOpp.getBumperPressed(Hand.kRight), DT.Deadband(speed), 0);
+    // }
+
+
+    //####################################################################
+    //####################   Driver Controls   ###########################
+    //####################################################################
+    
+    if(XBDriver.getTriggerAxis(Hand.kRight) > .1){
+      IN.intakesOn(false);
+      // HO.hopperLogic(false);
+    }else if(XBDriver.getBButton()){
+      IN.intakeOut();
+    }else{
+      IN.intakesOff();
+    }
+    IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
+    if(!isClimbing){
+    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
+    }
+    // SH.basicServo(XBOpp.getTriggerAxis(Hand.kLeft));
+
+    //Shifter toggle
+    if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
+    if(shiftState == 1){
+      DT.shiftHigh.set(false);
+      DT.shiftLow.set(true);
+  
+    }else if(shiftState >= 1){
+      DT.shiftLow.set(false);
+      DT.shiftHigh.set(true);
+      shiftState = 0;
+    }
+    if(XBDriver.getYButton()){
+      DJ.djUp();
+      if(XBDriver.getBButton()){
+        DJ.djSpin();
+      }else{
+        DJ.djSpinOff();
+      }
+    }else{
+      DJ.djDown();
+      DJ.djSpinOff();
     }
 
+    //####################################################################
+    //####################   Periodic Updates   ##########################
+    //####################################################################
+    
     if(hoodState == 1){
       SH.hoodLogic(false);
     }else{
@@ -179,64 +231,12 @@ public class Robot extends TimedRobot {
     }
       SH.hoodToggle(hoodState);
       if(hoodState >= 2)  hoodCounter++;
-      if(hoodCounter >= 25){ 
+      if(hoodCounter >= 45){ 
         hoodCounter = 0;
         hoodState = 0;
       }
+      SH.limeLightTurret();
 
-    if(XBDriver.getTriggerAxis(Hand.kRight) > .1){
-      IN.intakesOn();
-    //  HO.hopperLogic(false);
-    }else if(XBDriver.getBButton()){
-      IN.intakesOut();
-    }else{
-      IN.intakesOff();
-    }
-    SH.limeLightTurret();
-
-    // if(pos >8200) pos = 0;
-    // if(pos < 0) pos = 8200;
-    if(!isClimbing){
-    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
-    }
-    // SH.basicServo(XBDriver.getTriggerAxis(Hand.kLeft));
-
-    IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
-
-
-    // if(XBDriver.getXButton()){
-    //   // HO.hopperLogicBasic(false);
-    //   HO.hopperLogic(false);
-    // }
-
-
-    //Shifter toggle
-    if(XBDriver.getBumperPressed(Hand.kLeft)) shiftState++;
-    if(shiftState == 1){
-      DT.shiftHigh.set(false);
-      DT.shiftLow.set(true);
-     // isHigh = !isHigh;
-  
-    }else if(shiftState >= 1){
-      DT.shiftLow.set(false);
-      DT.shiftHigh.set(true);
-     // isHigh = !isHigh;
-      shiftState = 0;
-    }
-
-    
-
-
-    //
-    //Toggle for the shooter
-    //
-    // if(XBDriver.getAButtonPressed()) shooterState++;
-    // if(shooterState == 1){
-    //   SH.velocityShooter(1);
-    // }else if(shooterState >= 1){
-    //   SH.velocityShooter(0);
-    //   shooterState = 0;
-    // }
   }
 
   @Override
