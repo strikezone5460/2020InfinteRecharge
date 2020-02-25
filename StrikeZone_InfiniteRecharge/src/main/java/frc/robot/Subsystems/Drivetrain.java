@@ -65,7 +65,6 @@ public class Drivetrain extends RobotMap{
         
     }
 
-    public double gyroVal(){return gyro.getAngle();}
     /**
      * Uses Velocity mode PID in talons to drive
      * @param speed Percent of Maximum velocity (0-1)

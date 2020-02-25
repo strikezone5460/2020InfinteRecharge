@@ -12,7 +12,7 @@ import frc.robot.Subsystems.*;
  * Add your docs here.
  */
 public class EightBall{
-    // private Drivetrain DT = Drivetrain.getInstance();
+    private Drivetrain DT = new Drivetrain();
     private Shooter SH = new Shooter();
     private Intakes IN = new Intakes();
     private Hopper HO = new Hopper();
