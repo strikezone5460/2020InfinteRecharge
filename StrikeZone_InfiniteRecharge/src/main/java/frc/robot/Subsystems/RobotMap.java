@@ -32,7 +32,7 @@ public class RobotMap {
     TalonSRX hopperHorizontal = new TalonSRX(8);
     VictorSPX hopperVertical = new VictorSPX(9);
 
-    VictorSPX wheelSpin = new VictorSPX(10);
+    TalonSRX wheelSpin = new TalonSRX(10);
 
     TalonSRX turretRotation = new TalonSRX(11);
 
@@ -42,7 +42,7 @@ public class RobotMap {
 //     
     static double kShooterPct = 1.0;
     static double kShooterOff = 0.0;
-    public int kShooterVel[] = {12800, 14000, 15500, 17500, 19500};
+    public int kShooterVel[] = {12800, 15700, 17500, 19500, 19500};
     static double kHoodPos[] = {0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1};
 
 

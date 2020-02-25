@@ -48,9 +48,9 @@ public class Intakes extends RobotMap{
         }
     }
 
-    public void intakesOn(){
-        if(!isIntakeIn){
-            intake.set(ControlMode.PercentOutput, .7);
+    public void intakesOn(boolean bypass){
+        if(!isIntakeIn || bypass){
+            intake.set(ControlMode.PercentOutput, .75);
         }else{
             intake.set(ControlMode.PercentOutput, 0);
         }
