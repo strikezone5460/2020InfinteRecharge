@@ -50,7 +50,7 @@ public class Intakes extends RobotMap{
 
     public void intakesOn(boolean bypass){
         if(!isIntakeIn || bypass){
-            intake.set(ControlMode.PercentOutput, .75);
+            intake.set(ControlMode.PercentOutput, 1);
         }else{
             intake.set(ControlMode.PercentOutput, 0);
         }

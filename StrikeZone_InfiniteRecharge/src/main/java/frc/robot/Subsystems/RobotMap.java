@@ -7,6 +7,7 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -36,13 +37,15 @@ public class RobotMap {
 
     TalonSRX turretRotation = new TalonSRX(11);
 
+    CANifier hoodEncoder = new CANifier(0);
+
 
 // 
 //  Constants
 //     
     static double kShooterPct = 1.0;
     static double kShooterOff = 0.0;
-    public int kShooterVel[] = {12800, 15700, 17500, 19500, 19500};
+    public int kShooterVel[] = {12800, 16000, 17500, 19500, 19500};
     static double kHoodPos[] = {0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1};
 
 

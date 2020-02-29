@@ -140,10 +140,12 @@ public class Robot extends TimedRobot {
 
     counter++;
     if((counter%8)==0){
-      System.out.println("left: " + (DT.leftEncPos()) + " right: " + (DT.rightEncPos()) + " Gyro " + DT.gyroVal());
+      // System.out.println("left: " + (DT.leftEncPos()) + " right: " + (DT.rightEncPos()) + " Gyro " + DT.gyroVal());
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       // System.out.println("shooter Vel: " + SH.shooterVel() + " hoodState " + hoodState);
       //System.out.println("turret pos: " + SH.turretPos);
+ //     System.out.println("HoodEncoder: " + SH.hoodPos());
+      System.out.println("Vel Equation: " + SH.shooterEquation(0));
     }
     //####################################################################
     //##################   Opperator Controls   ##########################
@@ -172,6 +174,7 @@ public class Robot extends TimedRobot {
       shooterCounter = 0;
       HO.hopperBasicOff();
     }
+    // SH.basicServo(DT.Deadband(XBOpp.getY(Hand.kLeft)));
 
     // if(XBOpp.getBumper(Hand.kLeft)){
     //   isClimbing = true;

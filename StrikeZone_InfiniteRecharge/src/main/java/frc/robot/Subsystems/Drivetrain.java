@@ -123,6 +123,14 @@ public class Drivetrain extends RobotMap{
 
    }
 
+   public void gyroPosDrive(double pos, double angle){
+       
+       leftDriveMaster.set(ControlMode.Position, pos);
+       leftDriveSlave.follow(leftDriveMaster);
+       rightDriveMaster.set(ControlMode.Position, pos);
+       rightDriveSlave.follow(rightDriveMaster);
+   }
+
 
 
 
