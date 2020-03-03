@@ -34,8 +34,8 @@ public class Auton1 {
         switch (autoState) {
             case 0:
             //intake prep\\
-                IN.intakesOut();
-                IN.intakesOn(true);
+                IN.intakesExtend();
+                IN.intakeOn(true);
                 if(autoCounter == 10){
                     autoState = 1;
                     autoCounter = 0;
