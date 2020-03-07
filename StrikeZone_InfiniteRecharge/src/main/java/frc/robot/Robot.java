@@ -187,12 +187,12 @@ public class Robot extends TimedRobot {
     //####################################################################
     
     if(XBDriver.getTriggerAxis(Hand.kRight) > .1){
-      IN.intakesOn(false);
+      IN.intakeOn(false);
       // HO.hopperLogic(false);
     }else if(XBDriver.getBButton()){
       IN.intakeOut();
     }else{
-      IN.intakesOff();
+      IN.intakeOff();
     }
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
     if(!isClimbing){
