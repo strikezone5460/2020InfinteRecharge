@@ -37,7 +37,7 @@ public class RobotMap {
 
     TalonSRX turretRotation = new TalonSRX(11);
 
-    CANifier hoodEncoder = new CANifier(0);
+    CANifier canifier = new CANifier(0);
 
 
 // 
@@ -45,8 +45,9 @@ public class RobotMap {
 //     
     static double kShooterPct = 1.0;
     static double kShooterOff = 0.0;
-    public int kShooterVel[] = {12800, 16000, 17500, 19500, 19500};
-    static double kHoodPos[] = {0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1};
+    public int kShooterVel[] = {15200, 15300, 15500, 16000, 16500, 16800 ,16300 ,16300 ,16300 ,16700 ,16800 ,17300 ,17700};
+    static double kHoodPos[] = {0.475, .55, .675, .825, .9, .95, .875, .875, .85, .775, .775, .875, .9};
+    static double kLimelightty[] = {18, 12.6, 4.3, 1.3, -1.3, -3.2, -5.4, -6.9, -8.5, -10.5, -11, -12.3, -13.3};
 
 
     int kMaxLowDriveVel = 19000;
