@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -27,9 +28,13 @@ public class Robot extends TimedRobot {
    */
   XboxController XBDriver = new XboxController(0);
   XboxController XBOpp = new XboxController(1);
-  
+  XboxController OppBox = new XboxController(2);
+  Solenoid led1 = new Solenoid(1,5);
+  Solenoid led2 = new Solenoid(1,6);
+  Solenoid led3 = new Solenoid(1,7);
   // Solenoid shiftHigh = new Solenoid(0);
   // Solenoid shiftLow = new Solenoid(1);
+
   Shooter SH = new Shooter();
   Drivetrain DT = new Drivetrain();
   Intakes IN = new Intakes();
@@ -38,6 +43,8 @@ public class Robot extends TimedRobot {
   ColorWheel DJ = new ColorWheel();
 
   Auton_0 a0 = new Auton_0();
+  Auton_3 a3 = new Auton_3();
+  Auton_4 a4 = new Auton_4();
 
   int pos = 4100;
   
@@ -48,18 +55,24 @@ public class Robot extends TimedRobot {
   int shooterCounter =0;
   int shooterSetpoint = 0;
   int hoodCounter = 0;
+  int djToggle = 0;
 
   boolean isClimbing = false;
+  boolean isLockdownEnabled = false;
+
+  double angle = 0;
+  double angleMod = 0;
+  double lockdownAngle = 0;
 
 
   int autonIndex = 0;
   int cycle = 0;
   String autonStrings[] = {
-    "Move 5 feet",
-    "Shoot 3 then Move 5 feet",
-    "Shoot 3, get 2 behind, move 5 feet",
-    "Undefined",
-    "Undefined",
+    "shoot 3, Move",
+    "Steal 2, Shoot 5",
+    "Shoot 3, Grab 3, Shoot 3",
+    "Shoot 3, Grab 5, Shoot 5",
+    "Shoot 3, Grab 5, Shoot 5, Grab 2",
     "Undefined",
     "Undefined",
     "Undefined",
@@ -89,6 +102,8 @@ public class Robot extends TimedRobot {
     SH.limeLightToggle(XBDriver.getBButtonPressed());
     //Limelight on Shooter
 
+    
+
     if ((XBDriver.getBackButtonPressed())&&(autonIndex < 16)){
       autonIndex++;
     }
@@ -100,11 +115,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    DT.Init();
+    SH.shooterInit();
     switch(autonIndex){
       case 0:
         a0.Init(DT, SH, HO, IN);
       break;
       case 1:
+
+        break;
+      case 3:
+        a3.Init(DT, SH, HO, IN);
+
 
     }
   }
@@ -115,6 +137,9 @@ public class Robot extends TimedRobot {
     switch(autonIndex){
       case 0:
         a0.Periodic();
+        break;
+      case 3:
+        a3.Periodic();
         break;
     }
   
@@ -129,8 +154,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    // led1.set(true);
+    // led2.set(true);
+    // led3.set(true);
     double speed = XBDriver.getY(Hand.kLeft);
     double rotate = XBDriver.getX(Hand.kRight);
+    angleMod +=  DT.Deadband(rotate) * 7.5;
+    angle = DT.gyroVal() + angleMod;
     // isHigh =  DT.shiftHigh.get();
     double yOffset = SH.ty.getDouble(0.0);
 
@@ -144,35 +174,48 @@ public class Robot extends TimedRobot {
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       // System.out.println("shooter Vel: " + SH.shooterVel() + " hoodState " + hoodState);
       //System.out.println("turret pos: " + SH.turretPos);
- //     System.out.println("HoodEncoder: " + SH.hoodPos());
-      System.out.println("Vel Equation: " + SH.shooterEquation(0));
+    //  System.out.println("HoodEncoder: " + SH.hoodPos());
+      // System.out.println("Vel Equation: " + SH.shooterEquation(0));
+      
     }
     //####################################################################
     //##################   Opperator Controls   ##########################
     //####################################################################
 
-    // SH.limeLightToggle(XBOpp.getTriggerAxis(Hand.kRight)>.25);
-    if(XBOpp.getTriggerAxis(Hand.kRight)>.1){
-       SH.velocityShooter(SH.shooterSpeed(yOffset));
-       SH.hoodToggle(1);
-       hoodState = 1;
-       if(shooterCounter++ < 10 && shooterCounter > 0){ //shooter warmup period TODO Adjust
-        HO.hopperBasicRev(.25);
-       }else if(shooterCounter > 10 && shooterCounter < 50){
-          HO.hopperBasicOff();
-       }else if(shooterCounter >= 60){
-        HO.hopperLogic(true);
-       }
-    }else if(XBOpp.getAButton()){
+   
+    if(XBOpp.getTriggerAxis(Hand.kRight) >= 0.1){
+      SH.velocityShooter(20000);
+      SH.hoodToggle(1);
+    if(shooterCounter++ < 10 && shooterCounter > 0){ //shooter warmup period TODO Adjust
+      HO.hopperBasicRev(.25);
+    }else if(shooterCounter > 10 && shooterCounter < 50){
+      HO.hopperBasicOff();
+    }
+    }else{
+      SH.velocityShooter(0);
+    }
+
+    if(XBOpp.getTriggerAxis(Hand.kLeft) >= 0.1){
+      HO.hopperLogic(true);
+    }else if(XBOpp.getAButton() || XBDriver.getTriggerAxis(Hand.kRight) >= 0.1){
       HO.hopperLogic(false);
     }else if(XBOpp.getBButton()){
       HO.hopperBasicRev(.5);
-    }else if(XBOpp.getYButtonPressed()){
-      hoodState++;
     }else{
-      SH.percentShooter(0);
-      shooterCounter = 0;
       HO.hopperBasicOff();
+    }
+
+    DJ.djToggle(XBOpp.getBumperPressed(Hand.kRight));
+    if(XBOpp.getBumperPressed(Hand.kRight))djToggle++;
+    if(djToggle >= 1){
+      if(XBOpp.getXButton()){
+        DJ.djBoothRotation();
+      }else if(XBOpp.getYButton()){
+        DJ.djBoothExact();
+      }
+    }
+    if(XBOpp.getBumperPressed(Hand.kLeft)){
+      hoodState++;
     }
     // SH.basicServo(DT.Deadband(XBOpp.getY(Hand.kLeft)));
 
@@ -186,17 +229,26 @@ public class Robot extends TimedRobot {
     //####################   Driver Controls   ###########################
     //####################################################################
     
-    if(XBDriver.getTriggerAxis(Hand.kRight) > .1){
+    
+    if(XBDriver.getTriggerAxis(Hand.kRight) >= .1){
       IN.intakeOn(false);
       // HO.hopperLogic(false);
-    }else if(XBDriver.getBButton()){
+    }else if(XBDriver.getTriggerAxis(Hand.kLeft) >= .1){
       IN.intakeOut();
     }else{
       IN.intakeOff();
     }
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
-    if(!isClimbing){
-    DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
+    if(XBDriver.getBButtonPressed()){
+      lockdownAngle = DT.gyroVal();
+    }
+    if(XBDriver.getBButton()){
+      DT.gyroDrive(0, lockdownAngle);
+    }else if(OppBox.getRawButton(1)){
+      CL.robotClimb(XBDriver.getAButtonPressed(), XBDriver.getXButtonPressed(),XBDriver.getYButton(), DT.Deadband(speed), DT.Deadband(rotate));
+    }else{
+      DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
+
     }
     // SH.basicServo(XBOpp.getTriggerAxis(Hand.kLeft));
 
@@ -211,18 +263,7 @@ public class Robot extends TimedRobot {
       DT.shiftHigh.set(true);
       shiftState = 0;
     }
-    if(XBDriver.getYButton()){
-      DJ.djUp();
-      if(XBDriver.getBButton()){
-        DJ.djSpin();
-      }else{
-        DJ.djSpinOff();
-      }
-    }else{
-      DJ.djDown();
-      DJ.djSpinOff();
-    }
-
+  
     //####################################################################
     //####################   Periodic Updates   ##########################
     //####################################################################
@@ -234,7 +275,7 @@ public class Robot extends TimedRobot {
     }
       SH.hoodToggle(hoodState);
       if(hoodState >= 2)  hoodCounter++;
-      if(hoodCounter >= 45){ 
+      if(SH.hoodPos() < 10){ 
         hoodCounter = 0;
         hoodState = 0;
       }

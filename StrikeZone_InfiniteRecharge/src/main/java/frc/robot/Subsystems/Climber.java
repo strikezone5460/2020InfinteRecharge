@@ -14,40 +14,63 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class Climber extends RobotMap{
     Solenoid PTO = new Solenoid(0, 2);
+    Solenoid armsRelease = new Solenoid(0, 5);
+    
     Drivetrain DT;
 
     private int climbState = 0;
     private int counter = 0;
+    boolean extended = false;
     public void Init(Drivetrain dt){
         DT = dt;
     }
-    public void robotClimb(boolean noDrive, double speed, double rotate){
+    public void robotClimb(boolean noDrive,boolean armsUp,boolean goBack, double speed, double rotate){
         counter++;
     switch (climbState) {
         case 0:
             PTO.set(true);
-            DT.arcadeDrive(speed, rotate, true);
-            if(counter == 50){
+            //DT.arcadeDrive(speed, rotate, true);
+            if(counter == 25){
                 climbState = 1;
                 counter=0;
-                break;
             }
+                break;
         case 1:
             PTO.set(false);
-            DT.arcadeDrive(speed, rotate, false);
-
+            DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);
+            if(armsUp){
+                extended = true;
+            }
+            armsRelease.set(extended);
             if(noDrive){
                 climbState = 2;
                 counter=0;
-                break;
             }
+                break;
         case 2:
             PTO.set(true);
-            DT.arcadeDrive(speed, rotate, true);
-
+            if(goBack){
+                PTO.set(false);
+                DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);
+                if(armsUp){
+                    extended = true;
+                }
+                armsRelease.set(extended);
+            }else{
+            if(armsUp){
+                extended = true;
+            }
+            armsRelease.set(extended);
+            DT.arcadeDrive(Math.abs(speed), 0, true);
+        }
         default:
             break;
     }
+    }
+
+    public void foldUp(boolean toggle){
+        int thingy;
+
     }
 
 

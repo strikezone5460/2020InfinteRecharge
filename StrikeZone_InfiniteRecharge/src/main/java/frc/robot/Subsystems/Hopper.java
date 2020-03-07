@@ -51,8 +51,8 @@ public class Hopper extends RobotMap{
             break;
           case 3:
           // balls in horizontal and bottom vertical positions
-            hopperHorizontal.set(ControlMode.PercentOutput, -.8);
-            hopperVertical.set(ControlMode.PercentOutput, -.8);
+            hopperHorizontal.set(ControlMode.PercentOutput, -.75);
+            hopperVertical.set(ControlMode.PercentOutput, -.75);
             break;
           case 4:
           // ball in top vertical position

@@ -59,7 +59,7 @@ public class Shooter extends RobotMap{
     double[] Distance = camtran.getDoubleArray(noVal);
 
     boolean isFlipping = false;
-    public int hoodPos(){return hoodEncoder.getQuadraturePosition();}
+    public int hoodPos(){return canifier.getQuadraturePosition();}
 
 
 
@@ -82,7 +82,7 @@ public class Shooter extends RobotMap{
         shooterMaster.configClosedloopRamp(.2, 0);
         shooterMaster.configClosedLoopPeakOutput(0, 1);
         turretRotation.setSelectedSensorPosition(760);
-        hoodEncoder.setQuadraturePosition(0, 0);
+        canifier.setQuadraturePosition(0, 0);
         // shooterMaster.config
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
     }
@@ -102,7 +102,7 @@ public class Shooter extends RobotMap{
         double correction = ((error * kP)+1) / 2;
     
         hoodAdjust.setPosition(correction);
-        // System.out.println("HoodEncoder: " + currentValue +" error: "+error+" correction: "+correction);
+        // System.out.println("canifier: " + currentValue +" error: "+error+" correction: "+correction);
     
     }
 
@@ -212,30 +212,30 @@ public class Shooter extends RobotMap{
             closedHood();
             ledMode.setNumber(1);
             camMode.setNumber(1);
-
         }
     }
     public void hoodLogic(boolean closed){
         yOffset = ty.getDouble(0.0);
     if(!closed){
-        if(yOffset >= -1){
+        if(yOffset >= kLimelightty[0]){
             //under 10ft
             // hoodAdjust.setPosition(kHoodPos[0]);
-            basicServo(kHoodPos[4]);
+            basicServo(.8);
         }else if(yOffset < -1 && yOffset > -10){
             //between 10 and 15ft
             // hoodAdjust.setPosition(kHoodPos[2]);
-            basicServo(kHoodPos[6]);
+            basicServo(.9);
         }else if(yOffset < -10 && yOffset > -15){
             //between 15 and 20
             // hoodAdjust.setPosition(kHoodPos[5]);
-            basicServo(kHoodPos[8]);
+            basicServo(.95);
         }else{
             // hoodAdjust.setPosition(kHoodPos[10]);
-            basicServo(kHoodPos[10]);
+            basicServo(1);
         }
     }else{
-        hoodAdjust.setPosition(0);
+        // hoodAdjust.setPosition(0);
+        basicServo(0);
     }
     }
 
