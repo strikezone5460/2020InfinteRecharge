@@ -26,6 +26,7 @@ public class ColorWheel extends RobotMap{
      ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard); // colorSensor is color sensor
         private final ColorMatch colorMatch = new ColorMatch();
         String startColor = "";
+        int upDownToggle = 0;
 
 
       
@@ -47,6 +48,15 @@ public class ColorWheel extends RobotMap{
     public void djDown(){
         wheelEx.set(false);
     }
+    public void djToggle(boolean toogle){
+      if(toogle)upDownToggle++;
+      if(upDownToggle == 1)djUp();
+      else{
+        djDown();
+        upDownToggle = 0;
+      }
+    }
+
     public void djSpin(){
         wheelSpin.set(ControlMode.PercentOutput, .75);
     }
@@ -55,7 +65,7 @@ public class ColorWheel extends RobotMap{
 
     }
     int theWheelState = 0;
-    public void djBoothPos(){
+    public void djBoothRotation(){
         Color detectedColor = colorSensor.getColor(); // colorSensor is color sensor
         String nextColor;
         ColorMatchResult match = colorMatch.matchClosestColor(detectedColor);
