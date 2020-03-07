@@ -8,7 +8,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
+//import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
@@ -39,6 +39,7 @@ public class Shooter extends RobotMap{
     public NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ta = table.getEntry("ta");
     NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableEntry camtran = table.getEntry("camtran");
     NetworkTableEntry ledMode = table.getEntry("ledMode");
     NetworkTableEntry camMode = table.getEntry("camMode");
     
@@ -48,14 +49,17 @@ public class Shooter extends RobotMap{
 
     boolean LLtoggle = true;
     double setpoint = 760;
+    double[] noVal = {0.0,0.0,0.0,0.0,0.0,0.0};
 
     public int turretPos = turretRotation.getSelectedSensorPosition(0);
     //NetworkTableInstance.getDefault().getTable("limelight-turret").getEntry("tv")
     double isTargeting = tv.getDouble(0);
     double xOffset = tx.getDouble(0.0);
     double yOffset = ty.getDouble(0.0);
+    double[] Distance = camtran.getDoubleArray(noVal);
 
     boolean isFlipping = false;
+    public int hoodPos(){return hoodEncoder.getQuadraturePosition();}
 
 
 
@@ -78,6 +82,7 @@ public class Shooter extends RobotMap{
         shooterMaster.configClosedloopRamp(.2, 0);
         shooterMaster.configClosedLoopPeakOutput(0, 1);
         turretRotation.setSelectedSensorPosition(760);
+        hoodEncoder.setQuadraturePosition(0, 0);
         // shooterMaster.config
         //shooterMaster.configAllowableClosedloopError(0, allowableCloseLoopError, timeoutMs)
     }
@@ -90,8 +95,15 @@ public class Shooter extends RobotMap{
 
     public void basicServo(double input){
         //Turret rotation
-        double pos = input; //(input +1)/2;
-        hoodAdjust.setPosition(pos);
+        final double kP = 10;
+        double pos =input;      //(input +1)/2;     0 to 1.0
+        double currentValue = hoodPos() / 2265.0;
+        double error = pos - currentValue;
+        double correction = ((error * kP)+1) / 2;
+    
+        hoodAdjust.setPosition(correction);
+        // System.out.println("HoodEncoder: " + currentValue +" error: "+error+" correction: "+correction);
+    
     }
 
     public void velocityShooter(double setpoint){
@@ -208,15 +220,19 @@ public class Shooter extends RobotMap{
     if(!closed){
         if(yOffset >= -1){
             //under 10ft
-            hoodAdjust.setPosition(kHoodPos[0]);
+            // hoodAdjust.setPosition(kHoodPos[0]);
+            basicServo(kHoodPos[4]);
         }else if(yOffset < -1 && yOffset > -10){
             //between 10 and 15ft
-            hoodAdjust.setPosition(kHoodPos[10]);
+            // hoodAdjust.setPosition(kHoodPos[2]);
+            basicServo(kHoodPos[6]);
         }else if(yOffset < -10 && yOffset > -15){
             //between 15 and 20
-            hoodAdjust.setPosition(kHoodPos[10]);
+            // hoodAdjust.setPosition(kHoodPos[5]);
+            basicServo(kHoodPos[8]);
         }else{
-            hoodAdjust.setPosition(kHoodPos[10]);
+            // hoodAdjust.setPosition(kHoodPos[10]);
+            basicServo(kHoodPos[10]);
         }
     }else{
         hoodAdjust.setPosition(0);
@@ -224,9 +240,9 @@ public class Shooter extends RobotMap{
     }
 
     public double shooterSpeed(double yOffset){
-        if(yOffset >= -2){
+        if(yOffset >= 0){
             return kShooterVel[0];
-          }else if(yOffset < -2 && yOffset > -10){
+          }else if(yOffset < 0 && yOffset > -10){
             //between 10 and 15ft
             return kShooterVel[1];
         }else if(yOffset < -10 && yOffset > -15){
@@ -254,9 +270,12 @@ public class Shooter extends RobotMap{
         hoodSub.set(false);
     }
 
-    // public double shooterEquation(double ty){
-        
-    // }
+    public double shooterEquation(int modifier){
+        double[] distance = camtran.getDoubleArray(noVal);
+
+        double vel = (-(distance[2])* (Math.pow(Math.E, .444))*60);
+        return vel + modifier;
+    }
 
     
 }

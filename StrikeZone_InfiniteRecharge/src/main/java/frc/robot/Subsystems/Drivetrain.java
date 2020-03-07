@@ -46,6 +46,7 @@ public class Drivetrain extends RobotMap{
         rightDriveMaster.setSelectedSensorPosition(0);
         leftDriveMaster.configClosedloopRamp(.25);
         rightDriveMaster.configClosedloopRamp(.25);
+        gyro.reset();
     }
     /**
      * Standard Drive function for teleop
@@ -100,7 +101,7 @@ public class Drivetrain extends RobotMap{
      * @param angle Angle that the robot will travel
      */
    public void gyroDrive(double speed, double angle){
-        double kp = 0.001;
+        double kp = 0.0125;
 
         double input = gyro.getAngle();
         double error = angle - input;
@@ -121,6 +122,14 @@ public class Drivetrain extends RobotMap{
        rightDriveMaster.set(ControlMode.Position, rightSetpoint);
        rightDriveSlave.follow(rightDriveMaster);
 
+   }
+
+   public void gyroPosDrive(double pos, double angle){
+       
+       leftDriveMaster.set(ControlMode.Position, pos);
+       leftDriveSlave.follow(leftDriveMaster);
+       rightDriveMaster.set(ControlMode.Position, pos);
+       rightDriveSlave.follow(rightDriveMaster);
    }
 
 

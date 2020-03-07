@@ -38,6 +38,8 @@ public class Robot extends TimedRobot {
   ColorWheel DJ = new ColorWheel();
 
   Auton_0 a0 = new Auton_0();
+  Auton_3 a3 = new Auton_3();
+  Auton_4 a4 = new Auton_4();
 
   int pos = 4100;
   
@@ -50,16 +52,20 @@ public class Robot extends TimedRobot {
   int hoodCounter = 0;
 
   boolean isClimbing = false;
+  boolean isLockdownEnabled = false;
+
+  double angle = 0;
+  double angleMod = 0;
 
 
   int autonIndex = 0;
   int cycle = 0;
   String autonStrings[] = {
-    "Move 5 feet",
-    "Shoot 3 then Move 5 feet",
-    "Shoot 3, get 2 behind, move 5 feet",
-    "Undefined",
-    "Undefined",
+    "shoot 3, Move",
+    "Steal 2, Shoot 5",
+    "Shoot 3, Grab 3, Shoot 3",
+    "Shoot 3, Grab 5, Shoot 5",
+    "Shoot 3, Grab 5, Shoot 5, Grab 2",
     "Undefined",
     "Undefined",
     "Undefined",
@@ -100,11 +106,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    DT.Init();
+    SH.shooterInit();
     switch(autonIndex){
       case 0:
         a0.Init(DT, SH, HO, IN);
       break;
       case 1:
+
+        break;
+      case 3:
+        a3.Init(DT, SH, HO, IN);
+
 
     }
   }
@@ -115,6 +128,9 @@ public class Robot extends TimedRobot {
     switch(autonIndex){
       case 0:
         a0.Periodic();
+        break;
+      case 3:
+        a3.Periodic();
         break;
     }
   
@@ -131,6 +147,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double speed = XBDriver.getY(Hand.kLeft);
     double rotate = XBDriver.getX(Hand.kRight);
+    angleMod +=  DT.Deadband(rotate) * 7.5;
+    angle = DT.gyroVal() + angleMod;
     // isHigh =  DT.shiftHigh.get();
     double yOffset = SH.ty.getDouble(0.0);
 
@@ -140,10 +158,13 @@ public class Robot extends TimedRobot {
 
     counter++;
     if((counter%8)==0){
-      System.out.println("left: " + (DT.leftEncPos()) + " right: " + (DT.rightEncPos()) + " Gyro " + DT.gyroVal());
+      // System.out.println("left: " + (DT.leftEncPos()) + " right: " + (DT.rightEncPos()) + " Gyro " + DT.gyroVal());
       // System.out.println("isHome1: " + SH.isHome1 + " isHome: " + SH.isHome2);
       // System.out.println("shooter Vel: " + SH.shooterVel() + " hoodState " + hoodState);
       //System.out.println("turret pos: " + SH.turretPos);
+    //  System.out.println("HoodEncoder: " + SH.hoodPos());
+      // System.out.println("Vel Equation: " + SH.shooterEquation(0));
+      
     }
     //####################################################################
     //##################   Opperator Controls   ##########################
@@ -151,7 +172,7 @@ public class Robot extends TimedRobot {
 
     // SH.limeLightToggle(XBOpp.getTriggerAxis(Hand.kRight)>.25);
     if(XBOpp.getTriggerAxis(Hand.kRight)>.1){
-       SH.velocityShooter(SH.shooterSpeed(yOffset));
+       SH.velocityShooter(20000);//SH.shooterSpeed(yOffset)
        SH.hoodToggle(1);
        hoodState = 1;
        if(shooterCounter++ < 10 && shooterCounter > 0){ //shooter warmup period TODO Adjust
@@ -172,6 +193,7 @@ public class Robot extends TimedRobot {
       shooterCounter = 0;
       HO.hopperBasicOff();
     }
+    // SH.basicServo(DT.Deadband(XBOpp.getY(Hand.kLeft)));
 
     // if(XBOpp.getBumper(Hand.kLeft)){
     //   isClimbing = true;
@@ -183,18 +205,20 @@ public class Robot extends TimedRobot {
     //####################   Driver Controls   ###########################
     //####################################################################
     
+    
     if(XBDriver.getTriggerAxis(Hand.kRight) > .1){
-      IN.intakesOn(false);
+      IN.intakeOn(false);
       // HO.hopperLogic(false);
     }else if(XBDriver.getBButton()){
       IN.intakeOut();
     }else{
-      IN.intakesOff();
+      IN.intakeOff();
     }
     IN.intakesIO(XBDriver.getBumperPressed(Hand.kRight));
     if(!isClimbing){
     DT.arcadeDrive(DT.Deadband(speed), DT.Deadband(rotate)*.7, false);//TODO Replace with nuke
-    }
+      // DT.gyroDrive(DT.Deadband(speed), angle);
+  }
     // SH.basicServo(XBOpp.getTriggerAxis(Hand.kLeft));
 
     //Shifter toggle

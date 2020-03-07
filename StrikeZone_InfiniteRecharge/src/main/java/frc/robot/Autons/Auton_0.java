@@ -59,7 +59,7 @@ public class Auton_0 {
                 SH.velocityShooter(0);
                 SH.hoodLogic(true);
                 HO.hopperBasicOff();
-                IN.intakesOut();
+                IN.intakeOut();
                 DT.arcadeDrive(.25, 0, false);
                 if(autoCounter == 60){
                     autoState = 3;
