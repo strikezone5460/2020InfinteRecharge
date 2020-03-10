@@ -50,41 +50,48 @@ public class Auton1 {
                 }
                 break;
             case 2: 
-                DT.gyroDrive(0.35, 30);
+                DT.gyroDrive(-0.5, 30);
                 if(autoCounter == 40){
                     autoState = 3;  
                     autoCounter = 0;
                 } 
                 break;
-            case 3:
-            //drive out of trench\\
-                DT.gyroDrive(-0.5, 0);
-                if(autoCounter == 70){
+                case 3: 
+                DT.gyroDrive(0.5, 30);
+                if(autoCounter == 40){
                     autoState = 4;  
                     autoCounter = 0;
                 } 
                 break;
-            case 4: 
+            case 4:
+            //drive out of trench\\
+                DT.gyroDrive(-0.5, 0);
+                if(autoCounter == 70){
+                    autoState = 5;  
+                    autoCounter = 0;
+                } 
+                break;
+            case 5: 
             //prep shooter\\
                 DT.gyroDrive(0, 0);
                 SH.hoodToggle(1);
                 SH.velocityShooter(SH.kShooterVel[1]);
                 if(autoCounter == 80){
-                    autoState = 5;  
+                    autoState = 6;  
                     autoCounter = 0;
                 }
                 break;
-            case 5:
+            case 6:
             //actually shoots\\
                 SH.hoodToggle(1);
                 SH.velocityShooter(SH.kShooterVel[1]);
                 HO.hopperBasic();
                 if (autoCounter == 200){
-                    autoState = 6;
+                    autoState = 7;
                     autoCounter = 0;
                 }
                 break;
-            case 6:
+            case 7:
             //stop shooting\\
                 SH.velocityShooter(0);
                 HO.hopperBasicOff();
