@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
   ColorWheel DJ = new ColorWheel();
 
   Auton_0 a0 = new Auton_0();
+  Auton_1 a1 = new Auton_1();
   Auton_3 a3 = new Auton_3();
   Auton_4 a4 = new Auton_4();
 
@@ -122,7 +123,7 @@ public class Robot extends TimedRobot {
         a0.Init(DT, SH, HO, IN);
       break;
       case 1:
-
+        
         break;
       case 3:
         a3.Init(DT, SH, HO, IN);

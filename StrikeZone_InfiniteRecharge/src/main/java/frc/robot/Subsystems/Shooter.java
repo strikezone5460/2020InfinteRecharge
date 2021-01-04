@@ -64,7 +64,7 @@ public class Shooter extends RobotMap{
 
 
     public void limeLightToggle(boolean input){
-        //Lime light toggle 
+        //Limelight toggle 
         if(input) LLtoggle = !LLtoggle;
         if(LLtoggle){
             ledMode.setNumber(0);

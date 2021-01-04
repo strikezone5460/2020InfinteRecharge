@@ -12,7 +12,7 @@ import frc.robot.Subsystems.*;
 /**
  * Add your docs here.
  */
-public class Auton1 {
+public class Auton_1 {
      
     Drivetrain DT;
     Shooter SH;
