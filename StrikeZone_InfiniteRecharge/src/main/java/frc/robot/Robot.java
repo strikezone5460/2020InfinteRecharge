@@ -1,19 +1,24 @@
 package frc.robot;
 
+import frc.robot.Subsystems.*;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import frc.robot.Subsystems.*;
-
-// import org.graalvm.compiler.core.common.type.ArithmeticOpTable.UnaryOp.Abs;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+////NOTES
+  /*
+  Test shooter follower mode
+  Test lights
+  Set talon pid for shooter vel
+  Test hood p loop
+  */
 
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
@@ -22,58 +27,65 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
 
-  ////DEFINES
+////DEFINES
   final double DEFAULT_DEADBAND = 0.2;
   final double MAX_VALUE = 1.0;
 
-  ////Drivetrain
+////Drivetrain
   final boolean ROCKET_DRIVE = true;
   final boolean ARCADE_DRIVE = false;
   final boolean WHEEL_DRIVE = false;
 
-  ////Intake
+////Intake
   final double INTAKE_POWER = 0.8;
 
-  ////Indexer
+////Indexer
   final double INDEXER_H_POWER = 0.5;
   final double INDEXER_V_POWER = 0.6;
 
-  ////Shooter
-  final double SHOOTER_VOLTAGE = 16000;
+////Shooter
+  final double SHOOTER_VEL = 16000;
   final double SHOOTER_Y = 17;
   final double SHOOTER_X = 0;
 
+  final boolean AUTO_TURRET = true;
+  final boolean AUTO_HOOD = true;
 
-  ////SUBSYSTEMS
+
+////SUBSYSTEMS
   Drivetrain drivetrain = new Drivetrain();
   Intake intake = new Intake();
   Indexer indexer = new Indexer();
   Shooter shooter = new Shooter();
 
 
-  ////HIDs
+////HIDs
   XboxController Driver = new XboxController(0);
   XboxController Operator = new XboxController(1);
   XboxController Board = new XboxController(2);
 
 
-  ////VARIABLES
+////VARIABLES
   double leftJoystickX, leftJoystickY, rightJoystickX, rightJoystickY;
   double leftTrigger, rightTrigger;
-  double speed, rotate;
-  double limelightX, limelightY, limelightD;
-  double hIndex, vIndex;
-  double turretTarget = 0;
 
+  double speed, rotate;
+
+  double hIndex, vIndex;
+
+  double turretTarget = 0;
+  double hoodTarget;
+  boolean hoodToggle = false;
   boolean shooterToggle = false;
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-turret");
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry td = table.getEntry("td");
+  double limelightX, limelightY, limelightD;
 
 
-  ////METHODS
+////METHODS
   public double applyDeadband(double input,double deadband){
     return(Math.abs(input) > deadband ? (input - (input > 0 ? deadband : -deadband)) * (MAX_VALUE / (MAX_VALUE - deadband)) : 0);
   }
@@ -132,7 +144,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    ////CONTROLS
+////VARIABLE UPDATES
+////Controls
     leftTrigger = applyDeadband(Driver.getTriggerAxis(Hand.kLeft),0.01);
     rightTrigger = applyDeadband(Driver.getTriggerAxis(Hand.kRight),0.01);
     leftJoystickX = WHEEL_DRIVE ? Driver.getX(Hand.kLeft) : applyDeadband(Driver.getX(Hand.kLeft));
@@ -140,12 +153,13 @@ public class Robot extends TimedRobot {
     rightJoystickX = applyDeadband(Driver.getX(Hand.kRight));
     rightJoystickY = applyDeadband(Driver.getY(Hand.kRight));
 
-    ////SENSORS
+////Sensors
     limelightX = tx.getDouble(0.0);
     limelightY = ty.getDouble(0.0);
     limelightD = td.getDouble(0.0);
 
-    ////DRIVETRAIN
+
+////DRIVETRAIN
     if(ROCKET_DRIVE){
       speed = rightTrigger - leftTrigger;
       rotate = squareVal((speed >= 0) ? leftJoystickX : -leftJoystickX);
@@ -167,14 +181,8 @@ public class Robot extends TimedRobot {
       drivetrain.shift();
     }
 
-    if(Driver.getYButton()){
-      drivetrain.targetDrive(limelightX - SHOOTER_X, limelightY - SHOOTER_Y);
-    }
-    else{
-      drivetrain.standardDrive(speed, rotate);
-    }
 
-    ////INDEXER
+////INDEXER
     if(Driver.getPOV() == 180){
       hIndex = INDEXER_H_POWER;
       vIndex = INDEXER_V_POWER;
@@ -188,7 +196,7 @@ public class Robot extends TimedRobot {
       hIndex = 0;
     }
 
-    ////INTAKES
+////INTAKES
     if(Driver.getBumperPressed(Hand.kRight)){
       intake.toggleIntake();
     }
@@ -207,16 +215,15 @@ public class Robot extends TimedRobot {
 
     if(!shooterToggle)indexer.autoIndex();
 
-    ////SHOOTER
+////SHOOTER
     if(Driver.getXButtonPressed()){
       shooterToggle = !shooterToggle;
-      shooter.setShooterPower(shooterToggle ? SHOOTER_VOLTAGE : 0);
+      shooter.setShooterPower(shooterToggle ? SHOOTER_VEL : 0);
     }
 
-    if(true){
-
+    if(AUTO_TURRET){
       if((turretTarget > -1000 && limelightX > 0) || (turretTarget < 1000 && limelightX < 0)){
-        turretTarget = shooter.getTurretPos() + (-limelightX*25);
+        turretTarget = shooter.getTurretEnc() + (-limelightX*25);
       }
 
       if(turretTarget < -1000){
@@ -225,62 +232,25 @@ public class Robot extends TimedRobot {
       else if(turretTarget > 1000){
         turretTarget = 1000;
       }
-
-      
-
-      // shooter.setTurretPower(10.0);
-
-      // System.out.println(turretTarget);
-      shooter.moveTurretPos(turretTarget);
-      // shooter.moveTurretPos(1000);
-      // shooter.moveTurretVision(-limelightX);
+      shooter.setTurretPos(turretTarget);
     }
-    // else if(Driver.getBackButton()){
-    //   shooter.moveTurretPos(-1000);
-    // }
-    // else{
-    //   shooter.setTurretPower(0);
-    // }
 
-    if(true){
-      // shooter.moveHoodPos(2150);
-      // System.out.println("MOVING");
+    if(AUTO_HOOD){
+      hoodTarget = Math.abs(limelightY - 15) * 67;
 
-      shooter.moveHoodPos(Math.abs(limelightY - 15) * 67);
-
-      if(shooter.getHoodPos() < 100){
-        shooter.moveHoodPos(100);
+      if(hoodTarget < 100){
+        hoodTarget = 100;
       }
-      else if(shooter.getHoodPos() > 2100){
-        shooter.moveHoodPos(2100);
+      else if(hoodTarget > 2100){
+        hoodTarget = 2100;
       }
+      shooter.setHoodPos(hoodTarget);
     }
-    // else{
-    //   shooter.setHoodSpeed(0.0);
-    // }
 
-    // if(shooterToggle && false){
-    //   shooter.moveTurretVision(limelightX);
-    //   shooter.setTurretPower(limelightD);
-    //   shooter.moveHoodPos(limelightY);
-    //   // if(limelightX == 0 && hoodAdjusted && shooterVelGood){
-    //     //set goodToGo = true;
-    //   // }
 
-    //   // if(timeout || indexEmpty || joysticksMoved){
-    //     //set goodToGo = false;
-    //   // }
-    //   // if(goodToGo){
-    //     // index routine
-    //   // }
-    // }
-
-    ////ETC.
+////ETC.
     indexer.indexerHPower(hIndex);
     indexer.indexerVPower(vIndex);
-    // System.out.print("HOOD POS:");
-    // System.out.println(shooter.getHoodPos());
-    shooter.getShooterVel();
   }
 
 
@@ -291,7 +261,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    System.out.println(shooter.getHoodPos());
+    System.out.println(shooter.getHoodEnc());
   }
 
 

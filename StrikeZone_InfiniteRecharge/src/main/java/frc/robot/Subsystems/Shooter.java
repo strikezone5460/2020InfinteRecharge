@@ -3,37 +3,33 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import com.ctre.phoenix.CANifier;
-import edu.wpi.first.wpilibj.Servo;
+
 import edu.wpi.first.wpilibj.Solenoid;
-
-
 import edu.wpi.first.wpilibj.PWM;
 
 
 public class Shooter{
-    ////DEVICES
+
+////DEVICES
     TalonFX shooterMaster = new TalonFX(5);
     TalonFX shooterFollower = new TalonFX(6);
 
     TalonSRX turret = new TalonSRX(11);
 
-    Solenoid hood = new Solenoid(1, 0);
-    Solenoid lightOne = new Solenoid(1, 5);
-    Solenoid lightTwo = new Solenoid(1, 6);
-    Solenoid lightThree = new Solenoid(1, 7);
-
     PWM hoodAdjust = new PWM(0);
+
+    Solenoid hood = new Solenoid(1, 0);
+    Solenoid lightBlue = new Solenoid(1, 5);
+    Solenoid lightGreen = new Solenoid(1, 6);
+    Solenoid lightRed = new Solenoid(1, 7);
 
     CANifier canifier = new CANifier(0);
 
-    ////VARIABLES
-    boolean hoodToggle = true;
 
-    ////METHODS
+////METHODS
     public void init(){
-        hood.set(true);
+        toggleHood(true);
         setTurretEnc(0);
         setHoodPos(0);
         turret.config_kP(0,4);
@@ -43,74 +39,59 @@ public class Shooter{
         canifier.setQuadraturePosition(0,10);
     }
 
-    public void toggleHood(){
-        hoodToggle = !hoodToggle;
-        hood.set(hoodToggle);
-    }
-
+////Shooter
     public void setShooterPower(double power){
         shooterMaster.set(ControlMode.Velocity,power);
-        shooterFollower.set(ControlMode.Velocity,-power);
+        // shooterFollower.set(ControlMode.Velocity,-power);
+        shooterFollower.set(ControlMode.Follower,shooterMaster.getDeviceID());
     }
 
-    public void getShooterVel(){
-        System.out.println(shooterMaster.getSelectedSensorVelocity());
-        System.out.println(shooterFollower.getSelectedSensorVelocity());
+    public int getShooterVel(){
+        return shooterMaster.getSelectedSensorVelocity();
     }
 
+////Turret
     public void setTurretPower(double power){
         turret.set(ControlMode.PercentOutput, power);
     }
 
-    public void moveTurretPos(double target){
-        // if(getTurretPos() > 1000 || target > 1000){
-        //     turret.set(ControlMode.Position, 1000);
-        // }
-        // else if(getTurretPos() < -1000 || target < -1000){
-        //     turret.set(ControlMode.Position, -1000);
-        // }
-        // else if(getTurretPos() < 1000 && getTurretPos() > -1000){
-        //     turret.set(ControlMode.Position, target);
-        // }
+    public void setTurretPos(double target){
         turret.set(ControlMode.Position, target);
     }
 
-    public void moveTurretVision(double error){
-        if((getTurretPos() < 1000 && error > 0) || (getTurretPos() > -1000 && error < 0)){
-            turret.set(ControlMode.PercentOutput, error/40);
-        }
+    public void setTurretEnc(int value){
+        turret.setSelectedSensorPosition(value);
     }
-    
-    public int getTurretPos(){
+
+    public int getTurretEnc(){
         return turret.getSelectedSensorPosition(0);
     }
 
-    public void setTurretEnc(int pos){
-        turret.setSelectedSensorPosition(pos);
+////Hood
+    public void toggleHood(boolean toggle){
+        hood.set(toggle);
     }
 
-    public void moveHoodPos(double target){
-        hoodAdjust.setSpeed((target - getHoodPos())/50);
-        // System.out.print("HOOD TARGET:");
-        // System.out.println((target - getHoodPos())/50);
+    public void setHoodPos(double target){
+        hoodAdjust.setSpeed((target - getHoodEnc())/200);
     }
 
-    public void setHoodSpeed(double speed){
+    public void setHoodPower(double speed){
         hoodAdjust.setSpeed(speed);
     }
 
-    public double getHoodPos(){
-        // return hoodAdjust.getAngle();
-        return canifier.getQuadraturePosition();
-    }
-
-    public void setHoodPos(int position){
+    public void setHoodEnc(int position){
         canifier.setQuadraturePosition(position, 10);
     }
 
-    public void setLight(int light, boolean onOff){
-        if(light == 0) lightOne.set(onOff);
-        if(light == 1) lightTwo.set(onOff);
-        if(light == 2) lightThree.set(onOff);
+    public double getHoodEnc(){
+        return canifier.getQuadraturePosition();
+    }
+
+////Lights
+    public void setLight(char light, boolean toggle){
+        if(light == 'b') lightBlue.set(toggle);
+        if(light == 'g') lightGreen.set(toggle);
+        if(light == 'r') lightRed.set(toggle);
     }
 }
