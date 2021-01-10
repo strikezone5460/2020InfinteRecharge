@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
   Test lights
   Set talon pid for shooter vel
   Test hood p loop
+  Add notes
   */
 
 public class Robot extends TimedRobot {
