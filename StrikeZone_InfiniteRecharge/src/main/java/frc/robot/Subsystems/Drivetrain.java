@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 
 public class Drivetrain{
-    
+    ////DEVICES
     TalonFX leftDriveMaster = new TalonFX(1);
     TalonFX leftDriveFollower = new TalonFX(2);
     TalonFX rightDriveMaster = new TalonFX(3);
@@ -20,14 +20,19 @@ public class Drivetrain{
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
 
-
+    ////VARIABLES
     boolean shiftToggle = false;
 
-
+    ////METHODS
     public void init(){
         leftDriveMaster.setSelectedSensorPosition(0);
         rightDriveMaster.setSelectedSensorPosition(0);
         gyro.reset();
+
+        // leftDriveMaster.
+        // turret.config_kI(0,0.05);
+        // turret.config_kD(0,148);
+        // turret.configMaxIntegralAccumulator(0, 100);
     }
 
     public void shift(){
