@@ -29,14 +29,17 @@ public class Shooter{
 
 ////METHODS
     public void init(){
-        toggleHood(true);
-        setTurretEnc(0);
-        setHoodPos(0);
+
         turret.config_kP(0,4);
         turret.config_kI(0,0.05);
         turret.config_kD(0,148);
         turret.configMaxIntegralAccumulator(0, 100);
+
         canifier.setQuadraturePosition(0,10);
+
+        toggleHood(true);
+        setTurretEnc(0);
+        setHoodPos(0);
     }
 
 ////Shooter
