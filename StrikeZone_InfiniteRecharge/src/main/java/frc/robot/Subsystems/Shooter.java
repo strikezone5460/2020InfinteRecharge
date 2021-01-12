@@ -41,9 +41,11 @@ public class Shooter{
 
 ////Shooter
     public void setShooterPower(double power){
-        shooterMaster.set(ControlMode.Velocity,power);
+        // shooterMaster.set(ControlMode.Velocity,power);
         // shooterFollower.set(ControlMode.Velocity,-power);
-        shooterFollower.set(ControlMode.Follower,shooterMaster.getDeviceID());
+        shooterMaster.set(ControlMode.PercentOutput,power);
+        shooterFollower.set(ControlMode.PercentOutput,-power);
+        // shooterFollower.set(ControlMode.Follower,shooterMaster.getDeviceID());
     }
 
     public int getShooterVel(){

@@ -45,8 +45,9 @@ public class Robot extends TimedRobot {
   final double INDEXER_V_POWER = 0.6;
 
 ////Shooter
-  final double SHOOTER_VEL = 16000;
-  final double SHOOTER_Y = 17;
+// final double SHOOTER_VEL = 18500;
+final double SHOOTER_VEL = 1;
+final double SHOOTER_Y = 17;
   final double SHOOTER_X = 0;
 
   final boolean AUTO_TURRET = true;
@@ -163,7 +164,7 @@ public class Robot extends TimedRobot {
 ////DRIVETRAIN
     if(ROCKET_DRIVE){
       speed = rightTrigger - leftTrigger;
-      rotate = squareVal((speed >= 0) ? leftJoystickX : -leftJoystickX);
+      rotate = squareVal(leftJoystickX);
     }
     else if(ARCADE_DRIVE){
       speed = rightJoystickY;
@@ -177,6 +178,7 @@ public class Robot extends TimedRobot {
       speed = 0;
       rotate = 0;
     }
+    drivetrain.standardDrive(speed, rotate);
 
     if(Driver.getBButtonPressed()){
       drivetrain.shift();
@@ -237,10 +239,10 @@ public class Robot extends TimedRobot {
     }
 
     if(AUTO_HOOD){
-      hoodTarget = Math.abs(limelightY - 15) * 67;
+      hoodTarget = Math.abs(limelightY - 21) * 70;
 
-      if(hoodTarget < 100){
-        hoodTarget = 100;
+      if(hoodTarget < 20){
+        hoodTarget = 20;
       }
       else if(hoodTarget > 2100){
         hoodTarget = 2100;
@@ -262,7 +264,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    System.out.println(shooter.getHoodEnc());
+    // System.out.println(shooter.getHoodEnc());
   }
 
 

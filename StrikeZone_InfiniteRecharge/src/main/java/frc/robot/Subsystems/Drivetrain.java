@@ -42,6 +42,7 @@ public class Drivetrain{
     }
     
     public void standardDrive(double speed, double rotate){
+        System.out.println(speed);
         leftDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
         rightDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
         leftDriveFollower.follow(leftDriveMaster);
