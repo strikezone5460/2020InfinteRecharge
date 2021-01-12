@@ -46,8 +46,8 @@ public class Robot extends TimedRobot {
 
 ////Shooter
 // final double SHOOTER_VEL = 18500;
-final double SHOOTER_VEL = 1;
-final double SHOOTER_Y = 17;
+  final double SHOOTER_VEL = 1;
+  final double SHOOTER_Y = 17;
   final double SHOOTER_X = 0;
 
   final boolean AUTO_TURRET = true;

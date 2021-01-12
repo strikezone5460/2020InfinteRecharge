@@ -27,6 +27,10 @@ public class Shooter{
     CANifier canifier = new CANifier(0);
 
 
+////VARIABLES
+    boolean readyForFeed;
+
+
 ////METHODS
     public void init(){
 
@@ -98,5 +102,47 @@ public class Shooter{
         if(light == 'b') lightBlue.set(toggle);
         if(light == 'g') lightGreen.set(toggle);
         if(light == 'r') lightRed.set(toggle);
+    }
+
+////Logic
+    public void autoShooterVel(){
+
+    }
+
+    public void autoTurretPos(){
+
+    }
+
+    public void autoHoodPos(){
+        
+    }
+
+    public void autoTarget(boolean shooterOn){
+        if(shooterOn) autoShooterVel();
+        autoTurretPos();
+        autoHoodPos();
+    }
+
+    //Auto shoot routine
+    //Calc and execute shooter vel, hood angle and turret pos
+    //Stop chassis and detect stop
+    //Lockdown hood, vel, and turret and detect lock
+    //Feed routine
+        //Detect lockdown
+        //Feed up
+        //Need to detect ball shot
+        //Try different hopper feed routines
+            //Shake intake
+            //Adjust speeds
+        //If not in A,B or C, go into "shake" mode until shoot mode cancelled or 5 shots detected
+    public boolean autoShoot(boolean brake){
+        autoTarget(true);
+        readyForFeed = false;
+        if(brake){
+            if(shooterLockdown()){
+                readyForFeed = true;
+            }
+        }
+        return readyForFeed;
     }
 }
