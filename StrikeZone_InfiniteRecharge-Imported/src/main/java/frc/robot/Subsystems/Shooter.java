@@ -11,6 +11,17 @@ import edu.wpi.first.wpilibj.PWM;
 
 public class Shooter{
 
+////DEFINES
+    final int MAX_TURRET = 1000;
+    final int MIN_TURRET = -1000;
+
+    final int MAX_HOOD = 2100;
+    final int MIN_HOOD = 20;
+
+    final int SHOOTER_GOAL = 200;
+    final int TURRET_GOAL = 10;
+    final int HOOD_GOAL = 10;
+
 ////DEVICES
     TalonFX shooterMaster = new TalonFX(5);
     TalonFX shooterFollower = new TalonFX(6);
@@ -28,7 +39,15 @@ public class Shooter{
 
 
 ////VARIABLES
+    double shooterTarget = 0;
+    double turretTarget = 0;
+    double hoodTarget = 0;
+
+    double limelightX, limelightY, limelightD;
+
+
     boolean readyForFeed;
+    boolean lockdown = false;
 
 
 ////METHODS
@@ -55,6 +74,13 @@ public class Shooter{
         // shooterFollower.set(ControlMode.Follower,shooterMaster.getDeviceID());
     }
 
+    public boolean setShooterVel(double vel){
+        shooterMaster.set(ControlMode.Velocity,vel);
+        shooterFollower.set(ControlMode.Velocity,-vel);
+        // shooterFollower.set(ControlMode.Follower,shooterMaster.getDeviceID());
+        return (Math.abs(getShooterVel() - vel) < SHOOTER_GOAL);
+    }
+
     public double getShooterVel(){
         return shooterMaster.getSelectedSensorVelocity();
     }
@@ -64,8 +90,9 @@ public class Shooter{
         turret.set(ControlMode.PercentOutput, power);
     }
 
-    public void setTurretPos(double target){
+    public boolean setTurretPos(double target){
         turret.set(ControlMode.Position, target);
+        return (Math.abs(getTurretEnc() - target) < TURRET_GOAL);
     }
 
     public void setTurretEnc(int value){
@@ -81,8 +108,9 @@ public class Shooter{
         hood.set(toggle);
     }
 
-    public void setHoodPos(double target){
+    public boolean setHoodPos(double target){
         hoodAdjust.setSpeed((target - getHoodEnc())/200);
+        return (Math.abs(getHoodEnc() - target) < HOOD_GOAL);
     }
 
     public void setHoodPower(double speed){
@@ -105,26 +133,55 @@ public class Shooter{
     }
 
 ////Logic
-    public void autoShooterVel(){
+    public void updateLLValues(double llX, double llY, double llD){
+        limelightX = llX;
+        limelightY = llY;
+        limelightD = llD;
+    }
+
+    public void keepShooterIdle(){
 
     }
 
-    public void autoTurretPos(){
-
+    public boolean autoShooterVel(){
+        return true;
     }
 
-    public void autoHoodPos(){
-        
+    public boolean autoTurretPos(double xOffset){
+        if((turretTarget > MIN_TURRET && xOffset > 0) || (turretTarget < MAX_TURRET && xOffset < 0)){
+            turretTarget = getTurretEnc() + (-xOffset*25);
+        }
+    
+        if(turretTarget < MIN_TURRET){
+            turretTarget = MIN_TURRET;
+        }
+        else if(turretTarget > MAX_TURRET){
+            turretTarget = MAX_TURRET;
+        }
+        return setTurretPos(turretTarget);
     }
 
-    public void autoTarget(boolean shooterOn){
-        if(shooterOn) autoShooterVel();
-        autoTurretPos();
-        autoHoodPos();
+    public boolean autoHoodPos(double offsetY){
+        hoodTarget = Math.abs(offsetY - 21) * 70;
+
+        if(hoodTarget < MIN_HOOD){
+            hoodTarget = MIN_HOOD;
+        }
+        else if(hoodTarget > MAX_HOOD){
+            hoodTarget = MAX_HOOD;
+        }
+        return setHoodPos(hoodTarget);
+    }
+
+    public boolean autoTarget(){
+        if(lockdown) return (autoShooterVel() && setTurretPos(turretTarget) && setHoodPos(hoodTarget));
+        else{
+            return (autoTurretPos(limelightX) && autoHoodPos(limelightY));
+        }
     }
 
     public boolean shooterLockdown(){
-        return true;
+        return (setShooterVel(shooterTarget) && setTurretPos(turretTarget) && setHoodPos(hoodTarget));
     }
 
     //Auto shoot routine
@@ -140,12 +197,10 @@ public class Shooter{
             //Adjust speeds
         //If not in A,B or C, go into "shake" mode until shoot mode cancelled or 5 shots detected
     public boolean autoShoot(boolean brake){
-        autoTarget(true);
         readyForFeed = false;
-        if(brake){
-            if(shooterLockdown()){
-                readyForFeed = true;
-            }
+        if(brake && autoTarget()){
+            lockdown = true;
+            readyForFeed = true;
         }
         return readyForFeed;
     }
