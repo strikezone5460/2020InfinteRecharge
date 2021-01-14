@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 
 public class Drivetrain{
-    ////DEVICES
+////DEVICES
     TalonFX leftDriveMaster = new TalonFX(1);
     TalonFX leftDriveFollower = new TalonFX(2);
     TalonFX rightDriveMaster = new TalonFX(3);
@@ -20,10 +20,12 @@ public class Drivetrain{
 
     ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
 
-    ////VARIABLES
+////VARIABLES
+    double gyroLock = -1;
+
     boolean shiftToggle = false;
 
-    ////METHODS
+////METHODS
     public void init(){
         leftDriveMaster.setSelectedSensorPosition(0);
         rightDriveMaster.setSelectedSensorPosition(0);
@@ -42,7 +44,6 @@ public class Drivetrain{
     }
     
     public void standardDrive(double speed, double rotate){
-        System.out.println(speed);
         leftDriveMaster.set(ControlMode.PercentOutput,-speed - rotate);
         rightDriveMaster.set(ControlMode.PercentOutput,speed - rotate);
         leftDriveFollower.follow(leftDriveMaster);
@@ -71,5 +72,18 @@ public class Drivetrain{
 
     public double getGyro(){
         return gyro.getAngle();
+    }
+
+////LOGIC
+    public boolean lock(){
+        if(gyroLock == -1){
+            gyroLock = getGyro();
+        }
+        standardDrive(0, (gyroLock - getGyro()) / 50);
+        return Math.abs(gyroLock - getGyro()) < 5;
+    }
+
+    public void resetLock(){
+        gyroLock = -1;
     }
 }

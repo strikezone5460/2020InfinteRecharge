@@ -156,9 +156,9 @@ public class Robot extends TimedRobot {
     rightJoystickY = applyDeadband(Driver.getY(Hand.kRight));
 
 ////Sensors
-    // limelightX = tx.getDouble(0.0);
-    // limelightY = ty.getDouble(0.0);
-    // limelightD = td.getDouble(0.0);
+    limelightX = tx.getDouble(0.0);
+    limelightY = ty.getDouble(0.0);
+    limelightD = td.getDouble(0.0);
 
 
 ////DRIVETRAIN
@@ -221,23 +221,23 @@ public class Robot extends TimedRobot {
 ////SHOOTER
     shooter.updateLLValues(limelightX, limelightY, limelightD);
 
-    if(Driver.getXButtonPressed()){
-      shooterToggle = !shooterToggle;
-      shooter.setShooterPower(shooterToggle ? SHOOTER_VEL : 0);
+    // if(Driver.getXButtonPressed()){
+    //   shooterToggle = !shooterToggle;
+    //   shooter.setShooterPower(shooterToggle ? SHOOTER_VEL : 0);
+    // }
+
+    if(Driver.getXButtonReleased()){
+      shooter.resetAutoTarget();
+      drivetrain.resetLock();
+      shooter.setLight('a', false);
     }
-
-    if(AUTO_TURRET){
-      // if((turretTarget > -1000 && limelightX > 0) || (turretTarget < 1000 && limelightX < 0)){
-      //   turretTarget = shooter.getTurretEnc() + (-limelightX*25);
-      // }
-
-      // if(turretTarget < -1000){
-      //   turretTarget = -1000;
-      // }
-      // else if(turretTarget > 1000){
-      //   turretTarget = 1000;
-      // }
-      // shooter.setTurretPos(turretTarget);
+    else if(Driver.getXButton()){
+      if(drivetrain.lock()){
+        shooter.setLight('b', true);
+        if(shooter.autoShoot(true)){
+          shooter.setLight('r', true);
+        }
+      }
     }
 
     if(AUTO_HOOD){

@@ -31,8 +31,8 @@ public class Shooter{
     PWM hoodAdjust = new PWM(0);
 
     Solenoid hood = new Solenoid(1, 0);
-    Solenoid lightBlue = new Solenoid(1, 5);
-    Solenoid lightGreen = new Solenoid(1, 6);
+    Solenoid lightGreen = new Solenoid(1, 5);
+    Solenoid lightBlue = new Solenoid(1, 6);
     Solenoid lightRed = new Solenoid(1, 7);
 
     CANifier canifier = new CANifier(0);
@@ -47,6 +47,7 @@ public class Shooter{
 
 
     boolean readyForFeed;
+    boolean autoTargeted = false;
     boolean lockdown = false;
 
 
@@ -62,7 +63,7 @@ public class Shooter{
 
         toggleHood(true);
         setTurretEnc(0);
-        setHoodPos(0);
+        setHoodEnc(0);
     }
 
 ////Shooter
@@ -75,6 +76,7 @@ public class Shooter{
     }
 
     public boolean setShooterVel(double vel){
+        System.out.printf("Shooter vel: %f, Shooter vel target: %f\n", getShooterVel(), vel);
         shooterMaster.set(ControlMode.Velocity,vel);
         shooterFollower.set(ControlMode.Velocity,-vel);
         // shooterFollower.set(ControlMode.Follower,shooterMaster.getDeviceID());
@@ -91,6 +93,7 @@ public class Shooter{
     }
 
     public boolean setTurretPos(double target){
+        System.out.printf("Turret pos: %f, Turret target: %f\n", getTurretEnc(), target);
         turret.set(ControlMode.Position, target);
         return (Math.abs(getTurretEnc() - target) < TURRET_GOAL);
     }
@@ -109,6 +112,7 @@ public class Shooter{
     }
 
     public boolean setHoodPos(double target){
+        System.out.printf("Hood pos: %f, Hood target: %f\n", getHoodEnc(), target);
         hoodAdjust.setSpeed((target - getHoodEnc())/200);
         return (Math.abs(getHoodEnc() - target) < HOOD_GOAL);
     }
@@ -128,8 +132,13 @@ public class Shooter{
 ////Lights
     public void setLight(char light, boolean toggle){
         if(light == 'b') lightBlue.set(toggle);
-        if(light == 'g') lightGreen.set(toggle);
-        if(light == 'r') lightRed.set(toggle);
+        else if(light == 'g') lightGreen.set(toggle);
+        else if(light == 'r') lightRed.set(toggle);
+        else if(light == 'a') {
+            lightBlue.set(toggle);
+            lightRed.set(toggle);
+            lightGreen.set(toggle);
+        }
     }
 
 ////Logic
@@ -144,7 +153,7 @@ public class Shooter{
     }
 
     public boolean autoShooterVel(){
-        return true;
+        return false;
     }
 
     public boolean autoTurretPos(double xOffset){
@@ -162,7 +171,7 @@ public class Shooter{
     }
 
     public boolean autoHoodPos(double offsetY){
-        hoodTarget = Math.abs(offsetY - 21) * 70;
+        hoodTarget = Math.abs(offsetY - 16) * 67;
 
         if(hoodTarget < MIN_HOOD){
             hoodTarget = MIN_HOOD;
@@ -174,14 +183,19 @@ public class Shooter{
     }
 
     public boolean autoTarget(){
-        if(lockdown) return (autoShooterVel() && setTurretPos(turretTarget) && setHoodPos(hoodTarget));
-        else{
-            return (autoTurretPos(limelightX) && autoHoodPos(limelightY));
+        if(lockdown) System.out.println("Locked down");
+        if(lockdown){
+            autoTargeted = autoShooterVel();
+            autoTargeted = setTurretPos(turretTarget) && autoTargeted;
+            autoTargeted =  setHoodPos(hoodTarget) && autoTargeted;
+            return (autoTargeted);
         }
-    }
-
-    public boolean shooterLockdown(){
-        return (setShooterVel(shooterTarget) && setTurretPos(turretTarget) && setHoodPos(hoodTarget));
+        else{
+            autoTargeted = autoTurretPos(limelightX);
+            autoTargeted = autoHoodPos(limelightY) && autoTargeted;
+            System.out.println(autoTargeted);
+            return (autoTargeted);
+        }
     }
 
     //Auto shoot routine
@@ -196,6 +210,7 @@ public class Shooter{
             //Shake intake
             //Adjust speeds
         //If not in A,B or C, go into "shake" mode until shoot mode cancelled or 5 shots detected
+
     public boolean autoShoot(boolean brake){
         readyForFeed = false;
         if(brake && autoTarget()){
@@ -203,5 +218,10 @@ public class Shooter{
             readyForFeed = true;
         }
         return readyForFeed;
+    }
+
+    public void resetAutoTarget(){
+        lockdown = false;
+        setHoodPower(0);
     }
 }
