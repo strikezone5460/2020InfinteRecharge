@@ -211,6 +211,51 @@ public class Shooter{
             //Adjust speeds
         //If not in A,B or C, go into "shake" mode until shoot mode cancelled or 5 shots detected
 
+
+    /* Auto shoot routine
+    Goal - To make shots anywhere on the field automatically
+
+     * (Turret)Any possible inner goal shots need to be identified and adjusted for (shots slightly off the
+    center line of the goal need to compensate, shooting at the center of target will not hit inner goal)
+     * Hood will have to go over shooter wheel when down, shooter wheel should always be spinning slowly
+    unless hood needs to go down, then only started back up when getting ready to shoot
+     * Turret should constantly be adjusting no matter what
+      -If no target, try to acheive 0 degrees (best pos to find target)
+      -If no target while shoot attempt, scan from closest side to other side or if on 0, left to right, if no target blink red
+      -If target seen but out of reach, blink blue. If on target, solid blue
+      -If target out of reach while shoot attempt, move chassis to center target
+      -If target is within certain degrees of goal, aim towards inner goal
+      -If target is at sharp angle, aim off center to bounce off opposite wall
+      -If targeted while attempt shoot, lock shooter unless detect chassis movement (after chassis is locked)
+    */
+
+    // if seeTarget {
+    //     tryToGetToTarget{
+    //         //get close as ppossible
+    //         //do math if inner goal attempt or sharp angle
+    //     }
+    //     if onTarget {
+    //         blue
+    //         if readytoShoot{
+    //             lockShooter
+    //         }
+    //     }
+    //     else if targetOutOfRange{
+    //         blink blue
+    //         if readyToShoot{
+    //             moveChassis
+    //         }
+    //     }
+    // }
+    // else{
+    //     if readyToShoot{
+    //         scan
+    //     }
+    //     else{
+    //         tryToGetTo0
+    //     }
+    // }
+
     public boolean autoShoot(boolean brake){
         readyForFeed = false;
         if(brake && autoTarget()){
