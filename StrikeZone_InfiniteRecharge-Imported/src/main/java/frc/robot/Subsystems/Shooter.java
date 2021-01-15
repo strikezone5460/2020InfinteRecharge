@@ -3,6 +3,9 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import org.graalvm.compiler.core.common.type.ArithmeticOpTable.UnaryOp.Abs;
+
 import com.ctre.phoenix.CANifier;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -21,6 +24,8 @@ public class Shooter{
     final int SHOOTER_GOAL = 200;
     final int TURRET_GOAL = 10;
     final int HOOD_GOAL = 10;
+    
+    final int TURRET_ENC_TO_DEG = 25;
 
 ////DEVICES
     TalonFX shooterMaster = new TalonFX(5);
@@ -44,6 +49,10 @@ public class Shooter{
     double hoodTarget = 0;
 
     double limelightX, limelightY, limelightD;
+    double gyro;
+
+
+    int scanState = 0;
 
 
     boolean readyForFeed;
@@ -130,7 +139,8 @@ public class Shooter{
     }
 
 ////Lights
-    public void setLight(char light, boolean toggle){
+    public void setLight(char light, boolean toggle, int mode){
+        //will change to mode- 0:off, 1:on, 2:blink)
         if(light == 'b') lightBlue.set(toggle);
         else if(light == 'g') lightGreen.set(toggle);
         else if(light == 'r') lightRed.set(toggle);
@@ -142,10 +152,13 @@ public class Shooter{
     }
 
 ////Logic
-    public void updateLLValues(double llX, double llY, double llD){
+    public void updateValues(double llX, double llY, double llD, double theGyro){
         limelightX = llX;
         limelightY = llY;
         limelightD = llD;
+
+        gyro = theGyro;
+        if(gyro > 180) gyro -= 360;
     }
 
     public void keepShooterIdle(){
@@ -156,18 +169,101 @@ public class Shooter{
         return false;
     }
 
-    public boolean autoTurretPos(double xOffset){
+    public double doTurretMath(double xOffset){
+        //Returns the target value of the turret
+
         if((turretTarget > MIN_TURRET && xOffset > 0) || (turretTarget < MAX_TURRET && xOffset < 0)){
             turretTarget = getTurretEnc() + (-xOffset*25);
         }
     
-        if(turretTarget < MIN_TURRET){
-            turretTarget = MIN_TURRET;
+        if(turretTarget < MIN_TURRET) turretTarget = MIN_TURRET;
+        else if(turretTarget > MAX_TURRET) turretTarget = MAX_TURRET;
+
+        return turretTarget;
+    }
+
+    public void turretScan(){
+        switch(scanState){
+            case 0:
+                if(getTurretEnc() > -500) turretTarget = MAX_TURRET;
+                else turretTarget = MIN_TURRET;
+                scanState = 1;
+                break;
+            case 1:
+                if(Math.abs(getTurretEnc() - turretTarget) < TURRET_GOAL){
+                    turretTarget = turretTarget == MAX_TURRET ? MIN_TURRET : MAX_TURRET;
+                    scanState = 2;
+                }
+                break;
+            case 2:
+                if(Math.abs(getTurretEnc() - turretTarget) < TURRET_GOAL) scanState = 3;
+                break;
+            case 3:
+                break;
+            default:
+                break;
         }
-        else if(turretTarget > MAX_TURRET){
-            turretTarget = MAX_TURRET;
+    }
+
+    public void turretZero(){
+        turretTarget = (0 - gyro) / TURRET_ENC_TO_DEG;
+
+        if(turretTarget < MIN_TURRET) turretTarget = MIN_TURRET;
+        else if(turretTarget > MAX_TURRET) turretTarget = MAX_TURRET;
+
+        setTurretPos(turretTarget);
+    }
+
+    public boolean autoTurretPos(boolean targetLocated, double xOffset, boolean tryToLock){
+
+        // if seeTarget {
+        //     tryToGetToTarget{
+        //         //get close as ppossible
+        //         //do math if inner goal attempt or sharp angle
+        //     }
+        //     if onTarget {
+        //         blue
+        //         if readytoShoot{
+        //             lockShooter
+        //         }
+        //     }
+        //     else if targetOutOfRange{
+        //         blink blue
+        //         if readyToShoot{
+        //             moveChassis
+        //         }
+        //     }
+        // }
+        // else{
+        //     if readyToShoot{
+        //         scan
+        //     }
+        //     else{
+        //         tryToGetTo0
+        //     }
+        // }
+
+        if(targetLocated && !lockdown){
+            if(setTurretPos(doTurretMath(xOffset))){
+                setLight('b', true, 1);
+                if(tryToLock) lockdown = true;
+            }
+            else{
+                setLight('b', true, 2);
+                if(tryToLock){
+                    //move chassis
+                }
+            }
         }
-        return setTurretPos(turretTarget);
+        else if(targetLocated && lockdown){
+            if(!tryToLock) lockdown = false;
+        }
+        else{
+            if(tryToLock) turretScan();
+            else turretZero();
+        }
+
+        return true;
     }
 
     public boolean autoHoodPos(double offsetY){
@@ -228,33 +324,6 @@ public class Shooter{
       -If target is at sharp angle, aim off center to bounce off opposite wall
       -If targeted while attempt shoot, lock shooter unless detect chassis movement (after chassis is locked)
     */
-
-    // if seeTarget {
-    //     tryToGetToTarget{
-    //         //get close as ppossible
-    //         //do math if inner goal attempt or sharp angle
-    //     }
-    //     if onTarget {
-    //         blue
-    //         if readytoShoot{
-    //             lockShooter
-    //         }
-    //     }
-    //     else if targetOutOfRange{
-    //         blink blue
-    //         if readyToShoot{
-    //             moveChassis
-    //         }
-    //     }
-    // }
-    // else{
-    //     if readyToShoot{
-    //         scan
-    //     }
-    //     else{
-    //         tryToGetTo0
-    //     }
-    // }
 
     public boolean autoShoot(boolean brake){
         readyForFeed = false;

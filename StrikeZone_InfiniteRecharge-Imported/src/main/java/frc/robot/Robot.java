@@ -219,7 +219,7 @@ public class Robot extends TimedRobot {
     if(!shooterToggle)indexer.autoIndex();
 
 ////SHOOTER
-    shooter.updateLLValues(limelightX, limelightY, limelightD);
+    shooter.updateValues(limelightX, limelightY, limelightD, drivetrain.getGyro());
 
     // if(Driver.getXButtonPressed()){
     //   shooterToggle = !shooterToggle;
