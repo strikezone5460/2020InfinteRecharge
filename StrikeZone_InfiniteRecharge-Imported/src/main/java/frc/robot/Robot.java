@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry td = table.getEntry("td");
-  double limelightX, limelightY, limelightD;
+  double limelightX, limelightY, limelightD, limelightA, limelightW;
 
 
 ////METHODS
@@ -159,6 +159,8 @@ public class Robot extends TimedRobot {
     limelightX = tx.getDouble(0.0);
     limelightY = ty.getDouble(0.0);
     limelightD = td.getDouble(0.0);
+    limelightA = 0;
+    limelightW = 0;
 
 
 ////DRIVETRAIN
@@ -219,26 +221,26 @@ public class Robot extends TimedRobot {
     if(!shooterToggle)indexer.autoIndex();
 
 ////SHOOTER
-    shooter.updateValues(limelightX, limelightY, limelightD, drivetrain.getGyro());
+    shooter.updateValues(limelightX, limelightY, limelightD, limelightA, limelightW, drivetrain.getGyro());
 
     // if(Driver.getXButtonPressed()){
     //   shooterToggle = !shooterToggle;
     //   shooter.setShooterPower(shooterToggle ? SHOOTER_VEL : 0);
     // }
 
-    if(Driver.getXButtonReleased()){
-      shooter.resetAutoTarget();
-      drivetrain.resetLock();
-      shooter.setLight('a', false);
-    }
-    else if(Driver.getXButton()){
-      if(drivetrain.lock()){
-        shooter.setLight('b', true);
-        if(shooter.autoShoot(true)){
-          shooter.setLight('r', true);
-        }
-      }
-    }
+    // if(Driver.getXButtonReleased()){
+    //   shooter.resetAutoTarget();
+    //   drivetrain.resetLock();
+    //   shooter.setLight('a', false);
+    // }
+    // else if(Driver.getXButton()){
+    //   if(drivetrain.lock()){
+    //     shooter.setLight('b', true);
+    //     if(shooter.autoShoot(true)){
+    //       shooter.setLight('r', true);
+    //     }
+    //   }
+    // }
 
     if(AUTO_HOOD){
       // hoodTarget = Math.abs(limelightY - 21) * 70;
