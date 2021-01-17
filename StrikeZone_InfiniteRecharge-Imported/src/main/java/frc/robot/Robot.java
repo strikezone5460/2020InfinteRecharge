@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -84,7 +84,10 @@ public class Robot extends TimedRobot {
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry td = table.getEntry("td");
-  double limelightX, limelightY, limelightD, limelightA, limelightW;
+  NetworkTableEntry ts = table.getEntry("ts");
+  NetworkTableEntry tv = table.getEntry("tv");
+
+  double limelightX, limelightY, limelightD, limelightV, limelightS;
 
 
 ////METHODS
@@ -159,8 +162,8 @@ public class Robot extends TimedRobot {
     limelightX = tx.getDouble(0.0);
     limelightY = ty.getDouble(0.0);
     limelightD = td.getDouble(0.0);
-    limelightA = 0;
-    limelightW = 0;
+    limelightS = ts.getDouble(0.0);
+    limelightV = tv.getDouble(0.0);
 
 
 ////DRIVETRAIN
@@ -221,26 +224,24 @@ public class Robot extends TimedRobot {
     if(!shooterToggle)indexer.autoIndex();
 
 ////SHOOTER
-    shooter.updateValues(limelightX, limelightY, limelightD, limelightA, limelightW, drivetrain.getGyro());
+    shooter.updateValues(limelightX, limelightY, limelightD, limelightS, limelightV == 1, drivetrain.getGyro());
 
     // if(Driver.getXButtonPressed()){
     //   shooterToggle = !shooterToggle;
     //   shooter.setShooterPower(shooterToggle ? SHOOTER_VEL : 0);
     // }
 
-    // if(Driver.getXButtonReleased()){
-    //   shooter.resetAutoTarget();
-    //   drivetrain.resetLock();
-    //   shooter.setLight('a', false);
-    // }
-    // else if(Driver.getXButton()){
-    //   if(drivetrain.lock()){
-    //     shooter.setLight('b', true);
-    //     if(shooter.autoShoot(true)){
-    //       shooter.setLight('r', true);
-    //     }
-    //   }
-    // }
+    if(Driver.getXButtonReleased()){
+      shooter.resetAutoTarget();
+    }
+    else if(Driver.getXButton()){
+      shooter.turretScan();
+    }
+    else
+    {
+      // shooter.autoTurretPos(false, limelightV == 1);
+      shooter.setTurretPos(shooter.doTurretMath());
+    }
 
     if(AUTO_HOOD){
       // hoodTarget = Math.abs(limelightY - 21) * 70;
@@ -268,7 +269,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    // System.out.println(shooter.getHoodEnc());
+    limelightS = ts.getDouble(0.0);
+    System.out.println(limelightS);
   }
 
 
