@@ -83,12 +83,13 @@ public class Robot extends TimedRobot {
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-turret");
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry ty = table.getEntry("ty");
-  NetworkTableEntry td = table.getEntry("td");
+  NetworkTableEntry th = table.getEntry("thor");
+  NetworkTableEntry tv = table.getEntry("tvert");
   NetworkTableEntry ts = table.getEntry("ts");
-  NetworkTableEntry tv = table.getEntry("tv");
+  NetworkTableEntry tf = table.getEntry("tv");
 
-  double limelightX, limelightY, limelightD, limelightV, limelightS;
-
+  double limelightX, limelightY, limelightH, limelightV, limelightS, limelightA;
+  boolean limelightF;
 
 ////METHODS
   public double applyDeadband(double input,double deadband){
@@ -161,10 +162,16 @@ public class Robot extends TimedRobot {
 ////Sensors
     limelightX = tx.getDouble(0.0);
     limelightY = ty.getDouble(0.0);
-    limelightD = td.getDouble(0.0);
-    limelightS = ts.getDouble(0.0);
+    limelightH = th.getDouble(0.0);
     limelightV = tv.getDouble(0.0);
+    limelightS = ts.getDouble(0.0);
+    limelightF = tf.getDouble(0.0) == 1;
 
+    limelightA = limelightS;
+    if(limelightH > limelightV){
+      if(limelightS < -45) limelightA += 90;
+    }
+    else if(limelightS > -45) limelightA += 90;
 
 ////DRIVETRAIN
     if(ROCKET_DRIVE){
@@ -224,7 +231,7 @@ public class Robot extends TimedRobot {
     if(!shooterToggle)indexer.autoIndex();
 
 ////SHOOTER
-    shooter.updateValues(limelightX, limelightY, limelightD, limelightS, limelightV == 1, drivetrain.getGyro());
+    shooter.updateValues(limelightX, limelightY, limelightA, limelightF, drivetrain.getGyro());
 
     // if(Driver.getXButtonPressed()){
     //   shooterToggle = !shooterToggle;

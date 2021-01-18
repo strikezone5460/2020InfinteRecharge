@@ -19,6 +19,11 @@ public class Shooter{
     final int MAX_HOOD = 2100;
     final int MIN_HOOD = 20;
 
+    final int SHOOTER_MAX = 18000;
+    final int SHOOTER_CLOSE = 14000;
+    final int SHOOTER_MIN = 10000;
+    final int SHOOTER_IDLE = 1000;
+
     final int SHOOTER_GOAL = 200;
     final int TURRET_GOAL = 10;
     final int HOOD_GOAL = 10;
@@ -26,6 +31,11 @@ public class Shooter{
     final int INNER_ZONE = 10;
     final int OUTER_ZONE = 60;
     final double INNER_OFFSET = 0.1;
+
+    final double MAX_TARGET_Y = 16;
+    final double MIN_TARGET_Y = -20;
+    final double Y_PT1 = 2;
+    final double Y_PT2 = 0;
     
     final int TURRET_ENC_TO_DEG = 26;
 
@@ -50,8 +60,8 @@ public class Shooter{
     double turretTarget = 0;
     double hoodTarget = 0;
 
-    double limelightX, limelightY, limelightD, limelightS;
-    boolean limelightV;
+    double limelightX, limelightY, limelightA;
+    boolean limelightF;
     double gyro;
 
 
@@ -63,6 +73,7 @@ public class Shooter{
     boolean lockdown = false;
     boolean scanStateToggle = false;
     boolean turretReady = false;
+    boolean innerTarget = false;
 
 
 ////METHODS
@@ -156,38 +167,51 @@ public class Shooter{
     }
 
 ////Logic
-    public void updateValues(double llX, double llY, double llD, double llS, boolean llV, double theGyro){
+    public void updateValues(double llX, double llY, double llA, boolean llF, double theGyro){
         limelightX = llX;
         limelightY = llY;
-        limelightD = llD;
-        limelightS = llS;
-        limelightV = llV;
+        limelightA = llA;
+        limelightF = llF;
+
+        //limelightA = width > height ? 
+        //limelightS < -45 then add 90
 
         gyro = theGyro % 360;
         if(gyro > 180) gyro -= 360;
         else if(gyro < -180) gyro += 360;
     }
 
+
     public void keepShooterIdle(){
 
     }
 
     public boolean autoShooterVel(){
-        return false;
+        if(limelightY > Y_PT1) shooterTarget = SHOOTER_CLOSE;
+        else if(limelightY < Y_PT2) shooterTarget = ((SHOOTER_MAX - SHOOTER_MIN) * ((limelightY - Y_PT2)/(Y_PT2 - MIN_TARGET_Y))) + SHOOTER_MIN;
+        else shooterTarget = (SHOOTER_CLOSE - SHOOTER_MIN) * (1 - (limelightY - Y_PT1)/(Y_PT1 - MIN_TARGET_Y)) + SHOOTER_MIN;
+
+        if(shooterTarget < SHOOTER_MIN) shooterTarget = SHOOTER_MIN;
+        else if(shooterTarget > SHOOTER_MAX) shooterTarget = SHOOTER_MAX;
+
+        return setShooterVel(shooterTarget);
     }
+
 
     public double doTurretMath(){
         //Returns the target value of the turret
-        System.out.println(limelightS);
-        if(limelightS < -85 || limelightS > -5){
-            turretTarget = (getTurretEnc() + (-limelightX*25)) - (limelightS + (limelightS < -45 ? 90 : 0) * INNER_OFFSET); //(limelightA * TURRET_ENC_TO_DEG)
+        System.out.println(limelightA);
+        if((Math.abs(limelightA) < 5 && !innerTarget) || (Math.abs(limelightA) < 10 && innerTarget)){
+            turretTarget = (getTurretEnc() + (-limelightX*TURRET_ENC_TO_DEG)) - (Math.abs(limelightA) * INNER_OFFSET); //(limelightA * TURRET_ENC_TO_DEG)
             setLight('g', true, 1);
+            innerTarget = true;
         }
         // else if(Math.abs(limelightA) > OUTER_ZONE) turretTarget = (getTurretEnc() + (-limelightX*25)) + (limelightW / (limelightA > 0 ? 2 : -2));
         else{
             System.out.println("FALSE");
-            turretTarget = getTurretEnc() + (-limelightX*26);
+            turretTarget = getTurretEnc() + (-limelightX*TURRET_ENC_TO_DEG);
             setLight('g', false, 0);
+            innerTarget = false;
         }
 
         if(turretTarget < MIN_TURRET) turretTarget = MIN_TURRET;
@@ -224,20 +248,22 @@ public class Shooter{
     }
 
     public void turretZero(){
-        System.out.printf("The gyro: %f\n",gyro);
-        turretTarget = (0 + gyro) * TURRET_ENC_TO_DEG;
+        if(gyro > -90 && gyro < 90) turretTarget = (0 + gyro) * TURRET_ENC_TO_DEG;
 
         if(turretTarget < MIN_TURRET) turretTarget = MIN_TURRET;
         else if(turretTarget > MAX_TURRET) turretTarget = MAX_TURRET;
 
+        if(turretTarget == MIN_TURRET && gyro < -175) turretTarget = MAX_TURRET;
+        else if(turretTarget == MAX_TURRET && gyro > 175) turretTarget = MIN_TURRET;
+
         setTurretPos(turretTarget);
     }
 
-    public boolean autoTurretPos(boolean targetLocated, boolean tryToLock){
+    public boolean autoTurretPos(boolean tryToLock){
         scanStateToggle = false;
         turretReady = false;
 
-        if(targetLocated && !lockdown){
+        if(limelightF && !lockdown){
             if(setTurretPos(doTurretMath())){
                 setLight('b', true, 1);
                 turretReady = true;
@@ -250,7 +276,7 @@ public class Shooter{
                 }
             }
         }
-        else if(targetLocated && lockdown){
+        else if(limelightF && lockdown){
             turretReady = true;
             if(!tryToLock) lockdown = false;
         }
@@ -267,17 +293,16 @@ public class Shooter{
         return turretReady;
     }
 
-    public boolean autoHoodPos(double offsetY){
-        hoodTarget = Math.abs(offsetY - 16) * 67;
 
-        if(hoodTarget < MIN_HOOD){
-            hoodTarget = MIN_HOOD;
-        }
-        else if(hoodTarget > MAX_HOOD){
-            hoodTarget = MAX_HOOD;
-        }
+    public boolean autoHoodPos(){
+        hoodTarget = limelightF ? (limelightY - MAX_TARGET_Y) * -67 : ((MAX_HOOD - MIN_HOOD) * .75) + MIN_HOOD;
+
+        if(hoodTarget < MIN_HOOD) hoodTarget = MIN_HOOD;
+        else if(hoodTarget > MAX_HOOD) hoodTarget = MAX_HOOD;
+
         return setHoodPos(hoodTarget);
     }
+
 
     public boolean autoTarget(){
         // if(lockdown) System.out.println("Locked down");
