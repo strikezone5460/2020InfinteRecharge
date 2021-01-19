@@ -242,12 +242,15 @@ public class Robot extends TimedRobot {
       shooter.resetAutoTarget();
     }
     else if(Driver.getXButton()){
-      shooter.turretScan();
+      shooter.autoTurretPos(false);
+      shooter.autoHoodPos();
+      shooter.autoShooterVel();    
     }
     else
     {
       // shooter.autoTurretPos(false, limelightV == 1);
-      shooter.setTurretPos(shooter.doTurretMath());
+      shooter.setHoodPower(0);
+      shooter.setShooterPower(0);
     }
 
     if(AUTO_HOOD){

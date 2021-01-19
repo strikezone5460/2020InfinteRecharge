@@ -20,8 +20,8 @@ public class Shooter{
     final int MIN_HOOD = 20;
 
     final int SHOOTER_MAX = 18000;
-    final int SHOOTER_CLOSE = 14000;
-    final int SHOOTER_MIN = 10000;
+    final int SHOOTER_CLOSE = 16500;
+    final int SHOOTER_MIN = 11500;
     final int SHOOTER_IDLE = 1000;
 
     final int SHOOTER_GOAL = 200;
@@ -32,12 +32,13 @@ public class Shooter{
     final int OUTER_ZONE = 60;
     final double INNER_OFFSET = 0.1;
 
-    final double MAX_TARGET_Y = 16;
+    final double MAX_TARGET_Y = 21;
     final double MIN_TARGET_Y = -20;
     final double Y_PT1 = 2;
     final double Y_PT2 = 0;
     
     final int TURRET_ENC_TO_DEG = 26;
+    final int HOOD_VALUE = -95; //Higher causes hood to get to max sooner
 
 ////DEVICES
     TalonFX shooterMaster = new TalonFX(5);
@@ -83,6 +84,11 @@ public class Shooter{
         turret.config_kI(0,0.05);
         turret.config_kD(0,148);
         turret.configMaxIntegralAccumulator(0, 100);
+
+        shooterMaster.config_kP(0,.2);
+        shooterMaster.config_kI(0,0.05);
+        shooterMaster.config_kD(0,50);
+        shooterMaster.configMaxIntegralAccumulator(0, 100);
 
         canifier.setQuadraturePosition(0,10);
 
@@ -187,9 +193,16 @@ public class Shooter{
     }
 
     public boolean autoShooterVel(){
-        if(limelightY > Y_PT1) shooterTarget = SHOOTER_CLOSE;
-        else if(limelightY < Y_PT2) shooterTarget = ((SHOOTER_MAX - SHOOTER_MIN) * ((limelightY - Y_PT2)/(Y_PT2 - MIN_TARGET_Y))) + SHOOTER_MIN;
-        else shooterTarget = (SHOOTER_CLOSE - SHOOTER_MIN) * (1 - (limelightY - Y_PT1)/(Y_PT1 - MIN_TARGET_Y)) + SHOOTER_MIN;
+        // if(limelightY > Y_PT1) shooterTarget = SHOOTER_CLOSE;
+        // else if(limelightY < Y_PT2) shooterTarget = ((SHOOTER_MAX - SHOOTER_MIN) * ((limelightY - Y_PT2)/(Y_PT2 - MIN_TARGET_Y))) + SHOOTER_MIN;
+        // else shooterTarget = (SHOOTER_CLOSE - SHOOTER_MIN) * (1 - (limelightY - Y_PT1)/(Y_PT1 - MIN_TARGET_Y)) + SHOOTER_MIN;
+
+        if(limelightY > 0){
+            shooterTarget = ((SHOOTER_CLOSE - SHOOTER_MIN) * ((limelightY - MAX_TARGET_Y)/-MAX_TARGET_Y) + SHOOTER_MIN);
+        }
+        else{
+            shooterTarget = ((SHOOTER_MAX - SHOOTER_CLOSE) * (limelightY/MIN_TARGET_Y) + SHOOTER_CLOSE);
+        }
 
         if(shooterTarget < SHOOTER_MIN) shooterTarget = SHOOTER_MIN;
         else if(shooterTarget > SHOOTER_MAX) shooterTarget = SHOOTER_MAX;
@@ -201,7 +214,7 @@ public class Shooter{
     public double doTurretMath(){
         //Returns the target value of the turret
         System.out.println(limelightA);
-        if((Math.abs(limelightA) < 5 && !innerTarget) || (Math.abs(limelightA) < 10 && innerTarget)){
+        if((Math.abs(limelightA) < 6 && !innerTarget) || (Math.abs(limelightA) < 9 && innerTarget)){
             turretTarget = (getTurretEnc() + (-limelightX*TURRET_ENC_TO_DEG)) - (Math.abs(limelightA) * INNER_OFFSET); //(limelightA * TURRET_ENC_TO_DEG)
             setLight('g', true, 1);
             innerTarget = true;
@@ -253,8 +266,8 @@ public class Shooter{
         if(turretTarget < MIN_TURRET) turretTarget = MIN_TURRET;
         else if(turretTarget > MAX_TURRET) turretTarget = MAX_TURRET;
 
-        if(turretTarget == MIN_TURRET && gyro < -175) turretTarget = MAX_TURRET;
-        else if(turretTarget == MAX_TURRET && gyro > 175) turretTarget = MIN_TURRET;
+        if(turretTarget == MAX_TURRET && gyro < -165 && gyro > -178) turretTarget = MIN_TURRET;
+        else if(turretTarget == MIN_TURRET && gyro > 165 && gyro < 178) turretTarget = MAX_TURRET;
 
         setTurretPos(turretTarget);
     }
@@ -295,7 +308,7 @@ public class Shooter{
 
 
     public boolean autoHoodPos(){
-        hoodTarget = limelightF ? (limelightY - MAX_TARGET_Y) * -67 : ((MAX_HOOD - MIN_HOOD) * .75) + MIN_HOOD;
+        hoodTarget = limelightF ? (limelightY - MAX_TARGET_Y) * HOOD_VALUE : ((MAX_HOOD - MIN_HOOD) * .75) + MIN_HOOD;
 
         if(hoodTarget < MIN_HOOD) hoodTarget = MIN_HOOD;
         else if(hoodTarget > MAX_HOOD) hoodTarget = MAX_HOOD;
