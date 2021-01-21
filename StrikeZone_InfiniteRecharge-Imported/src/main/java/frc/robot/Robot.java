@@ -91,6 +91,10 @@ public class Robot extends TimedRobot {
   double limelightX, limelightY, limelightH, limelightV, limelightS, limelightA;
   boolean limelightF;
 
+  ///Test vars
+  double theHoodPos = 200;
+  double theShooterVel = 0;
+
 ////METHODS
   public double applyDeadband(double input,double deadband){
     return(Math.abs(input) > deadband ? (input - (input > 0 ? deadband : -deadband)) * (MAX_VALUE / (MAX_VALUE - deadband)) : 0);
@@ -196,7 +200,6 @@ public class Robot extends TimedRobot {
       drivetrain.shift();
     }
 
-
 ////INDEXER
     if(Driver.getPOV() == 180){
       hIndex = INDEXER_H_POWER;
@@ -243,8 +246,10 @@ public class Robot extends TimedRobot {
     }
     else if(Driver.getXButton()){
       shooter.autoTurretPos(false);
-      shooter.autoHoodPos();
-      shooter.autoShooterVel();    
+      // shooter.autoHoodPos();
+      shooter.setHoodPos(20);
+      // shooter.autoShooterVel();  
+      shooter.setShooterVel(11500);  
     }
     else
     {
@@ -269,6 +274,34 @@ public class Robot extends TimedRobot {
 ////ETC.
     indexer.indexerHPower(hIndex);
     indexer.indexerVPower(vIndex);
+
+////TEST
+    if(Operator.getAButtonPressed()){
+      theHoodPos += 10;
+      System.out.println(theHoodPos);
+    }
+    else if(Operator.getBButtonPressed()){
+      theHoodPos -= 10;
+      System.out.println(theHoodPos);
+    }
+
+    // shooter.setHoodPos(theHoodPos);
+
+    if(Operator.getXButtonPressed()){
+      theShooterVel += 100;
+      System.out.println(theShooterVel);
+    }
+    else if(Operator.getYButtonPressed()){
+      theShooterVel -= 100;
+      System.out.println(theShooterVel);
+    }
+
+    if(Operator.getStartButtonPressed()){
+      shooter.setShooterVel(theShooterVel);
+    }
+    else if(Operator.getBackButtonPressed()){
+      shooter.setShooterPower(0);
+    }
   }
 
 
@@ -279,8 +312,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    limelightS = ts.getDouble(0.0);
-    System.out.println(limelightS);
+    // limelightS = ts.getDouble(0.0);
+    // System.out.println(limelightS);
   }
 
 

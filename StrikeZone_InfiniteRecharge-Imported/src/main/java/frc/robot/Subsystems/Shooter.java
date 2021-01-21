@@ -24,7 +24,7 @@ public class Shooter{
     final int SHOOTER_MIN = 11500;
     final int SHOOTER_IDLE = 1000;
 
-    final int SHOOTER_GOAL = 200;
+    final int SHOOTER_GOAL = 100;
     final int TURRET_GOAL = 10;
     final int HOOD_GOAL = 10;
 
@@ -85,9 +85,10 @@ public class Shooter{
         turret.config_kD(0,148);
         turret.configMaxIntegralAccumulator(0, 100);
 
-        shooterMaster.config_kP(0,.2);
+        shooterMaster.config_kP(0,.3);
         shooterMaster.config_kI(0,0.05);
         shooterMaster.config_kD(0,50);
+        shooterMaster.config_kF(0,.049);
         shooterMaster.configMaxIntegralAccumulator(0, 100);
 
         canifier.setQuadraturePosition(0,10);
@@ -107,9 +108,9 @@ public class Shooter{
     }
 
     public boolean setShooterVel(double vel){
-        System.out.printf("Shooter vel: %f, Shooter vel target: %f\n", getShooterVel(), vel);
         shooterMaster.set(ControlMode.Velocity,vel);
         shooterFollower.set(ControlMode.Velocity,-vel);
+        if(Math.abs(getShooterVel() - vel) > SHOOTER_GOAL) System.out.printf("Shooter vel: %f, Shooter target: %f, MATH: %f\n", getShooterVel(), vel, Math.abs(getShooterVel() - vel));
         // shooterFollower.set(ControlMode.Follower,shooterMaster.getDeviceID());
         return (Math.abs(getShooterVel() - vel) < SHOOTER_GOAL);
     }
@@ -142,8 +143,8 @@ public class Shooter{
     }
 
     public boolean setHoodPos(double target){
-        System.out.printf("Hood pos: %f, Hood target: %f\n", getHoodEnc(), target);
-        hoodAdjust.setSpeed((target - getHoodEnc())/200);
+        hoodAdjust.setSpeed((target - getHoodEnc())/118);
+        if(Math.abs(getHoodEnc() - target) > HOOD_GOAL) System.out.printf("Hood pos: %f, Hood target: %f, MATH: %f\n", getHoodEnc(), target, Math.abs(getHoodEnc() - target));
         return (Math.abs(getHoodEnc() - target) < HOOD_GOAL);
     }
 
